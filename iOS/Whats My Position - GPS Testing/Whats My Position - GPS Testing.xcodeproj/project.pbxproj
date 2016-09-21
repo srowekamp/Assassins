@@ -12,6 +12,7 @@
 		383856F81D93319000C438D9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 383856F61D93319000C438D9 /* Main.storyboard */; };
 		383856FA1D93319000C438D9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 383856F91D93319000C438D9 /* Assets.xcassets */; };
 		383856FD1D93319000C438D9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 383856FB1D93319000C438D9 /* LaunchScreen.storyboard */; };
+		383857061D9333FA00C438D9 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 383857051D9333FA00C438D9 /* MapKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		383856F91D93319000C438D9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		383856FC1D93319000C438D9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		383856FE1D93319000C438D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		383857051D9333FA00C438D9 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +31,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				383857061D9333FA00C438D9 /* MapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,6 +43,7 @@
 			children = (
 				383856F11D93319000C438D9 /* Whats My Position - GPS Testing */,
 				383856F01D93319000C438D9 /* Products */,
+				383857041D9333FA00C438D9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -62,6 +66,14 @@
 				383856FE1D93319000C438D9 /* Info.plist */,
 			);
 			path = "Whats My Position - GPS Testing";
+			sourceTree = "<group>";
+		};
+		383857041D9333FA00C438D9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				383857051D9333FA00C438D9 /* MapKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -98,6 +110,11 @@
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = 9W76SZUBMN;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Maps.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
