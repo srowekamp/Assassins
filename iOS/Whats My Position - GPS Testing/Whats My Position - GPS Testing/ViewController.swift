@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 import CoreLocation
 
-class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITableViewDelegate {
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var addressTable: UITableView!
     @IBOutlet weak var mapData: MKMapView!
@@ -18,7 +18,7 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     let geoCoder = CLGeocoder();
     let locMan = CLLocationManager();
     
-    var location_data = [String: String?]()
+    var location_data = [String?]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,13 +34,31 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         mapData.userTrackingMode = MKUserTrackingMode(rawValue: 1)!
         mapData.showsUserLocation = true
         
+        addressTable.dataSource = self
+        addressTable.delegate = self
+        
+        
         // Grab Location and Update Table
+        getAddress()
+        
+        
         
     }
     
     // MARK: - Table View Delegate Functions
     
-    override func table
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return (location_data.count)
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        print("mark1")
+        let cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "keyValueCell")
+        
+        cell.textLabel!.text = location_data[indexPath.row]
+        
+        return cell
+    }
     
     // MARK: - Location Functions
     
@@ -59,7 +77,13 @@ class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDele
                 if (placemarks?.count)! > 0 {
                     let pm = placemarks![0]
                     // Store Data Here
-                    self.location_data = pm.addressDictionary as! [String : String?]
+                    var i = 0
+                    for (key, value) in pm.addressDictionary! {
+                        self.location_data.append("\(key): \(value)")
+                        i += 1
+                    }
+                    print("should reload data")
+                    self.addressTable.reloadData()
                 }
             }
             return

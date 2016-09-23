@@ -38,6 +38,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		38052C091D94EFCA0000BE54 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		38052C0A1D94EFD20000BE54 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		38052C0B1D94EFD70000BE54 /* Controlers */ = {
+			isa = PBXGroup;
+			children = (
+				383856F41D93319000C438D9 /* ViewController.swift */,
+			);
+			name = Controlers;
+			sourceTree = "<group>";
+		};
 		383856E61D93319000C438D9 = {
 			isa = PBXGroup;
 			children = (
@@ -59,11 +81,13 @@
 			isa = PBXGroup;
 			children = (
 				383856F21D93319000C438D9 /* AppDelegate.swift */,
-				383856F41D93319000C438D9 /* ViewController.swift */,
 				383856F61D93319000C438D9 /* Main.storyboard */,
-				383856F91D93319000C438D9 /* Assets.xcassets */,
 				383856FB1D93319000C438D9 /* LaunchScreen.storyboard */,
 				383856FE1D93319000C438D9 /* Info.plist */,
+				38052C0B1D94EFD70000BE54 /* Controlers */,
+				38052C0A1D94EFD20000BE54 /* Views */,
+				38052C091D94EFCA0000BE54 /* Models */,
+				383856F91D93319000C438D9 /* Assets.xcassets */,
 			);
 			path = "Whats My Position - GPS Testing";
 			sourceTree = "<group>";
@@ -317,6 +341,7 @@
 				383857031D93319000C438D9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
