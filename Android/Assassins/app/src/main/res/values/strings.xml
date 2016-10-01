@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Assassins</string>
+    <string name="location_permission_error">Location Permission not granted</string>
+    <string name="location_null_error">Location was null</string>
 </resources>

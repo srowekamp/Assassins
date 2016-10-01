@@ -44,6 +44,10 @@ public class LoginActivity extends AppCompatActivity {
     /** Called when user clicks the forgot password text */
     public void forgotPassword(View view) {
         //Probably not doing this but it's here for now
+        //Used to open Lobby for testing
+        Intent intent = new Intent(this, LobbyActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     boolean doubleBackToExitPressedOnce = false;

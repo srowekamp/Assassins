@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="0dp"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
     android:paddingTop="0dp"
     tools:context="la_05.com.assassins.LobbyActivity">
 
@@ -20,7 +20,11 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="64dp"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:background="@android:drawable/dialog_holo_light_frame">
 
         <TextView
             android:text="Lobby Name"
@@ -28,7 +32,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/textLobbyName"
             android:layout_alignParentStart="true"
-            android:layout_centerVertical="true" />
+            android:layout_centerVertical="true"
+            android:textColor="?android:attr/textColorPrimaryInverse" />
 
         <TextView
             android:text="Time Remaining"
@@ -36,13 +41,15 @@
             android:layout_height="wrap_content"
             android:id="@+id/textTimeRemaining"
             android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:textColor="?android:attr/textColorPrimaryInverse" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:background="@android:drawable/dialog_holo_light_frame">
 
         <TextView
             android:text="X Players in Lobby"
@@ -50,16 +57,24 @@
             android:layout_height="wrap_content"
             android:id="@+id/textPlayerCount"
             android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true" />
+            android:layout_centerVertical="true"
+            android:textColor="?android:attr/textColorPrimaryInverse" />
 
-        <ImageButton
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@mipmap/ic_launcher"
             android:layout_alignParentStart="true"
-            android:id="@+id/imageButton"
+            android:id="@+id/imageView"
             android:layout_centerVertical="true" />
     </RelativeLayout>
 
+    <TextView
+        android:text="Waiting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/textGPSTest" />
 
 </RelativeLayout>
