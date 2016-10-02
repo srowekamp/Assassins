@@ -47,9 +47,11 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="64dp"
         android:layout_alignParentBottom="true"
-        android:background="@android:drawable/dialog_holo_light_frame">
+        android:paddingLeft="16dp"
+        android:background="@android:color/background_light"
+        android:layout_height="52dp"
+        android:id="@+id/RelativeLayoutBottom">
 
         <TextView
             android:text="X Players in Lobby"
@@ -58,7 +60,8 @@
             android:id="@+id/textPlayerCount"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:textColor="?android:attr/textColorPrimaryInverse" />
+            android:textColor="?android:attr/textColorPrimaryInverse"
+            android:textSize="18sp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -75,6 +78,29 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:id="@+id/textGPSTest" />
+        android:id="@+id/textGPSTest"
+        android:textColor="?android:attr/textColorPrimary" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/ic_menu_compass"
+        android:layout_above="@id/RelativeLayoutBottom"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:id="@+id/imageViewCenterCircle"
+        android:onClick="centerMapToMe" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/ic_menu_mylocation"
+        android:id="@+id/imageViewMyLocation"
+        android:layout_marginBottom="12dp"
+        android:layout_alignStart="@id/imageViewCenterCircle"
+        android:layout_above="@id/imageViewCenterCircle"
+        android:onClick="centerMapToCircle" />
+
 
 </RelativeLayout>

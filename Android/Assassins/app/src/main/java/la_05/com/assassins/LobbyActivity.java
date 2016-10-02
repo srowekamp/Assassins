@@ -1,6 +1,8 @@
 package la_05.com.assassins;
 
 import android.Manifest;
+import android.graphics.Color;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -9,32 +11,48 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-
-import java.security.Permission;
-
-import static java.security.AccessController.getContext;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class LobbyActivity extends AppCompatActivity {
 
-    //private static LocationManager locationManager;
-    //private static LocationListener locationListener;
-    //private static boolean GPS_PERMISSION = false;
-    TextView txtLatLong;
-    Location lastLocation;
+    public static final int LOCATION_UPDATE_INTERVAL = 10000; // Minimum time between location updates in milliseconds
+    public static final float LOCATION_UPDATE_DISTANCE = 2; // Minimum distance between location updates in meters
+    public static final int MAP_ZOOM_SCALE_FACTOR = 350; // Constant used to determine map zoom
+
+    private TextView txtLatLong;
+    private MapView mapView;
+    private Location lastLocation;
+    private LatLng lastLatLng;
+    private GoogleMap googleMap;
+    private double gameCircleRadius = 300;
+    private float cameraZoomLevel = 0;
+    private LatLng circleLatLng;
+    private boolean mapReady = false;
+    private boolean mapCircleDrawn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
+
         txtLatLong = (TextView) findViewById(R.id.textGPSTest);
 
         // Setup GPS Service
@@ -49,14 +67,27 @@ public class LobbyActivity extends AppCompatActivity {
             txtLatLong.setText(R.string.location_permission_error);
         }
         else {
-            // GPS_PERMISSION = true;
             // If app has permission, setup Location service
             LocationListener locationListener = new MyLocationListener();
             LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
+            // Request Location updates with static parameters
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    LOCATION_UPDATE_INTERVAL,
+                    LOCATION_UPDATE_DISTANCE,
+                    locationListener);
             updateTxt();
         }
 
+        // Setup the Map
+        mapView = (MapView) findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                setUpMap(googleMap);
+            }
+        });
 
         // Make Profile ImageView Rounded
         ImageView imageView = (ImageView)findViewById(R.id.imageView);
@@ -66,6 +97,84 @@ public class LobbyActivity extends AppCompatActivity {
         imageView.setImageDrawable(roundDrawable);
     }
 
+    /** Automatically added methods for the MapView */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    /** Set up the map once it is ready*/
+    private void setUpMap(GoogleMap map) {
+        googleMap = map;
+        googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mapReady = true;
+    }
+
+    /** Update the user's location within the map (not sure if this is needed)*/
+    private void updateMap() {
+        if (!mapReady) return;
+        if (!mapCircleDrawn) {
+            circleLatLng = lastLatLng; // TODO update with game options and move to setUpMap after
+            googleMap.addCircle(new CircleOptions().center(circleLatLng).radius(gameCircleRadius).strokeColor(Color.CYAN)); // Add game radius circle to map
+            cameraZoomLevel = getZoomLevel(gameCircleRadius);
+            // For zooming automatically to the location of the circle
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(lastLatLng).zoom(cameraZoomLevel).build();
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            mapCircleDrawn = true;
+        }
+        try {
+            googleMap.setMyLocationEnabled(true);
+        } catch (SecurityException e) {
+            // Shouldn't happen
+        } // TODO check if user's location on map is updated automatically
+    }
+
+    /** Center the map to the user's current location*/
+    public void centerMapToMe(View view) {
+        if (lastLatLng == null) return;
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(lastLatLng).zoom(cameraZoomLevel).build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
+    /** Center the map to the game's circle*/
+    public void centerMapToCircle(View view) {
+        if (circleLatLng == null) return;
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(circleLatLng).zoom(cameraZoomLevel).build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
+    /** Calculate the GoogleMap zoom level based on the radius of the game circle */
+    private float getZoomLevel(Double circleRadius) {
+        float zoomLevel = 0;
+        if (circleRadius != null){
+            double scale = circleRadius / MAP_ZOOM_SCALE_FACTOR; // TODO Does this work on other devices and screens?
+            zoomLevel = (float) (16 - Math.log(scale) / Math.log(2));
+        }
+        return zoomLevel;
+    }
+
+    /** Setup a LocationListener whose methods will be called on Location updates*/
     private final class MyLocationListener implements LocationListener {
 
         @Override
@@ -73,6 +182,7 @@ public class LobbyActivity extends AppCompatActivity {
             // called when the listener is notified with a location update from the GPS
             lastLocation = locFromGps;
             LobbyActivity.this.updateTxt();
+            LobbyActivity.this.updateMap();
         }
 
         @Override
@@ -91,13 +201,13 @@ public class LobbyActivity extends AppCompatActivity {
         }
     }
 
+    /** Update the textView that displays the user's current lat/long (just for demo/testing*/
     private void updateTxt() {
-        LatLng lastLatLng;
         Double lat, lon;
         try {
             lat = lastLocation.getLatitude();
             lon = lastLocation.getLongitude();
-            lastLatLng= new LatLng(lat, lon);
+            lastLatLng = new LatLng(lat, lon);
         } catch (NullPointerException e) {
             e.printStackTrace();
             txtLatLong.setText(R.string.location_null_error);
@@ -105,36 +215,6 @@ public class LobbyActivity extends AppCompatActivity {
         }
         txtLatLong.setText(lastLatLng.toString());
     }
-
-    /*public LatLng getLocation() {
-        if (!GPS_PERMISSION) return null;
-        // Get the location manager
-        //LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        String bestProvider = locationManager.getBestProvider(criteria, false);
-        Location location = null;
-        try {
-            location = locationManager.getLastKnownLocation(bestProvider);
-        }
-        catch (SecurityException e) {
-            return null;
-        }
-        Double lat, lon;
-        try {
-            lat = location.getLatitude();
-            lon = location.getLongitude();
-            return new LatLng(lat, lon);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public void refreshGPS(View view) {
-        LatLng ll = getLocation();
-        if (ll != null)
-            txtLatLong.setText(ll.toString());
-    }*/
 
     boolean doubleBackToExitPressedOnce = false;
 
