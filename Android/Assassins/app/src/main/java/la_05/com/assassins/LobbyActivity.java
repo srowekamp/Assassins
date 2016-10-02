@@ -1,6 +1,8 @@
 package la_05.com.assassins;
 
 import android.Manifest;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
@@ -12,12 +14,20 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,10 +58,18 @@ public class LobbyActivity extends AppCompatActivity {
     private boolean mapReady = false;
     private boolean mapCircleDrawn = false;
 
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private ArrayAdapter<String> mAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
+
+        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView)findViewById(R.id.navList);
+        addDrawerItems();
 
         txtLatLong = (TextView) findViewById(R.id.textGPSTest);
 
@@ -95,6 +113,18 @@ public class LobbyActivity extends AppCompatActivity {
         RoundedBitmapDrawable roundDrawable = RoundedBitmapDrawableFactory.create(getResources(), avatar);
         roundDrawable.setCircular(true);
         imageView.setImageDrawable(roundDrawable);
+    }
+
+    public void toggleDrawer(View view) {
+        if (!mDrawerLayout.isDrawerOpen(mDrawerList)) {
+            mDrawerLayout.openDrawer(mDrawerList);
+        }
+    }
+
+    private void addDrawerItems() {
+        String[] osArray = { "Radius", "Start Time", "Lobby Host", "Game Option", "Another Game Option" };
+        mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
+        mDrawerList.setAdapter(mAdapter);
     }
 
     /** Automatically added methods for the MapView */
@@ -214,6 +244,12 @@ public class LobbyActivity extends AppCompatActivity {
             return;
         }
         txtLatLong.setText(lastLatLng.toString());
+    }
+
+    public void gotoPlayerList(View view) {
+        // Switch to the Player List activity
+        Intent intent = new Intent(this, PlayersListActivity.class);
+        startActivity(intent);
     }
 
     boolean doubleBackToExitPressedOnce = false;
