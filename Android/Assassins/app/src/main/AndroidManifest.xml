@@ -36,6 +36,11 @@
         <activity android:name=".PlayersListActivity"
             android:theme="@style/AppTheme"
             android:parentActivityName=".LobbyActivity"/>
+        <activity
+            android:name=".GameActivity"
+            android:theme="@style/NoActionBar" />
+        <activity android:name=".MainMenuActivity"
+            android:theme="@style/NoActionBar" />
     </application>
 
 </manifest>
