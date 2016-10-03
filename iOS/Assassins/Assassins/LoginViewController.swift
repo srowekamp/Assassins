@@ -8,34 +8,35 @@
 
 import UIKit
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var usernameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        usernameField.delegate = self
+        passwordField.delegate = self
+        passwordField.isSecureTextEntry = true
     }
     
+    @IBAction func showCreateAccount(_ sender: AnyObject) {
+        performSegue(withIdentifier: "createAccount", sender: self)
+    }
+
     @IBAction func tapLogin(_ sender: AnyObject) {
+        usernameField.text = ""
+        passwordField.text = ""
+        
         performSegue(withIdentifier: "loginToMain", sender: self)
     }
+    
+    // MARK: Text Field Delegate Methods
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        textField.resignFirstResponder()
+        return true
     }
-    */
-
+    
 }
