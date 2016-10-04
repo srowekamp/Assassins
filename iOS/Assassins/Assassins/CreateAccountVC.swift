@@ -32,7 +32,7 @@ class CreateAccountVC: UIViewController, UIImagePickerControllerDelegate, UINavi
     }
     
     @IBAction func createAccount(_ sender: AnyObject) {
-        let newUser = Player(name: realName.text!, username: username.text!, password: password.text!, userPhoto: nil)
+        // let newUser = Player(name: realName.text!, username: username.text!, password: password.text!, userPhoto: nil)
     }
     
     @IBAction func showLoginPage(_ sender: AnyObject) {
