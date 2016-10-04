@@ -123,14 +123,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WGJ-7u-5Ja">
-                                <connections>
-                                    <action selector="openCameraButton:" destination="LAE-JS-IRd" eventType="touchUpInside" id="BDK-Dt-XHs"/>
-                                </connections>
-                            </button>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="R4D-Td-Up0">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="R4D-Td-Up0">
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="viking" translatesAutoresizingMaskIntoConstraints="NO" id="4aJ-co-ICN"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="viking" translatesAutoresizingMaskIntoConstraints="NO" id="4aJ-co-ICN">
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="100" id="5mS-ez-k83"/>
+                                            <constraint firstAttribute="height" constant="100" id="T82-5P-tyw"/>
+                                        </constraints>
+                                    </imageView>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="waR-oX-zst">
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="4Fq-Jh-YXK"/>
@@ -187,6 +187,11 @@
                                     </button>
                                 </subviews>
                             </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WGJ-7u-5Ja">
+                                <connections>
+                                    <action selector="openCameraButton:" destination="LAE-JS-IRd" eventType="touchUpInside" id="BDK-Dt-XHs"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -201,6 +206,7 @@
                     <navigationItem key="navigationItem" title="Create Account" id="VGw-Eq-ICW"/>
                     <connections>
                         <outlet property="confirmPassword" destination="LMh-hT-Cha" id="Z96-Sp-TD0"/>
+                        <outlet property="navBar" destination="VGw-Eq-ICW" id="IWn-y3-Jc9"/>
                         <outlet property="password" destination="CRg-c4-nbY" id="ED2-qe-R4X"/>
                         <outlet property="realName" destination="waR-oX-zst" id="dzE-4h-PRk"/>
                         <outlet property="userIcon" destination="4aJ-co-ICN" id="sKz-HR-uMa"/>

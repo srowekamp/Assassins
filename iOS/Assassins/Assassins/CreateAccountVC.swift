@@ -10,6 +10,7 @@ import UIKit
 
 class CreateAccountVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     
+    @IBOutlet weak var navBar: UINavigationItem!
     @IBOutlet weak var userIcon: UIImageView!
     @IBOutlet weak var realName: UITextField!
     @IBOutlet weak var username: UITextField!
@@ -31,13 +32,11 @@ class CreateAccountVC: UIViewController, UIImagePickerControllerDelegate, UINavi
     }
     
     @IBAction func createAccount(_ sender: AnyObject) {
-        
+        let newUser = Player(name: realName.text!, username: username.text!, password: password.text!, userPhoto: nil)
     }
     
     @IBAction func showLoginPage(_ sender: AnyObject) {
-        self.dismiss(animated: true) {
-            return
-        }
+        self.navigationController!.popViewController(animated: true)
     }
     
     // MARK: User Icon Methods
@@ -47,13 +46,17 @@ class CreateAccountVC: UIViewController, UIImagePickerControllerDelegate, UINavi
             let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
             imagePicker.sourceType = UIImagePickerControllerSourceType.camera
-            imagePicker.allowsEditing = false
+            imagePicker.allowsEditing = true
             self.present(imagePicker, animated: true, completion: nil)
+        } else {
+            let alert = UIAlertController(title: "No Camera", message: "Sorry, but the device you are using does not have a supported camera.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        userIcon.image = info["UIImagePickerControllerOriginalImage"] as! UIImage?
+        userIcon.image = info["UIImagePickerControllerEditedImage"] as! UIImage?
         self.dismiss(animated: true, completion: nil);
     }
     
