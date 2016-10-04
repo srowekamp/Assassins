@@ -25,7 +25,7 @@
         <!--Login-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="LoginViewController" customModule="Assassins" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="LoginVC" customModule="Assassins" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -92,10 +92,10 @@
             </objects>
             <point key="canvasLocation" x="44" y="90"/>
         </scene>
-        <!--Main-->
+        <!--Main Menu-->
         <scene sceneID="3Sx-r4-bNq">
             <objects>
-                <viewController id="dHc-Ti-esL" customClass="MainMenuViewController" customModule="Assassins" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="dHc-Ti-esL" customClass="MainMenuVC" customModule="Assassins" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="cD9-l1-Ew4"/>
                         <viewControllerLayoutGuide type="bottom" id="Cnm-EA-0uH"/>
@@ -103,13 +103,145 @@
                     <view key="view" contentMode="scaleToFill" id="XoA-Ne-pcy">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="P4q-PX-0tm">
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZgE-fI-MMX">
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kTy-uh-Whc">
+                                        <state key="normal" title="Join Game"/>
+                                        <connections>
+                                            <action selector="joinGame:" destination="dHc-Ti-esL" eventType="touchUpInside" id="e1E-Wd-3wn"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B8v-by-x6P">
+                                        <state key="normal" title="Create Game"/>
+                                        <connections>
+                                            <action selector="createGame:" destination="dHc-Ti-esL" eventType="touchUpInside" id="iAh-Do-QlB"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uSP-tc-K1K">
+                                        <state key="normal" title="Game Editor"/>
+                                        <connections>
+                                            <action selector="gameEditor:" destination="dHc-Ti-esL" eventType="touchUpInside" id="LVy-4J-70Q"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wrn-cn-lQC">
+                                        <state key="normal" title="Settings"/>
+                                        <connections>
+                                            <action selector="tapSettings:" destination="dHc-Ti-esL" eventType="touchUpInside" id="v4s-Am-D5B"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="P4q-PX-0tm" firstAttribute="centerX" secondItem="XoA-Ne-pcy" secondAttribute="centerX" id="UoZ-fd-Ki2"/>
+                            <constraint firstItem="P4q-PX-0tm" firstAttribute="centerY" secondItem="XoA-Ne-pcy" secondAttribute="centerY" id="ZRl-kL-NVU"/>
+                        </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Main" id="bux-Sb-uLS"/>
+                    <navigationItem key="navigationItem" title="Main Menu" id="bux-Sb-uLS"/>
+                    <connections>
+                        <segue destination="Wcf-Zx-ltU" kind="show" identifier="joinGame" id="cAD-dg-4h0"/>
+                        <segue destination="RcS-F5-1lq" kind="show" identifier="createGame" id="bku-r7-TcB"/>
+                        <segue destination="zPL-It-GOb" kind="show" identifier="gameEditor" id="MXr-Xk-rXz"/>
+                        <segue destination="pqV-TB-pvp" kind="show" identifier="settings" id="6No-9S-2uV"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3v8-iQ-7Py" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="862" y="-188"/>
+        </scene>
+        <!--Game Editor-->
+        <scene sceneID="fmD-n1-HYA">
+            <objects>
+                <viewController id="zPL-It-GOb" customClass="GameEditorVC" customModule="Assassins" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Tdi-qC-Axx"/>
+                        <viewControllerLayoutGuide type="bottom" id="mdM-bl-Fbh"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="X2D-Vg-kFc">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Game Editor" id="p3U-mm-FYM"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="c8W-y7-H3h" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2366" y="-188"/>
+        </scene>
+        <!--Create Game-->
+        <scene sceneID="oJc-jX-7jX">
+            <objects>
+                <viewController id="RcS-F5-1lq" customClass="CreateGameVC" customModule="Assassins" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="UAQ-uu-s0K"/>
+                        <viewControllerLayoutGuide type="bottom" id="3tq-pr-y9f"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Ny4-D2-p9g">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Create Game" id="ybT-h3-IuL"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eal-u2-9QZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1702" y="-519"/>
+        </scene>
+        <!--Join Game-->
+        <scene sceneID="j6d-dP-l9k">
+            <objects>
+                <viewController id="Wcf-Zx-ltU" customClass="JoinGameVC" customModule="Assassins" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="o1g-PY-9RJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="FXU-G4-51x"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="O76-7h-QZ0">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="tbc-84-Kwg">
+                                <subviews>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Game ID" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UHS-eP-ELx">
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Game Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xti-Lc-mVp">
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mua-iC-NNq">
+                                        <state key="normal" title="Join Game"/>
+                                        <connections>
+                                            <action selector="joinGame:" destination="Wcf-Zx-ltU" eventType="touchUpInside" id="ReE-Em-bv7"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="tbc-84-Kwg" firstAttribute="centerY" secondItem="O76-7h-QZ0" secondAttribute="centerY" id="6sg-3q-gsp"/>
+                            <constraint firstItem="tbc-84-Kwg" firstAttribute="centerX" secondItem="O76-7h-QZ0" secondAttribute="centerX" id="V2R-AP-Qlv"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Join Game" id="KvZ-CM-ly7"/>
+                    <connections>
+                        <outlet property="gameID" destination="UHS-eP-ELx" id="cdq-tf-so3"/>
+                        <outlet property="gamePassword" destination="xti-Lc-mVp" id="Cp9-EJ-cwj"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EqD-NW-Dg7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1702" y="-1169"/>
         </scene>
         <!--Create Account-->
         <scene sceneID="Dzc-gS-375">
@@ -215,7 +347,26 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q97-Py-o10" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="861.60000000000002" y="472.71364317841085"/>
+            <point key="canvasLocation" x="862" y="582"/>
+        </scene>
+        <!--Settings-->
+        <scene sceneID="kNW-G7-DkI">
+            <objects>
+                <viewController id="pqV-TB-pvp" customClass="SettingsVC" customModule="Assassins" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="2BP-Ng-jKd"/>
+                        <viewControllerLayoutGuide type="bottom" id="HQy-OH-oa2"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="iIv-JL-ZaC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Settings" id="uac-52-OYj"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bRf-bM-cue" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1702" y="171"/>
         </scene>
     </scenes>
     <resources>
