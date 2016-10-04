@@ -14,7 +14,7 @@ class JoinGameVC: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var gamePassword: UITextField!
     
     @IBAction func joinGame(_ sender: AnyObject) {
-        // TODO: Link to Lobby View
+        performSegue(withIdentifier: "joinToGame", sender: nil)
     }
     
     override func viewDidLoad() {
