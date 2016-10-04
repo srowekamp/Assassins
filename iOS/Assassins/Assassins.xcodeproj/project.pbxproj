@@ -64,7 +64,6 @@
 			children = (
 				38B6557F1DA31EEF004C9E02 /* Controllers */,
 				38B655801DA31F07004C9E02 /* Views */,
-				38B655811DA31F1E004C9E02 /* Models */,
 				38B655821DA31F4B004C9E02 /* Other */,
 			);
 			path = Assassins;
@@ -84,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				386735011D8B879300844D90 /* Main.storyboard */,
+				38B655811DA31F1E004C9E02 /* Models */,
 			);
 			name = Views;
 			sourceTree = "<group>";
