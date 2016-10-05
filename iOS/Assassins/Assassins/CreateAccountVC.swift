@@ -32,6 +32,13 @@ class CreateAccountVC: UIViewController, UIImagePickerControllerDelegate, UINavi
     }
     
     @IBAction func createAccount(_ sender: AnyObject) {
+        if(password.text == confirmPassword.text) {
+            // valid user account
+        } else {
+            let alert = UIAlertController(title: "Bad Password", message: "Your passwords do not match, please try again.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
         // let newUser = Player(name: realName.text!, username: username.text!, password: password.text!, userPhoto: nil)
     }
     

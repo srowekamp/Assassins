@@ -20,15 +20,33 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         passwordField.isSecureTextEntry = true
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        usernameField.text = ""
+        passwordField.text = ""
+    }
+    
     @IBAction func showCreateAccount(_ sender: AnyObject) {
         performSegue(withIdentifier: "createAccount", sender: self)
     }
 
     @IBAction func tapLogin(_ sender: AnyObject) {
-        usernameField.text = ""
-        passwordField.text = ""
+        if checkUser(username: usernameField.text!, password: passwordField.text!) {
+            performSegue(withIdentifier: "loginToMain", sender: self)
+        } else {
+            let alert = UIAlertController(title: "Login Failed", message: "You username or password is incorrect, please try again.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
         
-        performSegue(withIdentifier: "loginToMain", sender: self)
+    }
+    
+    func checkUser(username: String, password: String) -> Bool{
+        if(username == "baduser" && password == "badpass"){
+            return false
+        } else {
+            // check user by calling server
+            return true
+        }
     }
     
     // MARK: Text Field Delegate Methods
