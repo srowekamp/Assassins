@@ -31,6 +31,16 @@ public class LoginActivity extends AppCompatActivity {
 
         String usernameString = username.getText().toString();
         String passwordString = password.getText().toString();
+
+        /**
+         * here is where we will put our connection with the DB for determining if they
+         * input their credentials correctly
+         */
+
+        // Switch to the Main Menu Activity
+        Intent intent = new Intent(this, MainMenuActivity.class);
+        startActivity(intent);
+        finish(); // Closes the current activity, stops user from returning to it with back button
     }
 
     /** Called when user clicks the create account text */
@@ -43,11 +53,9 @@ public class LoginActivity extends AppCompatActivity {
 
     /** Called when user clicks the forgot password text */
     public void forgotPassword(View view) {
-        //Probably not doing this but it's here for now
-        //Used to open Lobby for testing
-        Intent intent = new Intent(this, LobbyActivity.class);
-        startActivity(intent);
-        finish();
+        /**
+         * this method will bring you to the forgot password screen.
+         */
     }
 
     boolean doubleBackToExitPressedOnce = false;
