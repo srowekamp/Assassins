@@ -24,4 +24,20 @@ public class MainMenuActivity extends AppCompatActivity{
         startActivity(intent);
         finish(); // Closes the current activity, stops user from returning to it with back button
     }
+
+    public void createGame(View view){
+        // TODO
+    }
+
+    public void options(View view){
+        // TODO
+    }
+
+    public void account(View view){
+        // TODO
+    }
+
+    public void gameEditor(View view){
+        // TODO
+    }
 }

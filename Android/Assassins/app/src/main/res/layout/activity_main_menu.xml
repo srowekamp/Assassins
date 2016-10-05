@@ -30,7 +30,8 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:id="@+id/JoinGameButton"/>
+        android:id="@+id/JoinGameButton"
+        android:onClick="joinGame" />
 
     <Button
         android:text="Create Game"
@@ -41,7 +42,8 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:id="@+id/CreateGameButton" />
+        android:id="@+id/CreateGameButton"
+        android:onClick="createGame" />
 
     <Button
         android:text="Options"
@@ -52,7 +54,8 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:id="@+id/OptionsButton" />
+        android:id="@+id/OptionsButton"
+        android:onClick="options"/>
 
     <Button
         android:text="Account"
@@ -63,7 +66,8 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:id="@+id/AccountButton" />
+        android:id="@+id/AccountButton"
+        android:onClick="account"/>
 
     <Button
         android:text="Game Editor"
@@ -74,5 +78,6 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:id="@+id/GameEditorButton" />
+        android:id="@+id/GameEditorButton"
+        android:onClick="gameEditor"/>
 </RelativeLayout>
