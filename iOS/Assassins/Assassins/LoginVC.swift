@@ -23,9 +23,16 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var usernameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     
+    let web = WebRequest()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initTextFields()
+        
+        web.getUser {
+            return
+        }
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -58,9 +65,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
             return false
         }
         switch(username){
-        case "baduser":
-            return false
-        case "admin":
+        case "admin2":
             user.adminFlag = true
             user.modFlag = true
             return true
@@ -68,8 +73,16 @@ class LoginVC: UIViewController, UITextFieldDelegate {
             user.modFlag = true
             return true
         default:
-            // make request to server to check user
-            return true
+            user.adminFlag = false
+            user.modFlag = false
+            // ask server for users
+           
+            // check if username and password are correct
+            print("\(web.username) , \(web.password)")
+            if username == web.username && password == web.password {
+                return true
+            }
+            return false
         }
     }
     

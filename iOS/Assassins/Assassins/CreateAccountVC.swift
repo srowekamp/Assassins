@@ -52,7 +52,7 @@ class CreateAccountVC: UIViewController, UIImagePickerControllerDelegate, UINavi
         user.realName = realName.text!
         
         // once the user has been created, go to main menu view
-        performSegue(withIdentifier: "createToMain", sender: nil)
+        performSegue(withIdentifier: "createToMenu", sender: nil)
     }
     
     @IBAction func showLoginPage(_ sender: AnyObject) {
