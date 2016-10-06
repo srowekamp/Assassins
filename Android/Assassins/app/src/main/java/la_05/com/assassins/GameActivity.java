@@ -3,6 +3,7 @@ package la_05.com.assassins;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Toast;
 
 public class GameActivity extends AppCompatActivity{
@@ -13,7 +14,7 @@ public class GameActivity extends AppCompatActivity{
         setContentView(R.layout.activity_game);
     }
 
-    public void assassinate(){
+    public void assassinate(View view){
         // TODO
     }
 
