@@ -75,9 +75,11 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         default:
             user.adminFlag = false
             user.modFlag = false
-            // ask server for users
-           
-            // check if username and password are correct
+            
+            // We will eventually have a method that asks the server to validate a username and password combination. 
+            // Right now we are just downloading a table of users and looking at the first item in the returned JSON
+            
+            // check if username and password are correct the web. items are from the WebRequest
             print("\(web.username) , \(web.password)")
             if username == web.username && password == web.password {
                 return true
@@ -95,7 +97,8 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         return true
     }
     
-    // initial setup
+    // MARK: Initial Setup Functions
+    
     private func initTextFields() {
         usernameField.delegate = self
         usernameField.autocorrectionType = .no
