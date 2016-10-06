@@ -20,15 +20,15 @@ class MainMenuVC: UIViewController {
     }
     
     @IBAction func createGame(_ sender: AnyObject) {
-        performSegue(withIdentifier: "joinGame", sender: nil)
+        performSegue(withIdentifier: "createGame", sender: nil)
     }
     
     @IBAction func gameEditor(_ sender: AnyObject) {
-        performSegue(withIdentifier: "joinGame", sender: nil)
+        performSegue(withIdentifier: "gameEditor", sender: nil)
     }
     
     @IBAction func tapSettings(_ sender: AnyObject) {
-        performSegue(withIdentifier: "joinGame", sender: nil)
+        performSegue(withIdentifier: "settings", sender: nil)
     }
 
 }

@@ -20,7 +20,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pZr-fO-1cN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-766" y="90"/>
+            <point key="canvasLocation" x="-1508" y="-188"/>
         </scene>
         <!--Login-->
         <scene sceneID="tne-QT-ifu">
@@ -90,7 +90,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="44" y="90"/>
+            <point key="canvasLocation" x="-697" y="-188"/>
         </scene>
         <!--Main Menu-->
         <scene sceneID="3Sx-r4-bNq">
@@ -167,7 +167,38 @@
                     <view key="view" contentMode="scaleToFill" id="w4g-VZ-8mS">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Fub-4a-w5j">
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Mdl-Fg-tSE">
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Target:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fts-Gw-Ukd">
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Scott" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MAU-mD-SIH">
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6ZK-hT-v6w">
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="200" id="Ybw-fE-Aga"/>
+                                            <constraint firstAttribute="width" constant="200" id="vmi-Pu-JP6"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                            </stackView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Fub-4a-w5j" firstAttribute="top" secondItem="8FX-rG-4NQ" secondAttribute="bottom" constant="32" id="fHt-Va-7ee"/>
+                            <constraint firstItem="Fub-4a-w5j" firstAttribute="centerX" secondItem="w4g-VZ-8mS" secondAttribute="centerX" id="t6I-2D-lQN"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Tracker Mode" id="TjZ-zf-Vac"/>
                     <navigationItem key="navigationItem" title="Tracker Mode" id="PgN-8w-qSf">
@@ -180,7 +211,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UgJ-aD-oBK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5334" y="-1101"/>
+            <point key="canvasLocation" x="5333.6000000000004" y="-1101.4992503748126"/>
         </scene>
         <!--Player List-->
         <scene sceneID="peR-hT-gyJ">
@@ -222,14 +253,50 @@
                                 <action selector="leaveGame:" destination="YVX-gC-oag" id="Wrs-p8-ZbA"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Admin/Mod" id="PjO-tQ-TBe">
+                            <connections>
+                                <action selector="loadAdminView:" destination="YVX-gC-oag" id="FJ5-EY-Z1R"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="playerTableList" destination="uBj-l4-uSw" id="yOl-KI-B4d"/>
+                        <segue destination="dcG-qn-4ff" kind="show" identifier="playerListToAdminMod" id="VLQ-Jv-NQp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rVT-Ro-gXA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="5330" y="-449"/>
+        </scene>
+        <!--Admin / Mod View-->
+        <scene sceneID="eNz-fM-qM3">
+            <objects>
+                <viewController id="dcG-qn-4ff" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="WuJ-dE-jET"/>
+                        <viewControllerLayoutGuide type="bottom" id="O3Z-76-rN9"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="h3A-wi-O74">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hello Admin/Mod" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fx0-bl-cr2">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Fx0-bl-cr2" firstAttribute="centerY" secondItem="h3A-wi-O74" secondAttribute="centerY" id="Fjx-OI-Sv3"/>
+                            <constraint firstItem="Fx0-bl-cr2" firstAttribute="centerX" secondItem="h3A-wi-O74" secondAttribute="centerX" id="R5v-gp-e9j"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Admin / Mod View" id="ZK7-ml-kcs"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="l9j-Uz-uhF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6157" y="-446"/>
         </scene>
         <!--Lobby-->
         <scene sceneID="Ca9-J9-T2x">
@@ -254,6 +321,7 @@
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Lobby" id="hBw-k5-Qfx"/>
+                    <toolbarItems/>
                     <navigationItem key="navigationItem" title="Lobby" id="egD-Kf-v1j">
                         <barButtonItem key="leftBarButtonItem" title="Leave Game" id="uXE-vR-HL3">
                             <connections>
@@ -261,6 +329,7 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="mapView" destination="a0V-uh-Kxd" id="xL3-pb-ABY"/>
                     </connections>
@@ -457,11 +526,12 @@
                         <outlet property="realName" destination="waR-oX-zst" id="dzE-4h-PRk"/>
                         <outlet property="userIcon" destination="4aJ-co-ICN" id="sKz-HR-uMa"/>
                         <outlet property="username" destination="5gh-l4-Bmz" id="3ug-up-OFt"/>
+                        <segue destination="dHc-Ti-esL" kind="show" identifier="createToMenu" id="mkb-pQ-9dg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q97-Py-o10" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="862" y="582"/>
+            <point key="canvasLocation" x="-113" y="591"/>
         </scene>
         <!--Settings-->
         <scene sceneID="kNW-G7-DkI">
@@ -564,4 +634,7 @@
     <resources>
         <image name="viking" width="100" height="100"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="kgQ-yI-hR4"/>
+    </inferredMetricsTieBreakers>
 </document>

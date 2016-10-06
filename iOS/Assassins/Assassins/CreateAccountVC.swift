@@ -22,6 +22,10 @@ class CreateAccountVC: UIViewController, UIImagePickerControllerDelegate, UINavi
         realName.delegate = self
         username.delegate = self
         password.delegate = self
+        realName.autocorrectionType = .no
+        realName.autocapitalizationType = .words
+        username.autocapitalizationType = .none
+        username.autocorrectionType = .no
         confirmPassword.delegate = self
         realName.text = ""
         username.text = ""
@@ -31,19 +35,35 @@ class CreateAccountVC: UIViewController, UIImagePickerControllerDelegate, UINavi
         confirmPassword.isSecureTextEntry = true
     }
     
+    // attempts to create a user account
+    // first check if the passwords match then send the information to the server and wait for a response if the account was added
+    // the server could return bad account if the user already exists
+    
     @IBAction func createAccount(_ sender: AnyObject) {
         if(password.text == confirmPassword.text) {
             // valid user account
         } else {
-            let alert = UIAlertController(title: "Bad Password", message: "Your passwords do not match, please try again.", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+           popupAlert(title: "Unable to Create Account", message: "Your passwords do not match, please try again.")
         }
-        // let newUser = Player(name: realName.text!, username: username.text!, password: password.text!, userPhoto: nil)
+        // attempt to create user on server
+        // for now add the user and move on
+        user.username = username.text!
+        user.password = password.text!
+        user.realName = realName.text!
+        
+        // once the user has been created, go to main menu view
+        performSegue(withIdentifier: "createToMain", sender: nil)
     }
     
     @IBAction func showLoginPage(_ sender: AnyObject) {
         self.navigationController!.popViewController(animated: true)
+    }
+    
+    // function to popup an alert
+    func popupAlert(title:String, message:String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     // MARK: User Icon Methods
