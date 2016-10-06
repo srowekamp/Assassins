@@ -50,6 +50,7 @@ class CreateAccountVC: UIViewController, UIImagePickerControllerDelegate, UINavi
         user.username = username.text!
         user.password = password.text!
         user.realName = realName.text!
+        user.image = userIcon.image
         
         // once the user has been created, go to main menu view
         performSegue(withIdentifier: "createToMenu", sender: nil)

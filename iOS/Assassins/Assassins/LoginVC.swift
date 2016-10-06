@@ -12,6 +12,7 @@ struct userInfo {
     var realName = "noName"
     var adminFlag = false
     var modFlag = false
+    var image:UIImage?
 }
 
 var user = userInfo()
@@ -28,11 +29,9 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         initTextFields()
-        
         web.getUser {
             return
         }
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {

@@ -368,9 +368,60 @@
                     <view key="view" contentMode="scaleToFill" id="Ny4-D2-p9g">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="I8Q-OK-0y5">
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="w3O-F0-85o">
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Private Match" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fue-cM-ZVO">
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="right" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gTl-M1-vhK">
+                                                <connections>
+                                                    <action selector="privateMatchSwitced:" destination="RcS-F5-1lq" eventType="valueChanged" id="W4a-Q1-dDv"/>
+                                                </connections>
+                                            </switch>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="cxq-jT-s49">
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Range (M)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Nb-Ts-DFM">
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="10" minValue="10" maxValue="1000" translatesAutoresizingMaskIntoConstraints="NO" id="SeS-A8-gWs">
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="214" id="oSe-JN-2VF"/>
+                                                </constraints>
+                                                <connections>
+                                                    <action selector="sliderChanged:" destination="RcS-F5-1lq" eventType="valueChanged" id="qC4-G1-Gsb"/>
+                                                </connections>
+                                            </slider>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I4f-ZA-MrJ">
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="I8Q-OK-0y5" firstAttribute="centerY" secondItem="Ny4-D2-p9g" secondAttribute="centerY" id="lLK-r2-KHA"/>
+                            <constraint firstItem="I8Q-OK-0y5" firstAttribute="centerX" secondItem="Ny4-D2-p9g" secondAttribute="centerX" id="xKn-9c-Vsj"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Create Game" id="ybT-h3-IuL"/>
+                    <connections>
+                        <outlet property="privateMatchSwitch" destination="gTl-M1-vhK" id="cLs-fg-pKP"/>
+                        <outlet property="rangeSlider" destination="SeS-A8-gWs" id="nUC-ly-80N"/>
+                        <outlet property="sliderValueLabel" destination="I4f-ZA-MrJ" id="Jbm-dD-fZt"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eal-u2-9QZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -544,9 +595,82 @@
                     <view key="view" contentMode="scaleToFill" id="iIv-JL-ZaC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="qlV-g2-RcW">
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="viking" translatesAutoresizingMaskIntoConstraints="NO" id="BHR-bS-cG8">
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="100" id="EYb-uJ-15K"/>
+                                            <constraint firstAttribute="height" constant="100" id="ZIk-C5-yzJ"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Real Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fcP-aA-7eb">
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="username" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eZu-Fx-BV1">
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="150" id="ocX-aM-xB7"/>
+                                        </constraints>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ltn-bB-9Av">
+                                        <state key="normal" title="Change Username"/>
+                                        <connections>
+                                            <action selector="changeUser:" destination="pqV-TB-pvp" eventType="touchUpInside" id="v7O-A3-yJV"/>
+                                        </connections>
+                                    </button>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="current password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xOV-g4-RRc">
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="150" id="Kgx-Ap-mY5"/>
+                                        </constraints>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="new password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MnX-GS-8AD">
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="150" id="Z17-5f-0yO"/>
+                                        </constraints>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="confirm password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XNG-9Y-ah4">
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="150" id="b04-xo-ZNZ"/>
+                                        </constraints>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zjr-2A-2MM">
+                                        <state key="normal" title="Change Password"/>
+                                        <connections>
+                                            <action selector="changePassword:" destination="pqV-TB-pvp" eventType="touchUpInside" id="5Yd-Be-vaE"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="qlV-g2-RcW" firstAttribute="centerY" secondItem="iIv-JL-ZaC" secondAttribute="centerY" id="obe-UH-hyX"/>
+                            <constraint firstItem="qlV-g2-RcW" firstAttribute="centerX" secondItem="iIv-JL-ZaC" secondAttribute="centerX" id="w7m-fB-Xm7"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Settings" id="uac-52-OYj"/>
+                    <connections>
+                        <outlet property="confirmPasswordField" destination="XNG-9Y-ah4" id="sOl-G1-HbI"/>
+                        <outlet property="currentPasswordField" destination="xOV-g4-RRc" id="rRR-sd-IKB"/>
+                        <outlet property="nameLabel" destination="fcP-aA-7eb" id="5vf-rS-eO9"/>
+                        <outlet property="newPasswordField" destination="MnX-GS-8AD" id="mUx-XU-RBN"/>
+                        <outlet property="userImage" destination="BHR-bS-cG8" id="d36-rm-J8O"/>
+                        <outlet property="usernameField" destination="eZu-Fx-BV1" id="BRd-1x-3Wx"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bRf-bM-cue" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -635,6 +759,6 @@
         <image name="viking" width="100" height="100"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="kgQ-yI-hR4"/>
+        <segue reference="mkb-pQ-9dg"/>
     </inferredMetricsTieBreakers>
 </document>

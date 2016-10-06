@@ -14,13 +14,27 @@ class JoinGameVC: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var gamePassword: UITextField!
     
     @IBAction func joinGame(_ sender: AnyObject) {
-        performSegue(withIdentifier: "joinToGame", sender: nil)
+        switch gameID.text! {
+        case "testgame":
+            performSegue(withIdentifier: "joinToGame", sender: nil)
+            break
+        case "badgame":
+            let alert = UIAlertController(title: "Unable to Join Game", message: "Either the game does not exist or you password is incorrect, please try again", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        default:
+            // confirm with server that the entered information is valid
+            performSegue(withIdentifier: "joinToGame", sender: nil)
+            break;
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         gameID.delegate = self
         gamePassword.delegate = self
+        gameID.autocorrectionType = .no
+        gameID.autocapitalizationType = .none
         gameID.text = ""
         gamePassword.text = ""
         gamePassword.isSecureTextEntry = true
