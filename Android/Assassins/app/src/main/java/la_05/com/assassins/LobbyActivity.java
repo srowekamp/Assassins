@@ -121,6 +121,16 @@ public class LobbyActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * delete after demo 1
+     */
+    public void useless(View view){
+        // Switch to the game activity
+        Intent intent = new Intent(this, GameActivity.class);
+        startActivity(intent);
+        finish(); // Closes the current activity, stops user from returning to it with back button
+    }
+
     private void addDrawerItems() {
         String[] osArray = { "Radius", "Start Time", "Lobby Host", "Game Option", "Another Game Option" };
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
