@@ -21,7 +21,7 @@ public class GameActivity extends AppCompatActivity{
     boolean doubleBackToExitPressedOnce = false;
 
     /** Code to control back button usage */
-    @Override
+   /* @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
@@ -38,5 +38,5 @@ public class GameActivity extends AppCompatActivity{
                 doubleBackToExitPressedOnce=false;
             }
         }, 2000);
-    }
+    }*/
 }
