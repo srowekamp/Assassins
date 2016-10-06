@@ -6,11 +6,32 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
+
+    public static final String JSON_URL = "http://proj-309-la-05.cs.iastate.edu:8080/AssassinsLogin/";
+    public static final String BASIC_LOGIN = "AssassinsLoginBasic";
+    public static final String JSON_LOGIN = "AssassinsLoginJSON"; // Currently NOT implemented
+    public static final String KEY_ID = "idusers";
+    public static final String KEY_USERNAME = "username";
+    public static final String KEY_PASSWORD = "password";
+    public static final String AUTH_SUCCESS = "success";
+    public static final String AUTH_FAILURE = "fail";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,15 +53,87 @@ public class LoginActivity extends AppCompatActivity {
         String usernameString = username.getText().toString();
         String passwordString = password.getText().toString();
 
-        /**
-         * here is where we will put our connection with the DB for determining if they
-         * input their credentials correctly
-         */
+        loginString(usernameString, passwordString);
+    }
 
-        // Switch to the Main Menu Activity
-        Intent intent = new Intent(this, MainMenuActivity.class);
-        startActivity(intent);
-        finish(); // Closes the current activity, stops user from returning to it with back button
+    /** Send a formatted string using URL parameters to server for authentication */
+    private void loginString(String username, String password) {
+        //http://proj-309-la-05.cs.iastate.edu:8080/AssassinsLogin/AssassinsLoginBasic?username=nathan&password=password1
+
+        String requestURL = JSON_URL + BASIC_LOGIN + "?username=" + username + "&password=" + password;
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.POST, requestURL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        authenticate(response); // Got a response from the server, check if valid
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("ERROR","error => "+error.toString()); // Print the error to the device log
+                    }
+                });
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    /** Send a JSON object to the string for authentication (Currently NOT implemented) */
+    private void loginJSON(String username, String password) {
+        JSONObject jsLogin = new JSONObject();
+        try {
+            jsLogin.put(KEY_USERNAME, username);
+            jsLogin.put(KEY_PASSWORD, password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.POST, JSON_URL, jsLogin,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        authenticate(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("ERROR","error => "+error.toString());
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                return headers;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    /** Check the JSON object from the server to check if user has entered valid credentials */
+    private void authenticate(JSONObject response) {
+        String info = null;
+        try {
+            info = (String) response.get("info");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (info.equals(AUTH_SUCCESS)){
+            // Switch to the Main Menu Activity
+            Intent intent = new Intent(this, MainMenuActivity.class);
+            startActivity(intent);
+            finish(); // Closes the current activity, stops user from returning to it with back button
+        }
+        else {
+            Toast.makeText(LoginActivity.this, AUTH_FAILURE, Toast.LENGTH_LONG).show(); // indicate failure
+        }
     }
 
     /** Called when user clicks the create account text */
@@ -49,13 +142,6 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, CreateAccountActivity.class);
         startActivity(intent);
         finish(); // Closes the current activity, stops user from returning to it with back button
-    }
-
-    /** Called when user clicks the forgot password text */
-    public void forgotPassword(View view) {
-        /**
-         * this method will bring you to the forgot password screen.
-         */
     }
 
     boolean doubleBackToExitPressedOnce = false;
