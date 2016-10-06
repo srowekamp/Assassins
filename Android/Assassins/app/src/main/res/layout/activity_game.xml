@@ -128,7 +128,8 @@
         android:layout_height="75dp"
         android:layout_marginTop="300dp"
         android:layout_centerHorizontal="true"
-        android:id="@+id/AssassinateButton" />
+        android:id="@+id/AssassinateButton"
+        android:onClick="assassinate"/>
 
     <ImageView
         android:layout_width="wrap_content"
