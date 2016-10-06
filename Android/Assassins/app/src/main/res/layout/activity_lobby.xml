@@ -34,7 +34,8 @@
             android:layout_alignParentTop="true"
             android:paddingLeft="24dp"
             android:paddingRight="24dp"
-            android:background="@android:drawable/dialog_holo_light_frame">
+            android:background="@android:drawable/dialog_holo_light_frame"
+            android:id="@+id/relativeLayout">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -122,5 +123,16 @@
             android:layout_alignStart="@id/imageViewCenterCircle"
             android:layout_above="@id/imageViewCenterCircle"
             android:onClick="centerMapToCircle" />
+
+        <Button
+            android:text="Go To Game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/relativeLayout"
+            android:layout_toStartOf="@+id/textGPSTest"
+            android:layout_marginEnd="36dp"
+            android:layout_marginTop="46dp"
+            android:id="@+id/notForFuture"
+            android:onClick="useless"/>
     </RelativeLayout>
 </android.support.v4.widget.DrawerLayout>
