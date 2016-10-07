@@ -25,7 +25,15 @@ public class CreateAccount extends HttpServlet {
 	public static final String KEY_RESULT = "result";
 	public static final String RESULT_ACCOUNT_CREATED = "success"; // Value of Result when account successfully created
 	public static final String RESULT_ACCOUNT_EXISTS = "exists"; // Value of Result when user with username provided already exists
-	public static final String RESULT_OTHER_ERROR = "fail"; // Value of Result when an error occurs
+	public static final String RESULT_USERNAME_INVALID = "username_error"; // Value of Result when user enters an invalid username
+	public static final String RESULT_PASSWORD_INVALID = "password_error"; // Value of Result when user enters an invalid password
+	public static final String RESULT_OTHER_ERROR = "other_error"; // Value of Result when an error occurs
+	
+	public static final int USERNAME_MIN_LENGTH = 4;
+	public static final int USERNAME_MAX_LENGTH = 32;
+	
+	public static final int PASSWORD_MIN_LENGTH = 5;
+	public static final int PASSWORD_MAX_LENGTH = 32;
 
     /** 
      * Handles the HTTP <code>GET</code> method.
@@ -39,67 +47,71 @@ public class CreateAccount extends HttpServlet {
             throws ServletException, IOException {
         JSONObject jsonResponse = new JSONObject();
         boolean accountExists = true;
-        /*Enumeration paramNames = request.getParameterNames();
-        String params[] = new String[2];
-        int i = 0;
-        while (paramNames.hasMoreElements()) {
-            String paramName = (String) paramNames.nextElement();
-            String[] paramValues = request.getParameterValues(paramName);
-            params[i] = paramValues[0];
-            i++;
- 
-        }*/
         String username = request.getParameter(KEY_USERNAME);
         String password = request.getParameter(KEY_PASSWORD);
-        if (username == null || password == null) jsonResponse.put(KEY_RESULT, RESULT_OTHER_ERROR);
-        String sql = "SELECT username, password FROM db309la05.users where username=?";
-        Connection con = DBConnectionHandler.getConnection();
-        //String test = null;
-        try {
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, username);
-            ResultSet rs = ps.executeQuery();
-            //test = ps.toString();
-            if (rs.next()) {
-                jsonResponse.put(KEY_RESULT, RESULT_ACCOUNT_EXISTS);
-            } else {
-                accountExists = false;
-                //jsonResponse.put("test", "test1");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            //jsonResponse.put("test", "test2");
-        }
-        if (!accountExists) {
-        	String sqlInsert = "INSERT INTO db309la05.users(username, password) VALUES (?, ?)";
-        	String sqlCheck = "SELECT username, password FROM db309la05.users where username=? and password=?";
-        	Connection conInsert = DBConnectionHandler.getConnection();
-        	Connection conCheck = DBConnectionHandler.getConnection();
-            //String test = null;
-            try {
-                PreparedStatement psInsert = conInsert.prepareStatement(sqlInsert);
-                psInsert.setString(1, username);
-                psInsert.setString(2, password);
-                psInsert.executeUpdate();
-                PreparedStatement psCheck = conCheck.prepareStatement(sqlCheck);
-                psCheck.setString(1, username);
-                psCheck.setString(2, password);
-                ResultSet rsCheck = psCheck.executeQuery();
-                //test = ps.toString();
-                if (rsCheck.next()) {
-                    jsonResponse.put(KEY_RESULT, RESULT_ACCOUNT_CREATED);
-                } else {
-                	jsonResponse.put(KEY_RESULT, RESULT_OTHER_ERROR);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                //jsonResponse.put("test", "test3");
-            }
-        }
         
+        if (!isValidUsername(username)) jsonResponse.put(KEY_RESULT, RESULT_USERNAME_INVALID); // Check username and password for validity
+        else if (!isValidPassword(password)) jsonResponse.put(KEY_RESULT, RESULT_PASSWORD_INVALID);
+        else {
+        	// First check if the username provided already exists
+	        String sql = "SELECT username, password FROM db309la05.users where username=?";
+	        Connection con = DBConnectionHandler.getConnection();
+	        try {
+	            PreparedStatement ps = con.prepareStatement(sql);
+	            ps.setString(1, username);
+	            ResultSet rs = ps.executeQuery();
+	            if (rs.next()) {
+	                jsonResponse.put(KEY_RESULT, RESULT_ACCOUNT_EXISTS);
+	            } else {
+	                accountExists = false;
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            jsonResponse.put(KEY_RESULT, RESULT_OTHER_ERROR);
+	        }
+	        if (!accountExists) {
+	        	String sqlInsert = "INSERT INTO db309la05.users(username, password) VALUES (?, ?)";
+	        	String sqlCheck = "SELECT username, password FROM db309la05.users where username=? and password=?";
+	            try {
+	            	// Next attempt to add the provided username and password to database
+	                PreparedStatement psInsert = con.prepareStatement(sqlInsert);
+	                psInsert.setString(1, username);
+	                psInsert.setString(2, password);
+	                psInsert.executeUpdate();
+	                // Then check the database for the new entry
+	                PreparedStatement psCheck = con.prepareStatement(sqlCheck);
+	                psCheck.setString(1, username);
+	                psCheck.setString(2, password);
+	                ResultSet rsCheck = psCheck.executeQuery();
+	                if (rsCheck.next()) {
+	                    jsonResponse.put(KEY_RESULT, RESULT_ACCOUNT_CREATED);
+	                } else {
+	                	jsonResponse.put(KEY_RESULT, RESULT_OTHER_ERROR);
+	                }
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	                jsonResponse.put(KEY_RESULT, RESULT_OTHER_ERROR);
+	            }
+	        }
+        }
+        //Write the JSON object to the response
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(jsonResponse.toString());
+    }
+    
+    /** Checks the provided username for validity */
+    public static boolean isValidUsername(String username) {
+    	if (username == null) return false;
+    	if (username.length() < USERNAME_MIN_LENGTH || username.length() > USERNAME_MAX_LENGTH) return false;
+    	return true;
+    }
+    
+    /** Checks the provided password for validity */
+    public static boolean isValidPassword(String password) {
+    	if (password == null) return false;
+    	if (password.length() < PASSWORD_MIN_LENGTH || password.length() > PASSWORD_MAX_LENGTH) return false;
+    	return true;
     }
     
  
