@@ -19,6 +19,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
             imagePicker.sourceType = UIImagePickerControllerSourceType.camera
             imagePicker.allowsEditing = false
             self.present(imagePicker, animated: true, completion: nil)
+        } else {
+            let alert = UIAlertController(title: "No Camera", message: "Sorry, but the device you are using does not have a supported camera.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Click", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
