@@ -6,9 +6,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.*;
-import java.util.Enumeration;
 import org.json.simple.JSONObject;
-
 import assassins.DBConnectionHandler;
 
 public class CreateAccount extends HttpServlet {
