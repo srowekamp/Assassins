@@ -11,7 +11,7 @@ import org.json.simple.JSONObject;
 
 import assassins.DBConnectionHandler;
 
-public class AssassinsLogin extends HttpServlet {
+public class Login extends HttpServlet {
 
 	/**
 	 * Auto-generated number

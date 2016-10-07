@@ -11,7 +11,7 @@ import org.json.simple.JSONObject;
 
 import assassins.DBConnectionHandler;
 
-public class AssassinsCreateAccount extends HttpServlet {
+public class CreateAccount extends HttpServlet {
 	
 	
 	/**
