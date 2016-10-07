@@ -17,8 +17,8 @@ public class Login extends HttpServlet {
 	 */
 	private static final long serialVersionUID = -6693642062446368134L;
 	
-	public static final String RESULT_LOGIN_SUCCESS = "success";
-	public static final String RESULT_LOGIN_FAIL = "fail";
+	public static final String RESULT_LOGIN_SUCCESS = "success"; // Value of Result when user enters a valid login
+	public static final String RESULT_LOGIN_FAIL = "fail"; // Value of Result when user enters an invalid login
 
     /** 
      * Handles the HTTP <code>GET</code> method.

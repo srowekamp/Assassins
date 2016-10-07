@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -21,20 +22,24 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class CreateAccountActivity extends AppCompatActivity {
 
-    public static final String JSON_URL = "http://proj-309-la-05.cs.iastate.edu:8080/AssassinsCreateAccount/";
-    public static final String BASIC_CA = "AssassinsCreateAccountBasic";
-    public static final String JSON_CA = "AssassinsCreateAccountJSON"; // Currently NOT implemented
+    public static final String JSON_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/";
+    public static final String BASIC_CA = "CreateAccountBasic";
+    public static final String JSON_CA = "CreateAccountJSON"; // Currently NOT implemented
 
-    public static final String KEY_ID = "idusers";
     public static final String KEY_USERNAME = "username";
     public static final String KEY_PASSWORD = "password";
 
     public static final String KEY_RESULT = "result";
     public static final String RESULT_ACCOUNT_CREATED = "success"; // Value of Result when account successfully created
     public static final String RESULT_ACCOUNT_EXISTS = "exists"; // Value of Result when user with username provided already exists
-    public static final String RESULT_OTHER_ERROR = "fail"; // Value of Result when an error occurs
+    public static final String RESULT_USERNAME_INVALID = "username_error"; // Value of Result when user enters an invalid username
+    public static final String RESULT_PASSWORD_INVALID = "password_error"; // Value of Result when user enters an invalid password
+    public static final String RESULT_OTHER_ERROR = "other_error"; // Value of Result when an error occurs
 
 
     @Override
@@ -100,6 +105,42 @@ public class CreateAccountActivity extends AppCompatActivity {
         requestQueue.add(jsonObjectRequest);
     }
 
+    /** Send a JSON object to the string for authentication (Currently NOT implemented) */
+    private void createAccountJSON(String username, String password) {
+        JSONObject jsCreateAccount = new JSONObject();
+        try {
+            jsCreateAccount.put(KEY_USERNAME, username);
+            jsCreateAccount.put(KEY_PASSWORD, password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.POST, JSON_URL + JSON_CA, jsCreateAccount,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        authenticate(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("ERROR","error => "+error.toString());
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json; charset=utf-8");
+                return headers;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonObjectRequest);
+    }
+
     /** Check the JSON object from the server to check if user has entered valid credentials */
     private void authenticate(JSONObject response) {
         String result = null;
@@ -121,6 +162,12 @@ public class CreateAccountActivity extends AppCompatActivity {
         }
         else if (result != null && result.equals(RESULT_ACCOUNT_EXISTS)) {
             error = "An Account with that Username already Exists";
+        }
+        else if (result != null && result.equals(RESULT_USERNAME_INVALID)) {
+            error = "Invalid Username";
+        }
+        else if (result != null && result.equals(RESULT_PASSWORD_INVALID)) {
+            error = "Invalid Password";
         }
         Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
     }

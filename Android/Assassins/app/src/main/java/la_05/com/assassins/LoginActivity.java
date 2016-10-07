@@ -24,14 +24,19 @@ import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
-    public static final String JSON_URL = "http://proj-309-la-05.cs.iastate.edu:8080/AssassinsLogin/";
-    public static final String BASIC_LOGIN = "AssassinsLoginBasic";
-    public static final String JSON_LOGIN = "AssassinsLoginJSON"; // Currently NOT implemented
-    public static final String KEY_ID = "idusers";
+    public static final String JSON_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/";
+    public static final String BASIC_LOGIN = "LoginBasic";
+    public static final String JSON_LOGIN = "LoginJSON"; // Currently NOT implemented
+
     public static final String KEY_USERNAME = "username";
     public static final String KEY_PASSWORD = "password";
-    public static final String AUTH_SUCCESS = "success";
-    public static final String AUTH_FAILURE = "fail";
+
+    public static final String KEY_RESULT = "result";
+    public static final String RESULT_LOGIN_SUCCESS = "success"; // Value of Result when user enters a valid login
+    public static final String RESULT_LOGIN_FAIL = "fail"; // Value of Result when user enters an invalid login
+    public static final String RESULT_USERNAME_INVALID = "username_error"; // Value of Result when user enters an invalid username
+    public static final String RESULT_PASSWORD_INVALID = "password_error"; // Value of Result when user enters an invalid password
+    public static final String RESULT_OTHER_ERROR = "other_error"; // Value of Result when an error occurs
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,21 +128,33 @@ public class LoginActivity extends AppCompatActivity {
 
     /** Check the JSON object from the server to check if user has entered valid credentials */
     private void authenticate(JSONObject response) {
-        String info = null;
+        String result = null;
+        String error = "Unknown Error Occurred (1)";;
         try {
-            info = (String) response.get("info");
+            result = (String) response.get(KEY_RESULT);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (info.equals(AUTH_SUCCESS)){
+        if (result != null && result.equals(RESULT_LOGIN_SUCCESS)){
             // Switch to the Main Menu Activity
             Intent intent = new Intent(this, MainMenuActivity.class);
             startActivity(intent);
             finish(); // Closes the current activity, stops user from returning to it with back button
+            return;
         }
-        else {
-            Toast.makeText(LoginActivity.this, AUTH_FAILURE, Toast.LENGTH_LONG).show(); // indicate failure
+        if (result != null && result.equals(RESULT_OTHER_ERROR)) {
+            error = "Unknown Error Occurred (2)";
         }
+        else if (result != null && result.equals(RESULT_LOGIN_FAIL)) {
+            error = "Unknown Username or Password";
+        }
+        else if (result != null && result.equals(RESULT_USERNAME_INVALID)) {
+            error = "Invalid Username";
+        }
+        else if (result != null && result.equals(RESULT_PASSWORD_INVALID)) {
+            error = "Invalid Password";
+        }
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
     }
 
     /** Called when user clicks the create account text */
