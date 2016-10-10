@@ -8,22 +8,48 @@
 
 /* Begin PBXBuildFile section */
 		386734FE1D8B879300844D90 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386734FD1D8B879300844D90 /* AppDelegate.swift */; };
-		386735001D8B879300844D90 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386734FF1D8B879300844D90 /* ViewController.swift */; };
 		386735031D8B879300844D90 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 386735011D8B879300844D90 /* Main.storyboard */; };
 		386735061D8B879300844D90 /* Assassins.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 386735041D8B879300844D90 /* Assassins.xcdatamodeld */; };
 		386735081D8B879300844D90 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 386735071D8B879300844D90 /* Assets.xcassets */; };
 		3867350B1D8B879300844D90 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 386735091D8B879300844D90 /* LaunchScreen.storyboard */; };
+		386BF4901DA428E300CDC02E /* PlayerListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386BF48F1DA428E300CDC02E /* PlayerListVC.swift */; };
+		388D0AAE1DA5F258006CF9E9 /* WebRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388D0AAD1DA5F258006CF9E9 /* WebRequest.swift */; };
+		38A6968D1DA3EA470061FE9A /* LobbyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A6968C1DA3EA470061FE9A /* LobbyVC.swift */; };
+		38B6557E1DA2EEA4004C9E02 /* CreateAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6557D1DA2EEA4004C9E02 /* CreateAccountVC.swift */; };
+		38B655841DA31FDB004C9E02 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B655831DA31FDB004C9E02 /* Player.swift */; };
+		38E8DBF01DA3616D005EA2C2 /* JoinGameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBEF1DA3616D005EA2C2 /* JoinGameVC.swift */; };
+		38E8DBF21DA3617E005EA2C2 /* CreateGameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBF11DA3617E005EA2C2 /* CreateGameVC.swift */; };
+		38E8DBF41DA36196005EA2C2 /* GameEditorVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBF31DA36196005EA2C2 /* GameEditorVC.swift */; };
+		38E8DBF61DA3619E005EA2C2 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBF51DA3619E005EA2C2 /* SettingsVC.swift */; };
+		38E8DBF91DA361FA005EA2C2 /* MainMenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBF71DA361FA005EA2C2 /* MainMenuVC.swift */; };
+		38E8DBFA1DA361FA005EA2C2 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBF81DA361FA005EA2C2 /* LoginVC.swift */; };
+		38EB57F91DA4436100932027 /* TrackerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EB57F81DA4436100932027 /* TrackerVC.swift */; };
+		A558B9EDC0F3329A26A4D5BB /* Pods_Assassins.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81C53D132E467333271A012C /* Pods_Assassins.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		140CADA412C9604593F8D59B /* Pods-Assassins.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Assassins.release.xcconfig"; path = "Pods/Target Support Files/Pods-Assassins/Pods-Assassins.release.xcconfig"; sourceTree = "<group>"; };
+		3433DDC01C1751096C292F5A /* Pods-Assassins.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Assassins.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Assassins/Pods-Assassins.debug.xcconfig"; sourceTree = "<group>"; };
 		386734FA1D8B879300844D90 /* Assassins.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Assassins.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		386734FD1D8B879300844D90 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		386734FF1D8B879300844D90 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		386735021D8B879300844D90 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		386735051D8B879300844D90 /* Assassins.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Assassins.xcdatamodel; sourceTree = "<group>"; };
 		386735071D8B879300844D90 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3867350A1D8B879300844D90 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3867350C1D8B879300844D90 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		386BF48F1DA428E300CDC02E /* PlayerListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerListVC.swift; sourceTree = "<group>"; };
+		388D0AAD1DA5F258006CF9E9 /* WebRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebRequest.swift; sourceTree = "<group>"; };
+		38A6968C1DA3EA470061FE9A /* LobbyVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LobbyVC.swift; sourceTree = "<group>"; };
+		38B6557D1DA2EEA4004C9E02 /* CreateAccountVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateAccountVC.swift; sourceTree = "<group>"; };
+		38B655831DA31FDB004C9E02 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		38E8DBEF1DA3616D005EA2C2 /* JoinGameVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinGameVC.swift; sourceTree = "<group>"; };
+		38E8DBF11DA3617E005EA2C2 /* CreateGameVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateGameVC.swift; sourceTree = "<group>"; };
+		38E8DBF31DA36196005EA2C2 /* GameEditorVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameEditorVC.swift; sourceTree = "<group>"; };
+		38E8DBF51DA3619E005EA2C2 /* SettingsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
+		38E8DBF71DA361FA005EA2C2 /* MainMenuVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuVC.swift; sourceTree = "<group>"; };
+		38E8DBF81DA361FA005EA2C2 /* LoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
+		38EB57F81DA4436100932027 /* TrackerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackerVC.swift; sourceTree = "<group>"; };
+		81C53D132E467333271A012C /* Pods_Assassins.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Assassins.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A558B9EDC0F3329A26A4D5BB /* Pods_Assassins.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +69,8 @@
 			children = (
 				386734FC1D8B879300844D90 /* Assassins */,
 				386734FB1D8B879300844D90 /* Products */,
+				CE300855160EF9682D22E389 /* Pods */,
+				BE3E6353340E1A7A4DBDB1A0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -56,15 +85,75 @@
 		386734FC1D8B879300844D90 /* Assassins */ = {
 			isa = PBXGroup;
 			children = (
-				386734FD1D8B879300844D90 /* AppDelegate.swift */,
-				386734FF1D8B879300844D90 /* ViewController.swift */,
+				38B6557F1DA31EEF004C9E02 /* Controllers */,
+				38B655801DA31F07004C9E02 /* Views */,
+				38B655811DA31F1E004C9E02 /* Models */,
+				38B655821DA31F4B004C9E02 /* Other */,
+			);
+			path = Assassins;
+			sourceTree = "<group>";
+		};
+		38B6557F1DA31EEF004C9E02 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				38EB57F81DA4436100932027 /* TrackerVC.swift */,
+				38E8DBF81DA361FA005EA2C2 /* LoginVC.swift */,
+				38E8DBF71DA361FA005EA2C2 /* MainMenuVC.swift */,
+				38B6557D1DA2EEA4004C9E02 /* CreateAccountVC.swift */,
+				38A6968C1DA3EA470061FE9A /* LobbyVC.swift */,
+				38E8DBEF1DA3616D005EA2C2 /* JoinGameVC.swift */,
+				38E8DBF11DA3617E005EA2C2 /* CreateGameVC.swift */,
+				38E8DBF31DA36196005EA2C2 /* GameEditorVC.swift */,
+				38E8DBF51DA3619E005EA2C2 /* SettingsVC.swift */,
+				386BF48F1DA428E300CDC02E /* PlayerListVC.swift */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		38B655801DA31F07004C9E02 /* Views */ = {
+			isa = PBXGroup;
+			children = (
 				386735011D8B879300844D90 /* Main.storyboard */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		38B655811DA31F1E004C9E02 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				388D0AAD1DA5F258006CF9E9 /* WebRequest.swift */,
+				38B655831DA31FDB004C9E02 /* Player.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		38B655821DA31F4B004C9E02 /* Other */ = {
+			isa = PBXGroup;
+			children = (
 				386735071D8B879300844D90 /* Assets.xcassets */,
+				386734FD1D8B879300844D90 /* AppDelegate.swift */,
 				386735091D8B879300844D90 /* LaunchScreen.storyboard */,
 				3867350C1D8B879300844D90 /* Info.plist */,
 				386735041D8B879300844D90 /* Assassins.xcdatamodeld */,
 			);
-			path = Assassins;
+			name = Other;
+			sourceTree = "<group>";
+		};
+		BE3E6353340E1A7A4DBDB1A0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				81C53D132E467333271A012C /* Pods_Assassins.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CE300855160EF9682D22E389 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3433DDC01C1751096C292F5A /* Pods-Assassins.debug.xcconfig */,
+				140CADA412C9604593F8D59B /* Pods-Assassins.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -74,9 +163,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3867350F1D8B879300844D90 /* Build configuration list for PBXNativeTarget "Assassins" */;
 			buildPhases = (
+				C759A6444BF111B80F08153F /* [CP] Check Pods Manifest.lock */,
 				386734F61D8B879300844D90 /* Sources */,
 				386734F71D8B879300844D90 /* Frameworks */,
 				386734F81D8B879300844D90 /* Resources */,
+				C4B92815B5A6F0B386D44606 /* [CP] Embed Pods Frameworks */,
+				D167753F5F9A263307F22EBA /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -135,14 +227,73 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		C4B92815B5A6F0B386D44606 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Assassins/Pods-Assassins-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C759A6444BF111B80F08153F /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		D167753F5F9A263307F22EBA /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Assassins/Pods-Assassins-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		386734F61D8B879300844D90 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38E8DBF41DA36196005EA2C2 /* GameEditorVC.swift in Sources */,
 				386735061D8B879300844D90 /* Assassins.xcdatamodeld in Sources */,
-				386735001D8B879300844D90 /* ViewController.swift in Sources */,
+				388D0AAE1DA5F258006CF9E9 /* WebRequest.swift in Sources */,
+				38E8DBF01DA3616D005EA2C2 /* JoinGameVC.swift in Sources */,
+				38A6968D1DA3EA470061FE9A /* LobbyVC.swift in Sources */,
+				38EB57F91DA4436100932027 /* TrackerVC.swift in Sources */,
+				386BF4901DA428E300CDC02E /* PlayerListVC.swift in Sources */,
+				38E8DBF21DA3617E005EA2C2 /* CreateGameVC.swift in Sources */,
+				38E8DBFA1DA361FA005EA2C2 /* LoginVC.swift in Sources */,
+				38B6557E1DA2EEA4004C9E02 /* CreateAccountVC.swift in Sources */,
+				38B655841DA31FDB004C9E02 /* Player.swift in Sources */,
 				386734FE1D8B879300844D90 /* AppDelegate.swift in Sources */,
+				38E8DBF61DA3619E005EA2C2 /* SettingsVC.swift in Sources */,
+				38E8DBF91DA361FA005EA2C2 /* MainMenuVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -186,6 +337,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -235,6 +387,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -261,7 +414,9 @@
 		};
 		386735101D8B879300844D90 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3433DDC01C1751096C292F5A /* Pods-Assassins.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 9W76SZUBMN;
 				INFOPLIST_FILE = Assassins/Info.plist;
@@ -274,7 +429,9 @@
 		};
 		386735111D8B879300844D90 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 140CADA412C9604593F8D59B /* Pods-Assassins.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 9W76SZUBMN;
 				INFOPLIST_FILE = Assassins/Info.plist;
@@ -304,6 +461,7 @@
 				386735111D8B879300844D90 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

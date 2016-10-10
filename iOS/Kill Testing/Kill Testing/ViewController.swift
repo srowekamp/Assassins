@@ -11,6 +11,7 @@ import AVFoundation
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var button: UIButton!
     
     var player = AVAudioPlayer()
     
