@@ -50,6 +50,9 @@
                             <constraint firstItem="WU6-Ek-lrb" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="woz-09-GuA"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="button" destination="oO6-6b-P5U" id="vhm-eT-b59"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
