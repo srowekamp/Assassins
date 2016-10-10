@@ -10,7 +10,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="la_05.com.assassins.CreateGameActivity">
 
-<<<<<<< HEAD
+
     <Switch
         android:hint="PrivateGame"
         android:text="Private Game"
