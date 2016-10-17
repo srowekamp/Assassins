@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.sql.*;
 import org.json.simple.JSONObject;
 import assassins.DBConnectionHandler;
+import assassins.UserAccount;
 
 public class CreateAccount extends HttpServlet {
 	
@@ -17,21 +18,12 @@ public class CreateAccount extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 3390648842666208917L;
 	
-	public static final String KEY_USERNAME = "username";
-	public static final String KEY_PASSWORD = "password";
-	
 	public static final String KEY_RESULT = "result";
 	public static final String RESULT_ACCOUNT_CREATED = "success"; // Value of Result when account successfully created
 	public static final String RESULT_ACCOUNT_EXISTS = "exists"; // Value of Result when user with username provided already exists
 	public static final String RESULT_USERNAME_INVALID = "username_error"; // Value of Result when user enters an invalid username
 	public static final String RESULT_PASSWORD_INVALID = "password_error"; // Value of Result when user enters an invalid password
 	public static final String RESULT_OTHER_ERROR = "other_error"; // Value of Result when an error occurs
-	
-	public static final int USERNAME_MIN_LENGTH = 4;
-	public static final int USERNAME_MAX_LENGTH = 32;
-	
-	public static final int PASSWORD_MIN_LENGTH = 5;
-	public static final int PASSWORD_MAX_LENGTH = 32;
 
     /** 
      * Handles the HTTP <code>GET</code> method.
@@ -45,11 +37,11 @@ public class CreateAccount extends HttpServlet {
             throws ServletException, IOException {
         JSONObject jsonResponse = new JSONObject();
         boolean accountExists = true;
-        String username = request.getParameter(KEY_USERNAME);
-        String password = request.getParameter(KEY_PASSWORD);
+        String username = request.getParameter(UserAccount.KEY_USERNAME);
+        String password = request.getParameter(UserAccount.KEY_PASSWORD);
         
-        if (!isValidUsername(username)) jsonResponse.put(KEY_RESULT, RESULT_USERNAME_INVALID); // Check username and password for validity
-        else if (!isValidPassword(password)) jsonResponse.put(KEY_RESULT, RESULT_PASSWORD_INVALID);
+        if (!UserAccount.isValidUsername(username)) jsonResponse.put(KEY_RESULT, RESULT_USERNAME_INVALID); // Check username and password for validity
+        else if (!UserAccount.isValidPassword(password)) jsonResponse.put(KEY_RESULT, RESULT_PASSWORD_INVALID);
         else {
         	// First check if the username provided already exists
 	        String sql = "SELECT username, password FROM db309la05.users where username=?";
@@ -97,21 +89,6 @@ public class CreateAccount extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(jsonResponse.toString());
     }
-    
-    /** Checks the provided username for validity */
-    public static boolean isValidUsername(String username) {
-    	if (username == null) return false;
-    	if (username.length() < USERNAME_MIN_LENGTH || username.length() > USERNAME_MAX_LENGTH) return false;
-    	return true;
-    }
-    
-    /** Checks the provided password for validity */
-    public static boolean isValidPassword(String password) {
-    	if (password == null) return false;
-    	if (password.length() < PASSWORD_MIN_LENGTH || password.length() > PASSWORD_MAX_LENGTH) return false;
-    	return true;
-    }
-    
  
     /** 
      * Handles the HTTP <code>POST</code> method.
