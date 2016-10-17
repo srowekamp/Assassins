@@ -29,5 +29,15 @@
         <servlet-name>Login</servlet-name>
         <url-pattern>/LoginBasic</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>ImageUploadTest</servlet-name>
+        <servlet-class>assassins.ImageUploadTest</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ImageUploadTest</servlet-name>
+        <url-pattern>/ImageUploadTest</url-pattern>
+    </servlet-mapping>
 
 </web-app>
