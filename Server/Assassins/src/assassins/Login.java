@@ -40,7 +40,7 @@ public class Login extends HttpServlet {
         else if (!UserAccount.isValidPassword(password)) jsonResponse.put(CreateAccount.KEY_RESULT, CreateAccount.RESULT_PASSWORD_INVALID);
         else {
         	// Check if the username and password provided exist in database
-	        String sql = "SELECT * FROM db309la05.users2 where username=? and password=?";
+	        String sql = "SELECT * FROM db309la05.users3 where username=? and password=?";
 	        Connection con = DBConnectionHandler.getConnection();
 	        ResultSet rs = null;
 	        try {
@@ -50,6 +50,8 @@ public class Login extends HttpServlet {
 	            rs = ps.executeQuery();
 	            if (rs.next()) {
 	                jsonResponse.put(CreateAccount.KEY_RESULT, RESULT_LOGIN_SUCCESS);
+	                ua = new UserAccount(rs);
+		        	jsonResponse.put(UserAccount.KEY_USER_ACCOUNT, ua.toJSONString());
 	            } else {
 	            	jsonResponse.put(CreateAccount.KEY_RESULT, RESULT_LOGIN_FAIL);
 	            }
@@ -57,8 +59,6 @@ public class Login extends HttpServlet {
 	            e.printStackTrace();
 	            jsonResponse.put(CreateAccount.KEY_RESULT, CreateAccount.RESULT_OTHER_ERROR);
 	        }
-	        ua = new UserAccount(rs);
-	        //jsonResponse.put(KEY_USER_ACCOUNT, ua.toJsonString);
         }
         //Write the JSON object to the response
         response.setContentType("application/json");
