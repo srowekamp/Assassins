@@ -18,7 +18,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="35dp"
         android:layout_centerHorizontal="true"
-        android:id="@+id/imageView" />
+        android:id="@+id/imageView"
+        android:onClick="setImage"/>
 
     <EditText
         android:hint="Name"

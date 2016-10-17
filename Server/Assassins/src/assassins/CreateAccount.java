@@ -49,11 +49,11 @@ public class CreateAccount extends HttpServlet {
         String password = request.getParameter(UserAccount.KEY_PASSWORD);
         String real_name = request.getParameter(UserAccount.KEY_REAL_NAME);
         String image_filename = "0.jpg";
-        String b64Image = null; //request.getParameter(KEY_B64_JPG);
+        String b64Image = request.getParameter(KEY_B64_JPG);
         
         if (!UserAccount.isValidUsername(username)) jsonResponse.put(KEY_RESULT, RESULT_USERNAME_INVALID); // Check username and password for validity
         else if (!UserAccount.isValidPassword(password)) jsonResponse.put(KEY_RESULT, RESULT_PASSWORD_INVALID);
-        //else if (!isValidImage(b64Image)) jsonResponse.put(KEY_RESULT, RESULT_IMAGE_INVALID);
+        else if (!isValidImage(b64Image)) jsonResponse.put(KEY_RESULT, RESULT_IMAGE_INVALID);
         else {
         	// First check if the username provided already exists
 	        String sql = "SELECT username FROM db309la05.users3 where username=?";
@@ -89,7 +89,7 @@ public class CreateAccount extends HttpServlet {
 	                psInsert.setInt(5, 0);
 	                psInsert.setInt(6, 0);
 	                psInsert.executeUpdate();
-	                //updateUserImage(username, password, b64Image); // TODO implement image receive
+	                updateUserImage(username, password, b64Image); // TODO implement image receive
 	                // Then check the database for the new entry
 	                PreparedStatement psCheck = con.prepareStatement(sqlCheck);
 	                psCheck.setString(1, username);
@@ -152,7 +152,7 @@ public class CreateAccount extends HttpServlet {
     }
     
     private boolean saveB64Image(String filename, String b64Image) {
-    	String filepath = "C:\\Program Files\\Apache Software Foundation\\Tomcat 7.0\\webapps\\userImages";
+    	String filepath = "/var/lib/tomcat/webapps/userImages/";
     	byte[] imageBytes = javax.xml.bind.DatatypeConverter.parseBase64Binary(b64Image);
     	try {
 			BufferedImage img = ImageIO.read(new ByteArrayInputStream(imageBytes));
