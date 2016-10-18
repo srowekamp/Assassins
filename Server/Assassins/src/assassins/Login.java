@@ -31,7 +31,6 @@ public class Login extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
     	JSONObject jsonResponse = new JSONObject();
-        boolean accountExists = true;
         String username = request.getParameter(UserAccount.KEY_USERNAME);
         String password = request.getParameter(UserAccount.KEY_PASSWORD);
         UserAccount ua = null;

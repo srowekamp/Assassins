@@ -17,7 +17,7 @@
 
     <servlet-mapping>
         <servlet-name>CreateAccount</servlet-name>
-        <url-pattern>/CreateAccountBasic</url-pattern>
+        <url-pattern>/CreateAccount</url-pattern>
     </servlet-mapping>
     
     <servlet>
@@ -27,7 +27,7 @@
 
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
-        <url-pattern>/LoginBasic</url-pattern>
+        <url-pattern>/Login</url-pattern>
     </servlet-mapping>
     
     <servlet>

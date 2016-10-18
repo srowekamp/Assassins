@@ -57,7 +57,7 @@ public class UserAccount {
 	
 	public String toJSONString() {
 		JSONObject j = toJSON();
-		return j.toJSONString().replaceAll("\\\\", "").replaceAll("\r", "");
+		return j.toJSONString();
 	}
 	
     /** Checks the provided username for validity */

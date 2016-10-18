@@ -23,7 +23,7 @@ public class CreateAccount extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 3390648842666208917L;
 	
-	public static final String KEY_B64_JPG = "b64_jpg";
+    public static final String KEY_B64_JPG = "b64_jpg";
 	
 	public static final String KEY_RESULT = "result";
 	public static final String RESULT_ACCOUNT_CREATED = "success"; // Value of Result when account successfully created
@@ -31,6 +31,7 @@ public class CreateAccount extends HttpServlet {
 	public static final String RESULT_USERNAME_INVALID = "username_error"; // Value of Result when user enters an invalid username
 	public static final String RESULT_PASSWORD_INVALID = "password_error"; // Value of Result when user enters an invalid password
 	public static final String RESULT_IMAGE_INVALID = "image_error"; // Value of Result when an invalid Base64 encoded image is passed
+	public static final String RESULT_NAME_INVALID = "name_error"; // Value of Result when an invalid real name is passed
 	public static final String RESULT_OTHER_ERROR = "other_error"; // Value of Result when an error occurs
 
     /** 
@@ -50,10 +51,12 @@ public class CreateAccount extends HttpServlet {
         String real_name = request.getParameter(UserAccount.KEY_REAL_NAME);
         String image_filename = "0.jpg";
         String b64Image = request.getParameter(KEY_B64_JPG);
+        saveB64Image("last.jpg", b64Image);
         
         if (!UserAccount.isValidUsername(username)) jsonResponse.put(KEY_RESULT, RESULT_USERNAME_INVALID); // Check username and password for validity
         else if (!UserAccount.isValidPassword(password)) jsonResponse.put(KEY_RESULT, RESULT_PASSWORD_INVALID);
         else if (!isValidImage(b64Image)) jsonResponse.put(KEY_RESULT, RESULT_IMAGE_INVALID);
+        else if (!isValidRealName(real_name)) jsonResponse.put(KEY_RESULT, RESULT_NAME_INVALID);
         else {
         	// First check if the username provided already exists
 	        String sql = "SELECT username FROM db309la05.users3 where username=?";
@@ -89,7 +92,7 @@ public class CreateAccount extends HttpServlet {
 	                psInsert.setInt(5, 0);
 	                psInsert.setInt(6, 0);
 	                psInsert.executeUpdate();
-	                updateUserImage(username, password, b64Image); // TODO implement image receive
+	                updateUserImage(username, password, b64Image); // TODO fix
 	                // Then check the database for the new entry
 	                PreparedStatement psCheck = con.prepareStatement(sqlCheck);
 	                psCheck.setString(1, username);
@@ -114,8 +117,10 @@ public class CreateAccount extends HttpServlet {
         response.getWriter().write(jsonResponse.toString());
     }
     
+    /** Update a user's image given username, password, and a Base64 encoded jpg */
     public boolean updateUserImage(String username, String password, String b64Image) {
     	int id = 0;
+    	// First, retrieve the User's ID from the database
     	String sql = "SELECT * FROM db309la05.users3 where username=? and password=?";
         Connection con = DBConnectionHandler.getConnection();
         try {
@@ -131,6 +136,8 @@ public class CreateAccount extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+        // Using the user's id, update the filename in the database
         String sqlUpdate = "UPDATE db309la05.users3 SET image_filename=? WHERE id=?";
         try {
             PreparedStatement ps = con.prepareStatement(sqlUpdate);
@@ -138,12 +145,12 @@ public class CreateAccount extends HttpServlet {
             ps.setString(1, newFileName);
             ps.setInt(2, id);
             ps.executeUpdate();
-            ps = con.prepareStatement(sql);
-            ps.setString(1, username);
-            ps.setString(2, password);
-            ResultSet rs = ps.executeQuery();
-            if (rs.getString(UserAccount.KEY_IMAGE_PATH).equals(newFileName)) {
-            	if (saveB64Image(newFileName, b64Image)) return true;
+            PreparedStatement ps2 = con.prepareStatement(sql);
+            ps2.setString(1, username);
+            ps2.setString(2, password);
+            ResultSet rs = ps2.executeQuery();
+            if (rs.next() && rs.getString(UserAccount.KEY_IMAGE_PATH).equals(newFileName)) { // Check for successful insertion of new filename
+            	return saveB64Image(newFileName, b64Image); // New filename successfully added to database, so attempt to save new image to server
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -151,6 +158,7 @@ public class CreateAccount extends HttpServlet {
     	return false;
     }
     
+    /** Attempt to save the Base64 encoded image to the server using filename from database */
     private boolean saveB64Image(String filename, String b64Image) {
     	String filepath = "/var/lib/tomcat/webapps/userImages/";
     	byte[] imageBytes = javax.xml.bind.DatatypeConverter.parseBase64Binary(b64Image);
@@ -165,8 +173,14 @@ public class CreateAccount extends HttpServlet {
     	return true;
     }
     
+    /** Returns true if the provided b64Image is valid */
     private boolean isValidImage(String b64Image) {
     	return (b64Image != null && b64Image.length() > 0);
+    }
+    
+    /** Returns true if the provided b64Image is valid */
+    private boolean isValidRealName(String real_name) {
+    	return (real_name != null && real_name.length() > 0);
     }
  
     /** 

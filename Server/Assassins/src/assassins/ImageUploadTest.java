@@ -10,14 +10,15 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.*;
-import org.json.simple.JSONObject;
-import assassins.UserAccount;
-import assassins.DBConnectionHandler;
 
 public class ImageUploadTest extends HttpServlet {
 	
-    public static final String KEY_IMAGE = "image";
+    /**
+	 * Auto-generated number
+	 */
+	private static final long serialVersionUID = 5463499288825873708L;
+	
+	public static final String KEY_IMAGE = "image";
     public static final String KEY_NAME = "name";
 
     /** 
