@@ -1,12 +1,15 @@
 package la_05.com.assassins;
 
+import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.Volley;
 
 public class UserAccountActivity extends AppCompatActivity {
 
@@ -23,14 +26,23 @@ public class UserAccountActivity extends AppCompatActivity {
         TextView textViewTotalKills = (TextView) findViewById(R.id.textViewTotalKills);
         TextView textViewGamesPlayed = (TextView) findViewById(R.id.textViewGamesPlayed);
 
-        textViewRealName.setText(user.getRealName());
-        textViewUsername.setText(user.getUserName());
-        textViewTotalKills.setText(user.getTotalKills().toString());
-        textViewGamesPlayed.setText(user.getGamesPlayed().toString());
+        textViewRealName.setText("Name: " + user.getRealName());
+        textViewUsername.setText("Username: " + user.getUserName());
+        textViewTotalKills.setText("Total Kills: " + user.getTotalKills().toString());
+        textViewGamesPlayed.setText("Games Played: " + user.getGamesPlayed().toString());
 
-        ImageView imageViewUserImage = (ImageView) findViewById(R.id.imageViewUserImage);
+        final ImageView imageViewUserImage = (ImageView) findViewById(R.id.imageViewUserImage);
         //imageViewUserImage.setImageBitmap(userImage);
 
-        //ImageRequest ir = new ImageRequest(user.getImageURL(), new Response.Listener<Bitmap>())
+        ImageRequest ir = new ImageRequest(user.getImageURL(), new Response.Listener<Bitmap>() {
+
+            @Override
+            public void onResponse(Bitmap response) {
+                imageViewUserImage.setImageBitmap(response);
+            }
+        }, 0, 0, null, null);
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(ir);
     }
 }

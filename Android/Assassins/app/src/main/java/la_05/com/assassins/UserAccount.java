@@ -22,7 +22,7 @@ public class UserAccount implements Serializable{
     public static final String KEY_TOTAL_KILLS = "total_kills";
     public static final String KEY_GAMES_PLAYED = "games_played";
 
-    public static final String USER_IMAGE_URL = "proj-309-la-05.cs.iastate.edu:8080/userImages/";
+    public static final String USER_IMAGE_URL = "http://proj-309-la-05.cs.iastate.edu:8080/userImages/";
 
     private int id;
     private String username;
