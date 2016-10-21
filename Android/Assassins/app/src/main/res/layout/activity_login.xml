@@ -65,4 +65,14 @@
         android:id="@+id/textViewNeedAccount"
         android:onClick="switchToCreateAccount" />
 
+    <Button
+        android:text="Admin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textViewNeedAccount"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:id="@+id/buttonAdmin"
+        android:onClick="enterAdminCred"/>
+
 </RelativeLayout>
