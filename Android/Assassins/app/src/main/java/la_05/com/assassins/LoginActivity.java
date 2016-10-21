@@ -121,10 +121,8 @@ public class LoginActivity extends AppCompatActivity {
     private void authenticate(JSONObject response) {
         String result = null;
         String error = "Unknown Error Occurred (1)";
-
         try {
             result = (String) response.get(KEY_RESULT);
-            //test = response.getString(UserAccount.KEY_USER_ACCOUNT);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -133,11 +131,10 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 JSONObject account = new JSONObject (response.getString(UserAccount.KEY_USER_ACCOUNT));
                 user = new UserAccount(account);
-                Toast.makeText(this, "Welcome, " + account.getString(UserAccount.KEY_REAL_NAME), Toast.LENGTH_LONG).show(); // indicate failure
+                Toast.makeText(this, "Welcome, " + account.getString(UserAccount.KEY_REAL_NAME), Toast.LENGTH_LONG).show();
             }catch (JSONException e) {
                 e.printStackTrace();
             }
-
             // Switch to the Main Menu Activity
             Intent intent = new Intent(this, MainMenuActivity.class);
             intent.putExtra(UserAccount.KEY_USER_ACCOUNT, user);

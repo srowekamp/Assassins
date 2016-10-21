@@ -32,7 +32,6 @@ public class UserAccountActivity extends AppCompatActivity {
         textViewGamesPlayed.setText("Games Played: " + user.getGamesPlayed().toString());
 
         final ImageView imageViewUserImage = (ImageView) findViewById(R.id.imageViewUserImage);
-        //imageViewUserImage.setImageBitmap(userImage);
 
         ImageRequest ir = new ImageRequest(user.getImageURL(), new Response.Listener<Bitmap>() {
 
