@@ -54,7 +54,7 @@ public class CreateAccount extends HttpServlet {
         	// All provided parameters are valid, check to see if username is taken
         	if (!DB.doesUserExist(username)) {
         		// User does not exist, create new user
-        		ua = DB.addUser(username, password, real_name); // fix
+        		ua = DB.addUser(username, password, real_name);
         		if (ua == null) {
         			jsonResponse.put(KEY_RESULT, RESULT_OTHER_ERROR);
         		}
