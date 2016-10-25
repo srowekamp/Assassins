@@ -36,13 +36,14 @@ Current functions of the server (needs VPN):
 		username: user-entered username
 		password: user-entered password
 		real_name: user-entered real name
-		b64_jpg: user-selected jpg encoded as a Base64 String. No size restrictions, but try to make them 500x500 or at least square
+		b64_jpg: user-selected jpg encoded as a Base64 String. No size restrictions, but try to make them square up to 500x500 px
 	Returns a JSON object with key "result" with one value indicating what happened
 		Result values can be found in CreateAccount.java in the Assassins src
 	Also within the response is a JSON object with key "account" holding all user account info in database (look at UserAccount.java)
 		
-3) Output Users table: http://proj-309-la-05.cs.iastate.edu/connect3.php
-	Outputs all data in the users3 table from the database
+3) Output Users table: http://proj-309-la-05.cs.iastate.edu/connect.php
+	Outputs all data in the users table from the database
+	Just for testing. Don't use this in code. 
 	
 4) User Photos: http://proj-309-la-05.cs.iastate.edu:8080/userImages/x.jpg
 	int x = id of user in database
