@@ -63,7 +63,7 @@ public class DB {
 	/** Return the UserAccount object that matches the provided userID */
 	public static UserAccount getUser(int userID) {
 		Connection con = DBConnectionHandler.getConnection();
-		String sql = "SELECT * FROM " + DATABASE + "." + USERS_TABLE + "where " + UserAccount.KEY_USERNAME + 
+		String sql = "SELECT * FROM " + DATABASE + "." + USERS_TABLE + "where " + UserAccount.KEY_ID + 
 				"=?";
 		try {
 			PreparedStatement ps = con.prepareStatement(sql);
