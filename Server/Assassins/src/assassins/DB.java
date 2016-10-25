@@ -18,7 +18,7 @@ public class DB {
 	/** Return true if the user exists in the database */
 	public static boolean doesUserExist(String username) {
 		Connection con = DBConnectionHandler.getConnection();
-		String sql = "SELECT * FROM " + DATABASE + "." + USERS_TABLE + "where " + UserAccount.KEY_USERNAME + 
+		String sql = "SELECT * FROM " + DATABASE + "." + USERS_TABLE + " WHERE " + UserAccount.KEY_USERNAME + 
 				"=?";
 		try {
 			PreparedStatement ps = con.prepareStatement(sql);
@@ -34,7 +34,7 @@ public class DB {
 	/** Return true if the username and password provided match a user in the database */
 	public static boolean isValidLogin(String username, String password) {
 		Connection con = DBConnectionHandler.getConnection();
-		String sql = "SELECT * FROM " + DATABASE + "." + USERS_TABLE + "where " + UserAccount.KEY_USERNAME + 
+		String sql = "SELECT * FROM " + DATABASE + "." + USERS_TABLE + " WHERE " + UserAccount.KEY_USERNAME + 
 				"=? and " + UserAccount.KEY_PASSWORD + "=?";
 		try {
 			PreparedStatement ps = con.prepareStatement(sql);
@@ -51,8 +51,7 @@ public class DB {
 	/** Return the UserAccount object that matches the provided username. */
 	public static UserAccount getUser(String username) {
 		Connection con = DBConnectionHandler.getConnection();
-		String sql = "SELECT * FROM " + DATABASE + "." + USERS_TABLE + "where " + UserAccount.KEY_USERNAME + 
-				"=?";
+		String sql = "SELECT * FROM " + DATABASE + "." + USERS_TABLE + " WHERE " + UserAccount.KEY_USERNAME + "=?";
 		try {
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setString(1, username);
@@ -67,7 +66,7 @@ public class DB {
 	/** Return the UserAccount object that matches the provided userID */
 	public static UserAccount getUser(int userID) {
 		Connection con = DBConnectionHandler.getConnection();
-		String sql = "SELECT * FROM " + DATABASE + "." + USERS_TABLE + "where " + UserAccount.KEY_ID + 
+		String sql = "SELECT * FROM " + DATABASE + "." + USERS_TABLE + " WHERE " + UserAccount.KEY_ID + 
 				"=?";
 		try {
 			PreparedStatement ps = con.prepareStatement(sql);
@@ -113,7 +112,7 @@ public class DB {
 		if (!saveB64Image(filename, b64Image)) return null;
 		
 		Connection con = DBConnectionHandler.getConnection();
-		String sql = "UPDATE " + DATABASE + "." + USERS_TABLE + "SET " +
+		String sql = "UPDATE " + DATABASE + "." + USERS_TABLE + " SET " +
 				UserAccount.KEY_IMAGE_PATH + "=? WHERE " + UserAccount.KEY_ID + "=?";
 		try {
 			PreparedStatement ps = con.prepareStatement(sql);
