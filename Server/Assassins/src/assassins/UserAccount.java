@@ -20,6 +20,8 @@ public class UserAccount {
 	public static final int PASSWORD_MIN_LENGTH = 5;
 	public static final int PASSWORD_MAX_LENGTH = 32;
 	
+	public static final String DEFAULT_IMAGE = "0.jpg";
+	
 	private int id;
 	private String username;
 	private String password;
@@ -58,6 +60,10 @@ public class UserAccount {
 	public String toJSONString() {
 		JSONObject j = toJSON();
 		return j.toJSONString();
+	}
+	
+	public int getUserID() {
+		return id;
 	}
 	
     /** Checks the provided username for validity */
