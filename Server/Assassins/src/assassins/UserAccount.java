@@ -14,6 +14,8 @@ public class UserAccount {
 	public static final String KEY_IMAGE_PATH = "image_filename";
 	public static final String KEY_TOTAL_KILLS = "total_kills";
 	public static final String KEY_GAMES_PLAYED = "games_played";
+	public static final String KEY_X_LOCATION = "x_location";
+	public static final String KEY_Y_LOCATION = "y_location";
 	
 	public static final int USERNAME_MIN_LENGTH = 4;
 	public static final int USERNAME_MAX_LENGTH = 32;

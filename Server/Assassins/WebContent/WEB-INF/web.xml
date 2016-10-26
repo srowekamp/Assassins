@@ -31,6 +31,16 @@
     </servlet-mapping>
     
     <servlet>
+        <servlet-name>CreateGame</servlet-name>
+        <servlet-class>assassins.CreateGame</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CreateGame</servlet-name>
+        <url-pattern>/CreateGame</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
         <servlet-name>ImageUploadTest</servlet-name>
         <servlet-class>assassins.ImageUploadTest</servlet-class>
     </servlet>

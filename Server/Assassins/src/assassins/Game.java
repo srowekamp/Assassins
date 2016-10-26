@@ -21,6 +21,7 @@ public class Game {
 	
 	public static final String KEY_GAME = "game";
 	
+	public static final String KEY_ID = "id";
 	public static final String KEY_GAMEID = "gameid"; // Name of the game that users will see in game
 	public static final String KEY_PASSWORD = "password"; // Password to enter a private (default) game
 	public static final String KEY_X_CENTER = "xcenter"; // Longitude of the game area
@@ -28,6 +29,10 @@ public class Game {
 	public static final String KEY_RADIUS = "radius"; // Radius of the game area in meters
 	public static final String KEY_HOSTID = "hostid"; // Integer id of the user who created the game
 	public static final String KEY_DURATION = "duration"; // Duration of the game in seconds 
+	
+	public static final String KEY_PLAYERS_LIST = "players_list";
+	public static final String KEY_PLAYERS_ALIVE = "players_alive";
+	public static final String KEY_END_TIME = "end_time";
 	
 	public static final int GAMEID_MIN_LENGTH = 4;
 	public static final int GAMEID_MAX_LENGTH = 32;
@@ -43,6 +48,7 @@ public class Game {
 	public static final int DURATION_MAX_VALUE = 60 * 60; // Maximum duration of the game in seconds = 1 hour
 	
 
+	private int id;
 	private String gameID;
 	private String password;
 	private double xcenter;
@@ -51,22 +57,86 @@ public class Game {
 	private int hostID;
 	private int duration;
 	
-	private String playerList;
-	private String playersAlive;
-	private String endTime;
+	private String players_list;
+	private String players_alive;
+	private String end_time;
 	
-	public Game(HttpServletRequest request) {
-		gameID 		= request.getParameter(KEY_GAMEID);
-        password 	= request.getParameter(KEY_PASSWORD);
-        xcenter 	= Double.parseDouble(request.getParameter(KEY_X_CENTER));
-        ycenter 	= Double.parseDouble(request.getParameter(KEY_Y_CENTER));
-        radius 		= Integer.parseInt(request.getParameter(KEY_RADIUS));
-        hostID 		= Integer.parseInt(request.getParameter(KEY_HOSTID));
-        duration  	= Integer.parseInt(request.getParameter(KEY_DURATION));
+	/** Create a game object from a the SQL ResultSet in DB.getGame()*/
+	public Game(ResultSet rs) throws SQLException {
+		id 				= rs.getInt(KEY_ID);
+		gameID 			= rs.getString(KEY_GAMEID);
+        password 		= rs.getString(KEY_PASSWORD);
+        xcenter 		= rs.getDouble(KEY_X_CENTER);
+        ycenter 		= rs.getDouble(KEY_Y_CENTER);
+        radius 			= rs.getInt(KEY_RADIUS);
+        hostID 			= rs.getInt(KEY_HOSTID);
+        duration  		= rs.getInt(KEY_DURATION);
+        players_list	= rs.getString(KEY_PLAYERS_LIST);
+        players_alive 	= rs.getString(KEY_PLAYERS_ALIVE);
+        end_time		= rs.getString(KEY_END_TIME);
 	}
 	
+	/** Create a game object from the user request through CreateGame */
+	public Game(HttpServletRequest request) {
+		gameID 			= request.getParameter(KEY_GAMEID);
+        password 		= request.getParameter(KEY_PASSWORD);
+        xcenter 		= Double.parseDouble(request.getParameter(KEY_X_CENTER));
+        ycenter 		= Double.parseDouble(request.getParameter(KEY_Y_CENTER));
+        radius 			= Integer.parseInt(request.getParameter(KEY_RADIUS));
+        hostID 			= Integer.parseInt(request.getParameter(KEY_HOSTID));
+        duration  		= Integer.parseInt(request.getParameter(KEY_DURATION));
+        players_list 	= null;
+        players_alive	= null;
+        end_time		= null;
+	}
+	
+	/** Only for use with DB.createGame(Game). Adds the fields stored in the game object to PreparedStatement */
+	public void prepareStatement(PreparedStatement ps) throws SQLException {
+		ps.setString(1, gameID);
+		ps.setString(2, password);
+		ps.setDouble(3, xcenter);
+		ps.setDouble(4, ycenter);
+		ps.setInt(5, radius);
+		ps.setInt(6, hostID);
+		ps.setInt(7, duration);
+		ps.setString(8, String.format("%d,", hostID));
+		// Don't forget to set alivePlayers and endTime on game start
+	}
+	
+	public JSONObject toJSON() {
+		JSONObject j = new JSONObject();
+		j.put(KEY_ID, id);
+		j.put(KEY_GAMEID, gameID);
+		j.put(KEY_PASSWORD, password);
+		j.put(KEY_X_CENTER, xcenter);
+		j.put(KEY_Y_CENTER, ycenter);
+		j.put(KEY_RADIUS, radius);
+		j.put(KEY_HOSTID, hostID);
+		j.put(KEY_DURATION, duration);
+		j.put(KEY_PLAYERS_LIST, players_list);
+		j.put(KEY_PLAYERS_ALIVE, players_alive);
+		j.put(KEY_END_TIME, end_time);
+		return j;
+	}
+	
+	public String toJSONString() {
+		JSONObject j = toJSON();
+		return j.toJSONString();
+	}
+	
+	/** Return the gameID of this Game */
+	public String getGameID() {
+		return gameID;
+	}
+	
+	/** Returns the validity of this Game object */
 	public String checkValidity() {
-		// TODO
+		if (!isValidGameID(gameID)) return RESULT_GAMEID_INVALID;
+		if (!isValidPassword(password)) return RESULT_PASSWORD_INVALID;
+		if (!isValidXCenter(xcenter) || !isValidYCenter(ycenter)) return RESULT_CENTER_INVALID;
+		if (!isValidRadius(radius)) return RESULT_RADIUS_INVALID;
+		if (!isValidHostID(hostID)) return RESULT_HOSTID_INVALID;
+		if (!isValidDuration(duration)) return RESULT_DURATION_INVALID;
 		return VALID;
 	}
 	
@@ -106,5 +176,4 @@ public class Game {
     public static boolean isValidDuration(int d) {
     	return (d >= DURATION_MIN_VALUE && d <= DURATION_MAX_VALUE);
     }
-
 }
