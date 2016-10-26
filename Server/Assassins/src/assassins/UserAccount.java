@@ -69,13 +69,13 @@ public class UserAccount {
     /** Checks the provided username for validity */
     public static boolean isValidUsername(String username) {
     	if (username == null) return false;
-    	return (username.length() > USERNAME_MIN_LENGTH && username.length() < USERNAME_MAX_LENGTH);
+    	return (username.length() >= USERNAME_MIN_LENGTH && username.length() <= USERNAME_MAX_LENGTH);
     }
     
     /** Checks the provided password for validity */
     public static boolean isValidPassword(String password) {
     	if (password == null) return false;
-    	return (password.length() > PASSWORD_MIN_LENGTH && password.length() < PASSWORD_MAX_LENGTH);
+    	return (password.length() >= PASSWORD_MIN_LENGTH && password.length() <= PASSWORD_MAX_LENGTH);
     }
 
 }
