@@ -57,9 +57,8 @@ public class DB {
 				+ Game.KEY_RADIUS + ", "
 				+ Game.KEY_HOSTID + ", "
 				+ Game.KEY_DURATION + ", "
-				+ Game.KEY_PLAYERS_LIST + ", "
-				+ Game.KEY_PLAYERS_ALIVE + ") "
-    			+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				+ Game.KEY_PLAYERS_LIST + ") "
+    			+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		try {
 			PreparedStatement ps = con.prepareStatement(sql);
 			game.prepareStatement(ps);
