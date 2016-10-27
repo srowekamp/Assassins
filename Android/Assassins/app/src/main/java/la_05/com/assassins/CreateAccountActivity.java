@@ -203,15 +203,24 @@ public class CreateAccountActivity extends AppCompatActivity {
     /** Check the JSON object from the server for result */
     private void authenticate(JSONObject response) {
         String result = null;
-        String error = "Unknown Error Occurred (1)";;
+        String error = "Unknown Error Occurred (1)";
         try {
             result = (String) response.get(KEY_RESULT);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         if (result != null && result.equals(RESULT_ACCOUNT_CREATED)){
+            UserAccount user = null;
+            try {
+                JSONObject account = new JSONObject (response.getString(UserAccount.KEY_USER_ACCOUNT));
+                user = new UserAccount(account);
+                Toast.makeText(this, "Welcome, " + account.getString(UserAccount.KEY_REAL_NAME), Toast.LENGTH_LONG).show();
+            }catch (JSONException e) {
+                e.printStackTrace();
+            }
             // Switch to the Main Menu Activity
             Intent intent = new Intent(this, MainMenuActivity.class);
+            intent.putExtra(UserAccount.KEY_USER_ACCOUNT, user);
             startActivity(intent);
             finish(); // Closes the current activity, stops user from returning to it with back button
             return;

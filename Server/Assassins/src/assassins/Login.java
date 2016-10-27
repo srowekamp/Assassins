@@ -5,10 +5,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.*;
 import org.json.simple.JSONObject;
 import assassins.UserAccount;
-import assassins.DBConnectionHandler;
+import assassins.DB;
 
 public class Login extends HttpServlet {
 
@@ -39,26 +38,19 @@ public class Login extends HttpServlet {
         else if (!UserAccount.isValidPassword(password)) jsonResponse.put(CreateAccount.KEY_RESULT, CreateAccount.RESULT_PASSWORD_INVALID);
         else {
         	// Check if the username and password provided exist in database
-	        String sql = "SELECT * FROM db309la05.users3 where username=? and password=?";
-	        Connection con = DBConnectionHandler.getConnection();
-	        ResultSet rs = null;
-	        try {
-	            PreparedStatement ps = con.prepareStatement(sql);
-	            ps.setString(1, username);
-	            ps.setString(2, password);
-	            rs = ps.executeQuery();
-	            if (rs.next()) {
-	                jsonResponse.put(CreateAccount.KEY_RESULT, RESULT_LOGIN_SUCCESS);
-	                ua = new UserAccount(rs);
-		        	jsonResponse.put(UserAccount.KEY_USER_ACCOUNT, ua.toJSONString());
-	            } else {
-	            	jsonResponse.put(CreateAccount.KEY_RESULT, RESULT_LOGIN_FAIL);
-	            }
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	            jsonResponse.put(CreateAccount.KEY_RESULT, CreateAccount.RESULT_OTHER_ERROR);
-	        }
+        	if (DB.isValidLogin(username, password)) {
+        		ua = DB.getUser(username);
+        		if (ua == null) jsonResponse.put(CreateAccount.KEY_RESULT, CreateAccount.RESULT_OTHER_ERROR);
+        		else {
+        			jsonResponse.put(CreateAccount.KEY_RESULT, RESULT_LOGIN_SUCCESS);
+        			jsonResponse.put(UserAccount.KEY_USER_ACCOUNT, ua.toJSONString());
+        		}
+        	}
+        	else {
+        		jsonResponse.put(CreateAccount.KEY_RESULT, RESULT_LOGIN_FAIL);
+        	}
         }
+        
         //Write the JSON object to the response
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
