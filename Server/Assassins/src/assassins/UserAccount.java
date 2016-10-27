@@ -31,6 +31,8 @@ public class UserAccount {
 	private String userImagePath;
 	private int totalKills;
 	private int gamesPlayed;
+	private double xlocation;
+	private double ylocation;
 	
 	public UserAccount(ResultSet rs) {
 		try {
@@ -41,6 +43,8 @@ public class UserAccount {
 			userImagePath = rs.getString(KEY_IMAGE_PATH);
 			totalKills = rs.getInt(KEY_TOTAL_KILLS);
 			gamesPlayed = rs.getInt(KEY_GAMES_PLAYED);
+			xlocation = rs.getDouble(KEY_X_LOCATION);
+			ylocation = rs.getDouble(KEY_Y_LOCATION);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -56,6 +60,8 @@ public class UserAccount {
 		j.put(KEY_IMAGE_PATH, userImagePath);
 		j.put(KEY_TOTAL_KILLS, totalKills);
 		j.put(KEY_GAMES_PLAYED, gamesPlayed);
+		j.put(KEY_X_LOCATION, xlocation);
+		j.put(KEY_Y_LOCATION, ylocation);
 		return j;
 	}
 	

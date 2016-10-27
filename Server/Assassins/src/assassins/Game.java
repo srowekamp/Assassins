@@ -76,18 +76,20 @@ public class Game {
         end_time		= rs.getString(KEY_END_TIME);
 	}
 	
-	/** Create a game object from the user request through CreateGame */
-	public Game(HttpServletRequest request) {
-		gameID 			= request.getParameter(KEY_GAMEID);
-        password 		= request.getParameter(KEY_PASSWORD);
-        xcenter 		= Double.parseDouble(request.getParameter(KEY_X_CENTER));
-        ycenter 		= Double.parseDouble(request.getParameter(KEY_Y_CENTER));
-        radius 			= Integer.parseInt(request.getParameter(KEY_RADIUS));
-        hostID 			= Integer.parseInt(request.getParameter(KEY_HOSTID));
-        duration  		= Integer.parseInt(request.getParameter(KEY_DURATION));
-        players_list 	= null;
-        players_alive	= null;
-        end_time		= null;
+	/** Create a game object from the user request through CreateGame.
+	 *  Throws an Exception if any of the parameters are missing */
+	public Game(HttpServletRequest request) throws Exception {
+			gameID 			= request.getParameter(KEY_GAMEID);
+	        password 		= request.getParameter(KEY_PASSWORD);
+	        xcenter 		= Double.parseDouble(request.getParameter(KEY_X_CENTER)); // These throw exceptions if parameter is null
+	        ycenter 		= Double.parseDouble(request.getParameter(KEY_Y_CENTER));
+	        radius 			= Integer.parseInt(request.getParameter(KEY_RADIUS));
+	        hostID 			= Integer.parseInt(request.getParameter(KEY_HOSTID));
+	        duration  		= Integer.parseInt(request.getParameter(KEY_DURATION));
+	        players_list 	= null;
+	        players_alive	= null;
+	        end_time		= null;
+	        if (gameID == null || password == null) throw new Exception();
 	}
 	
 	/** Only for use with DB.createGame(Game). Adds the fields stored in the game object to PreparedStatement */
