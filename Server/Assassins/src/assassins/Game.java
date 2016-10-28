@@ -160,8 +160,37 @@ public class Game {
 	}
 	
 	/** Returns an int array representing the players_alive String */
-	private int[] getPlayersAlive() {
+	public int[] getPlayersAlive() {
 		ArrayList<Integer> integers = parseAlivePlayers();
+	    int[] ret = new int[integers.size()];
+	    Iterator<Integer> iterator = integers.iterator();
+	    for (int i = 0; i < ret.length; i++)
+	    {
+	        ret[i] = iterator.next().intValue();
+	    }
+	    return ret;
+	}
+	
+	/** Returns an ArrayList of Integer objects representing the players_list String  */
+	private ArrayList<Integer> parsePlayers() {
+		if (players_list == null) return null;
+		int n = 0;
+		ArrayList<Integer> al = new ArrayList<Integer>();
+		for (int i = 0; i < players_list.length(); i++) {
+			char c = players_list.charAt(i);
+			if (Character.isDigit(c)) n = n * 10 + Character.getNumericValue(c);
+			if (c == ',') {
+				al.add(new Integer(n));
+				n = 0;
+			}
+		}
+		if (n != 0) al.add(new Integer(n));
+		return al;
+	}
+	
+	/** Returns an int array representing the players_list String */
+	public int[] getPlayers() {
+		ArrayList<Integer> integers = parsePlayers();
 	    int[] ret = new int[integers.size()];
 	    Iterator<Integer> iterator = integers.iterator();
 	    for (int i = 0; i < ret.length; i++)
