@@ -194,4 +194,25 @@ public class DB {
 		}
     	return true;
     }
+    
+    /** Update the given user's GPS location within the database */
+    public static UserAccount updateUserLocation(int userID, double xlocation, double ylocation) {
+Connection con = DBConnectionHandler.getConnection();
+		String sql = "UPDATE " + DATABASE + "." + USERS_TABLE
+				+ " SET "
+				+ UserAccount.KEY_X_LOCATION + "=?, "
+				+ UserAccount.KEY_Y_LOCATION + "=?"
+				+ " WHERE " + UserAccount.KEY_ID + "=?";
+		try {
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setDouble(1, xlocation);
+			ps.setDouble(2, ylocation);
+			ps.setInt(3, userID);
+			ps.executeUpdate();
+			return getUser(userID); // Assumes update was successful
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+    }
 }

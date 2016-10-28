@@ -40,9 +40,9 @@ public class UpdateGame extends HttpServlet {
         boolean parameterMissing = false;
         String result = null;
         String gameID = null;
-        int playerID;
-        double xlocation;
-        double ylocation;
+        int playerID = -1;
+        double xlocation = -1;
+        double ylocation = -1;
         boolean isTop = false;
         try {
         	gameID = request.getParameter(Game.KEY_GAMEID);
@@ -53,7 +53,7 @@ public class UpdateGame extends HttpServlet {
         	result = RESULT_PARAMETER_MISSING;
         	parameterMissing = true;
         }
-        if (!parameterMissing) {
+        if (!parameterMissing) { // TODO ensure values grabbed from request are valid
         	// Get the latest game object
         	Game game = DB.getGame(gameID);
         	// Check that the player is still alive
