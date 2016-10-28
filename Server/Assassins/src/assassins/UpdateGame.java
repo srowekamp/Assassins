@@ -21,6 +21,7 @@ public class UpdateGame extends HttpServlet {
 	public static final String RESULT_PLAYER_DEAD = "dead"; // Result when the player was killed since the last update
 	public static final String RESULT_NORMAL = "normal"; // Result when the game is proceeding as normal
 	public static final String RESULT_GAME_WIN = "win"; // Result when the player has won the game
+	public static final String RESULT_ERROR = "error"; // Result when there is an error. Shouldn't occur
 	
 	public static final String KEY_TARGET = "target"; // Key in the JSONObject response corresponding to the player's target represented by a JSONObject in String form
 	public static final String KEY_IS_TOP = "istop"; // Key in the JSONObject response representing whether or not the player is at the top of the AlivePlayers list
@@ -62,21 +63,26 @@ public class UpdateGame extends HttpServlet {
         	else {
         		// Get the player's target
         		UserAccount target = game.getTarget(playerID);
-        		/* Check if the player is at the top of the AlivePlayers list.
-        		   The player at the top will make the request to End the game when time is up or all other players are dead*/
-        		isTop = game.isTop(playerID);
-        		// Add this status to the response
-        		jsonResponse.put(KEY_IS_TOP, isTop);
-        		// If the player's target is the player and they are at the top of AlivePlayers, they have won
-        		if (isTop && target.getUserID() == playerID) {
-        			result = RESULT_GAME_WIN;
+        		if (target == null) {
+        			result = RESULT_ERROR;
         		}
         		else {
-        			// The game is proceeding as normal, first update the player's location in the database
-        			DB.updateUserLocation(playerID, xlocation, ylocation);
-        			// Now put the player's target in the response JSONObject
-        			jsonResponse.put(KEY_TARGET, target.toJSONString());
-        			jsonResponse.put(KEY_RESULT, RESULT_NORMAL);
+	        		/* Check if the player is at the top of the AlivePlayers list.
+	        		   The player at the top will make the request to End the game when time is up or all other players are dead*/
+	        		isTop = game.isTop(playerID);
+	        		// Add this status to the response
+	        		jsonResponse.put(KEY_IS_TOP, isTop);
+	        		// If the player's target is the player and they are at the top of AlivePlayers, they have won
+	        		if (isTop && target.getUserID() == playerID) {
+	        			result = RESULT_GAME_WIN;
+	        		}
+	        		else {
+	        			// The game is proceeding as normal, first update the player's location in the database
+	        			DB.updateUserLocation(playerID, xlocation, ylocation);
+	        			// Now put the player's target in the response JSONObject
+	        			jsonResponse.put(KEY_TARGET, target.toJSONString());
+	        			jsonResponse.put(KEY_RESULT, RESULT_NORMAL);
+	        		}
         		}
         	}
         }

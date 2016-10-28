@@ -1,6 +1,10 @@
 package assassins;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import org.json.simple.JSONObject;
 import assassins.DB;
@@ -105,6 +109,68 @@ public class Game {
 		// Don't forget to set alivePlayers and endTime on game start
 	}
 	
+	/** Returns true if the playerID given is in the list of alive players */
+	public boolean isPlayerAlive(int playerID) {
+		return (getPlayerIndex(playerID) != -1); // If the player index within the players_alive list is not -1, they are alive
+	}
+	
+	/** Returns the target of the playerID. Assumes playerID is in players_alive. Target is the next player in the list with wraparound. */
+	public UserAccount getTarget(int playerID) {
+		int[] alivePlayers = getPlayersAlive();
+		int playerIndex = getPlayerIndex(playerID);
+		if (playerIndex == -1) return null;
+		int targetIndex = (playerIndex + 1) % alivePlayers.length;
+		int target = alivePlayers[targetIndex];
+		return DB.getUser(target);
+	}
+	
+	/** Returns true if the player is at the top of the list of alive players */
+	public boolean isTop(int playerID) {
+		return (getPlayerIndex(playerID) == 0); // If the player index within the list of alive players is 0, they are at the top
+	}
+	
+	/** Returns the index of the given player within the players_alive array. -1 if playerID is not found in the list */
+	private int getPlayerIndex(int playerID) {
+		int[] alivePlayers = getPlayersAlive();
+		int playerIndex = -1;
+		for (int i = 0; i < alivePlayers.length; i++) {
+			if (alivePlayers[i] == playerID) {
+				playerIndex = i;
+				break;
+			}
+		}
+		return playerIndex;
+	}
+	
+	/** Returns an ArrayList of Integer objects representing the players_alive String  */
+	private ArrayList<Integer> parseAlivePlayers() {
+		if (players_alive == null) return null;
+		int n = 0;
+		ArrayList<Integer> al = new ArrayList<Integer>();
+		for (int i = 0; i < players_alive.length(); i++) {
+			char c = players_alive.charAt(i);
+			if (Character.isDigit(c)) n = n * 10 + Character.getNumericValue(c);
+			if (c == ',') {
+				al.add(new Integer(n));
+				n = 0;
+			}
+		}
+		return al;
+	}
+	
+	/** Returns an int array representing the players_alive String */
+	private int[] getPlayersAlive() {
+		ArrayList<Integer> integers = parseAlivePlayers();
+	    int[] ret = new int[integers.size()];
+	    Iterator<Integer> iterator = integers.iterator();
+	    for (int i = 0; i < ret.length; i++)
+	    {
+	        ret[i] = iterator.next().intValue();
+	    }
+	    return ret;
+	}
+	
+	/** Converts this game object into a JSONObject */
 	public JSONObject toJSON() {
 		JSONObject j = new JSONObject();
 		j.put(KEY_ID, id);
@@ -121,9 +187,15 @@ public class Game {
 		return j;
 	}
 	
+	/** Converts this game object into a JSONObject formatted as a string */
 	public String toJSONString() {
 		JSONObject j = toJSON();
 		return j.toJSONString();
+	}
+	
+	@Override
+	public String toString() {
+		return toJSONString();
 	}
 	
 	/** Return the gameID of this Game */
