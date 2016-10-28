@@ -56,8 +56,11 @@ public class UpdateGame extends HttpServlet {
         if (!parameterMissing) { // TODO ensure values grabbed from request are valid
         	// Get the latest game object
         	Game game = DB.getGame(gameID);
+        	if (game == null) {
+        		result = RESULT_ERROR;
+        	}
         	// Check that the player is still alive
-        	if (!game.isPlayerAlive(playerID)) {
+        	else if (!game.isPlayerAlive(playerID)) {
         		result = RESULT_PLAYER_DEAD;
         	}
         	else {
