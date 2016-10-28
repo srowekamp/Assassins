@@ -18,6 +18,8 @@ struct userInfo {
 var user = userInfo()
 
 import UIKit
+import Alamofire
+import SwiftyJSON
 
 class LoginVC: UIViewController, UITextFieldDelegate {
 
@@ -26,8 +28,27 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     
     let web = WebRequest()
     
+    func login() {
+        let loginURL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/Login"
+        let paramaters = ["username":"admin","password":"password"]
+        Alamofire.request(loginURL, parameters: paramaters).responseJSON { response in
+            //print(response.request)  // original URL request
+            //print(response.response) // HTTP URL response
+            //print(response.data)     // server data
+            //print(response.result)   // result of response serialization
+            
+            if let data = response.result.value {
+                let json = JSON(data: data)
+                if let username = json["account"]["username"].string {
+                    //Now you got your value
+                }
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        login()
         initTextFields()
         web.getUser {
             return
