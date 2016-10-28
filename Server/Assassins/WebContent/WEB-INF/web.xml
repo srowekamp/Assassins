@@ -41,6 +41,16 @@
     </servlet-mapping>
     
     <servlet>
+        <servlet-name>GetPlayers</servlet-name>
+        <servlet-class>assassins.GetPlayers</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetPlayers</servlet-name>
+        <url-pattern>/GetPlayers</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
         <servlet-name>UpdateGame</servlet-name>
         <servlet-class>assassins.UpdateGame</servlet-class>
     </servlet>
