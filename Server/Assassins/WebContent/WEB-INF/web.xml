@@ -41,13 +41,15 @@
     </servlet-mapping>
     
     <servlet>
-        <servlet-name>ImageUploadTest</servlet-name>
-        <servlet-class>assassins.ImageUploadTest</servlet-class>
+        <servlet-name>UpdateGame</servlet-name>
+        <servlet-class>assassins.UpdateGame</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>ImageUploadTest</servlet-name>
-        <url-pattern>/ImageUploadTest</url-pattern>
+        <servlet-name>UpdateGame</servlet-name>
+        <url-pattern>/UpdateGame</url-pattern>
     </servlet-mapping>
+    
+
 
 </web-app>
