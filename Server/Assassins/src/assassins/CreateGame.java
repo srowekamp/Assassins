@@ -16,7 +16,7 @@ public class CreateGame extends HttpServlet {
 	private static final long serialVersionUID = 1788356290670041061L;
 
 	public static final String KEY_RESULT = "result";
-	public static final String KEY_PARAMETER_MISSING = "parameter_error";
+	public static final String RESULT_PARAMETER_MISSING = "parameter_error";
 
     /** 
      * Handles the HTTP <code>GET</code> method.
@@ -36,7 +36,7 @@ public class CreateGame extends HttpServlet {
         	tempGame = new Game(request);
         } catch (Exception e) {
         	missingParameter = true;
-        	result = KEY_PARAMETER_MISSING;
+        	result = RESULT_PARAMETER_MISSING;
         }
         Game game = null;
         if (!missingParameter) {
