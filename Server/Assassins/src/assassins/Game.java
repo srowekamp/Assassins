@@ -155,6 +155,7 @@ public class Game {
 				n = 0;
 			}
 		}
+		if (n != 0) al.add(new Integer(n));
 		return al;
 	}
 	
