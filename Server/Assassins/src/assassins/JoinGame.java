@@ -13,6 +13,11 @@ public class JoinGame extends HttpServlet{
 	 */
 	private static final long serialVersionUID = 3390648842666208917L;
 	
+	public static final String KEY_RESULT = "result";
+	public static final String RESULT_JOIN_GAME_SUCCESS = "joined game";
+	public static final String RESULT_JOIN_GAME_FAILURE = "unable to join game";
+	
+	
 	/**
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
