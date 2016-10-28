@@ -14,6 +14,8 @@ public class UserAccount {
 	public static final String KEY_IMAGE_PATH = "image_filename";
 	public static final String KEY_TOTAL_KILLS = "total_kills";
 	public static final String KEY_GAMES_PLAYED = "games_played";
+	public static final String KEY_X_LOCATION = "x_location";
+	public static final String KEY_Y_LOCATION = "y_location";
 	
 	public static final int USERNAME_MIN_LENGTH = 4;
 	public static final int USERNAME_MAX_LENGTH = 32;
@@ -29,6 +31,8 @@ public class UserAccount {
 	private String userImagePath;
 	private int totalKills;
 	private int gamesPlayed;
+	private double xlocation;
+	private double ylocation;
 	
 	public UserAccount(ResultSet rs) {
 		try {
@@ -39,6 +43,8 @@ public class UserAccount {
 			userImagePath = rs.getString(KEY_IMAGE_PATH);
 			totalKills = rs.getInt(KEY_TOTAL_KILLS);
 			gamesPlayed = rs.getInt(KEY_GAMES_PLAYED);
+			xlocation = rs.getDouble(KEY_X_LOCATION);
+			ylocation = rs.getDouble(KEY_Y_LOCATION);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -54,6 +60,8 @@ public class UserAccount {
 		j.put(KEY_IMAGE_PATH, userImagePath);
 		j.put(KEY_TOTAL_KILLS, totalKills);
 		j.put(KEY_GAMES_PLAYED, gamesPlayed);
+		j.put(KEY_X_LOCATION, xlocation);
+		j.put(KEY_Y_LOCATION, ylocation);
 		return j;
 	}
 	
@@ -69,13 +77,13 @@ public class UserAccount {
     /** Checks the provided username for validity */
     public static boolean isValidUsername(String username) {
     	if (username == null) return false;
-    	return (username.length() > USERNAME_MIN_LENGTH && username.length() < USERNAME_MAX_LENGTH);
+    	return (username.length() >= USERNAME_MIN_LENGTH && username.length() <= USERNAME_MAX_LENGTH);
     }
     
     /** Checks the provided password for validity */
     public static boolean isValidPassword(String password) {
     	if (password == null) return false;
-    	return (password.length() > PASSWORD_MIN_LENGTH && password.length() < PASSWORD_MAX_LENGTH);
+    	return (password.length() >= PASSWORD_MIN_LENGTH && password.length() <= PASSWORD_MAX_LENGTH);
     }
 
 }

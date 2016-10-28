@@ -15,11 +15,65 @@ public class DB {
 	public static final String USERS_TABLE = "users";
 	public static final String GAMES_TABLE = "active_games"; //not created yet
 	
+	/** Return true if the game exists in the database. Assumes that if the gameID is in
+	 *  the active_games table, a table representing the game with gameID provided also exists */
+	public static boolean doesGameExist(String gameID) {
+		Connection con = DBConnectionHandler.getConnection();
+		String sql = "SELECT * FROM " + DATABASE + "." + GAMES_TABLE + " WHERE " + Game.KEY_GAMEID + "=?";
+		try {
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1, gameID);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	/** Return the Game object matching the provided gameID */
+	public static Game getGame(String gameID) {
+		Connection con = DBConnectionHandler.getConnection();
+		String sql = "SELECT * FROM " + DATABASE + "." + GAMES_TABLE + " WHERE " + Game.KEY_GAMEID + "=?";
+		try {
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1, gameID);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) return new Game(rs);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/** Create A game in the database. Doesn't check for validity or uniqueness. */
+	public static Game createGame(Game game) {
+		Connection con = DBConnectionHandler.getConnection();
+		String sql = "INSERT INTO " + DATABASE + "." + GAMES_TABLE + "("
+				+ Game.KEY_GAMEID + ", "
+				+ Game.KEY_PASSWORD + ", "
+				+ Game.KEY_X_CENTER + ", "
+				+ Game.KEY_Y_CENTER + ", "
+				+ Game.KEY_RADIUS + ", "
+				+ Game.KEY_HOSTID + ", "
+				+ Game.KEY_DURATION + ", "
+				+ Game.KEY_PLAYERS_LIST + ") "
+    			+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		try {
+			PreparedStatement ps = con.prepareStatement(sql);
+			game.prepareStatement(ps);
+			ps.executeUpdate();
+			return getGame(game.getGameID());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	/** Return true if the user exists in the database */
 	public static boolean doesUserExist(String username) {
 		Connection con = DBConnectionHandler.getConnection();
-		String sql = "SELECT * FROM " + DATABASE + "." + USERS_TABLE + " WHERE " + UserAccount.KEY_USERNAME + 
-				"=?";
+		String sql = "SELECT * FROM " + DATABASE + "." + USERS_TABLE + " WHERE " + UserAccount.KEY_USERNAME + "=?";
 		try {
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setString(1, username);
@@ -139,5 +193,26 @@ public class DB {
 			return false;
 		}
     	return true;
+    }
+    
+    /** Update the given user's GPS location within the database */
+    public static UserAccount updateUserLocation(int userID, double xlocation, double ylocation) {
+Connection con = DBConnectionHandler.getConnection();
+		String sql = "UPDATE " + DATABASE + "." + USERS_TABLE
+				+ " SET "
+				+ UserAccount.KEY_X_LOCATION + "=?, "
+				+ UserAccount.KEY_Y_LOCATION + "=?"
+				+ " WHERE " + UserAccount.KEY_ID + "=?";
+		try {
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setDouble(1, xlocation);
+			ps.setDouble(2, ylocation);
+			ps.setInt(3, userID);
+			ps.executeUpdate();
+			return getUser(userID); // Assumes update was successful
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
     }
 }
