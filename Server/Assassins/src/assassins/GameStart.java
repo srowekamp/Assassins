@@ -18,6 +18,8 @@ public class GameStart extends HttpServlet {
 	public static final String KEY_RESULT = "result";
 	public static final String RESULT_PARAMETER_MISSING = "parameter_error";
 	public static final String RESULT_GAME_STARTED = "success";
+	
+	public static final String KEY_TARGET = "target";
 
     /** 
      * Handles the HTTP <code>GET</code> method.
@@ -32,15 +34,19 @@ public class GameStart extends HttpServlet {
         JSONObject jsonResponse	= new JSONObject();
         boolean missingParameter = false;
         String result = null;
-        Game game = null;
-        try {
-        	game = new Game(request);
-        } catch (Exception e) {
-        	missingParameter = true;
-        	result = RESULT_PARAMETER_MISSING;
-        }
-        if (!missingParameter) {
-	        result = RESULT_GAME_STARTED;
+        String gameID = request.getParameter(Game.KEY_GAMEID);
+        String startTime = request.getParameter(Game.KEY_START_TIME);
+        if (!Game.isValidGameID(gameID)) result = Game.RESULT_GAMEID_INVALID;
+        else if (!Game.isValidStartTime(startTime)) result = Game.RESULT_START_TIME_INVALID;
+        else {
+        	Game game = DB.getGame(gameID);
+        	DB.setEndTime(game, startTime);
+        	DB.setTargetList(game, game.createTargetsList());
+        	UserAccount target = game.getTarget(game.getHostID());
+        	String endTime = game.getEndTime();
+        	jsonResponse.put(KEY_TARGET, target.toJSONString());
+        	jsonResponse.put(Game.KEY_END_TIME, endTime);
+        	result = RESULT_GAME_STARTED;
         }
         jsonResponse.put(KEY_RESULT, result);
         //Write the JSON object to the response
