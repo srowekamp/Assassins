@@ -34,12 +34,16 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         // the url to login in to the server
         let loginURL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/Login"
         let paramaters = ["username":"admin","password":"password"]
+        
         // make a request to the server and proccess the data
         Alamofire.request(loginURL, parameters: paramaters).responseJSON { response in
             if let data = response.result.value as? [String:String] {
                 if let jsonString = data["account"]?.data(using: .utf8, allowLossyConversion: false) {
                     let json = JSON(data: jsonString)
                     print(json)
+                    
+                    // TODO add protection if json fails
+                    // TODO prevent the display from locking up if the server has a long delay
                     
                     // check that username and password are correct
                     if (json["username"].string! == username && json["password"].string! == password) {
@@ -49,7 +53,6 @@ class LoginVC: UIViewController, UITextFieldDelegate {
                         alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
                         self.present(alert, animated: true, completion: nil)
                     }
-                    
                 }
             }
         }
