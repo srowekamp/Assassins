@@ -7,8 +7,15 @@
 //
 
 import UIKit
+import Alamofire
+import SwiftyJSON
+import SwiftyBase64
 
 class CreateAccountVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
+    
+    struct Constants {
+        static let addUserURL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/CreateAccount"
+    }
     
     @IBOutlet weak var navBar: UINavigationItem!
     @IBOutlet weak var userIcon: UIImageView!
@@ -36,14 +43,40 @@ class CreateAccountVC: UIViewController, UIImagePickerControllerDelegate, UINavi
            popupAlert(title: "Unable to Create Account", message: "Your passwords do not match, please try again.")
         }
         // attempt to create user on server
+        
+        // encode the image a base64 string
+        let imageData = UIImageJPEGRepresentation(userIcon.image!, CGFloat(100))
+        let base64StringImageData:String = imageData!.base64EncodedString()
+        print("\n\(base64StringImageData)\n")
+        
+        
+        // set up data for server call
+        let parameters = ["username":username.text!,
+                          "password":password.text!,
+                          "real_name":realName.text!,
+                          "b64_jpg":base64StringImageData]
+       
+        
+        
+        // make server call
+        Alamofire.request(Constants.addUserURL, parameters: parameters).validate().responseJSON { response in
+            switch response.result {
+            case .success(let value):
+                let json = JSON(value)
+                print("JSON: \(json)")
+            case .failure(let error):
+                print(error)
+            }
+        }
+
         // for now add the user and move on
-        user.username = username.text!
-        user.password = password.text!
-        user.realName = realName.text!
-        user.image = userIcon.image
+//        user.username = username.text!
+//        user.password = password.text!
+//        user.realName = realName.text!
+//        user.image = userIcon.image
         
         // once the user has been created, go to main menu view
-        performSegue(withIdentifier: "createToMenu", sender: nil)
+        // performSegue(withIdentifier: "createToMenu", sender: nil)
     }
     
     @IBAction func showLoginPage(_ sender: AnyObject) {
