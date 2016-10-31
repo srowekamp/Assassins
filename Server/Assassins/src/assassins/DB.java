@@ -85,6 +85,15 @@ public class DB {
 		return false;
 	}
 	
+	public static Game joinGame(String gameID, String playerID){
+		Connection con = DBConnectionHandler.getConnectoin();
+		String sql = "SELECT * FROM " + DATABASE + "." + GAMES_TABLE +  " WHERE " + Game.KEY_GAMEID + "=?";
+		try{
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.
+		}
+	}
+	
 	/** Return true if the username and password provided match a user in the database */
 	public static boolean isValidLogin(String username, String password) {
 		Connection con = DBConnectionHandler.getConnection();
