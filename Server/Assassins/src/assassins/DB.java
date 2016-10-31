@@ -5,6 +5,10 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Random;
+
 import javax.imageio.ImageIO;
 import assassins.DBConnectionHandler;
 import assassins.UserAccount;
@@ -62,6 +66,63 @@ public class DB {
 		try {
 			PreparedStatement ps = con.prepareStatement(sql);
 			game.prepareStatement(ps);
+			ps.executeUpdate();
+			return getGame(game.getGameID());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/** Return an updated Game object after adding the End Time of a game given the time it was started,
+	 *  using the duration specified on creation */
+	public static Game setEndTime(Game game, String start_time) {
+		int h, m, s, current_time, end_time_seconds;
+		h = Integer.parseInt(start_time.substring(0, 2));
+		m = Integer.parseInt(start_time.substring(2, 4));
+		s = Integer.parseInt(start_time.substring(4, 6));
+		current_time = 60 * 60 * h + 60 * m + s;
+		end_time_seconds = current_time + game.getDuration();
+		int end_hour = end_time_seconds / 3600;
+		int end_minute = (end_time_seconds % 3600) / 60;
+		int end_second = end_time_seconds % 60;
+		String endTime = String.format("%d%d%d", end_hour, end_minute, end_second);
+		// TODO set end time to string
+		Connection con = DBConnectionHandler.getConnection();
+		//UPDATE `db309la05`.`active_games` SET `end_time`='235959' WHERE `id`='1';
+		String sql = "UPDATE " + DATABASE + "." + GAMES_TABLE + " SET "
+				+ Game.KEY_END_TIME + "=? WHERE " + Game.KEY_ID + "=?";
+		try {
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1, endTime);
+			ps.setInt(2, game.getID());
+			ps.executeUpdate();
+			return getGame(game.getGameID());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/** Return an updated Game object after setting the target list (players_alive) in the database */
+	public static Game setTargetList(Game game) {
+		int players[] = game.getPlayers();
+		Integer[] playersAlive = new Integer[players.length];
+		Collections.shuffle(Arrays.asList(playersAlive));
+		String players_alive = String.format("%d,", players[0]);
+		for (int i = 0 ; i < players.length; i++) {
+			if (playersAlive[i].intValue() != players[0]) {
+				players_alive += String.format("%d,", playersAlive[i].intValue());
+			}
+		}
+		Connection con = DBConnectionHandler.getConnection();
+		//UPDATE `db309la05`.`active_games` SET `players_alive`='4,' WHERE `id`='2';
+		String sql = "UPDATE " + DATABASE + "." + GAMES_TABLE + " SET "
+				+ Game.KEY_PLAYERS_ALIVE + "=? WHERE " + Game.KEY_ID + "=?";
+		try {
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1, players_alive);
+			ps.setInt(2, game.getID());
 			ps.executeUpdate();
 			return getGame(game.getGameID());
 		} catch (Exception e) {
