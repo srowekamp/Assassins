@@ -19,20 +19,10 @@ class CreateAccountVC: UIViewController, UIImagePickerControllerDelegate, UINavi
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        realName.delegate = self
-        username.delegate = self
-        password.delegate = self
-        realName.autocorrectionType = .no
-        realName.autocapitalizationType = .words
-        username.autocapitalizationType = .none
-        username.autocorrectionType = .no
-        confirmPassword.delegate = self
-        realName.text = ""
-        username.text = ""
-        password.text = ""
-        confirmPassword.text = ""
-        password.isSecureTextEntry = true
-        confirmPassword.isSecureTextEntry = true
+        prepareTextField(textField: realName, secure: false, capitalType: .words)
+        prepareTextField(textField: username, secure: false, capitalType: .none)
+        prepareTextField(textField: password, secure: true, capitalType: nil)
+        prepareTextField(textField: confirmPassword, secure: true, capitalType: nil)
     }
     
     // attempts to create a user account
@@ -88,7 +78,22 @@ class CreateAccountVC: UIViewController, UIImagePickerControllerDelegate, UINavi
         self.dismiss(animated: true, completion: nil);
     }
     
-    // MARK: Text Field Delegate Methods
+    // MARK: Text Field Delegate and Other Methods
+    
+    // sets up a text field based on the given parameters a capitalization type may be specified, but if it is secuer it will be ignored
+    func prepareTextField(textField:UITextField, secure:Bool, capitalType:UITextAutocapitalizationType?){
+        textField.delegate = self
+        textField.text = ""
+        
+        if secure {
+            textField.isSecureTextEntry = true
+        } else {
+            textField.autocorrectionType = .no
+            if capitalType != nil {
+                textField.autocapitalizationType = capitalType!
+            }
+        }
+    }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
