@@ -40,12 +40,11 @@ public class GameStart extends HttpServlet {
         else if (!Game.isValidStartTime(startTime)) result = Game.RESULT_START_TIME_INVALID;
         else {
         	Game game = DB.getGame(gameID);
-        	DB.setEndTime(game, startTime);
-        	DB.setTargetList(game, game.createTargetsList());
+        	game = DB.setEndTime(game, startTime);
+        	game = DB.setTargetList(game);
         	UserAccount target = game.getTarget(game.getHostID());
-        	String endTime = game.getEndTime();
         	jsonResponse.put(KEY_TARGET, target.toJSONString());
-        	jsonResponse.put(Game.KEY_END_TIME, endTime);
+        	jsonResponse.put(Game.KEY_GAME, game);
         	result = RESULT_GAME_STARTED;
         }
         jsonResponse.put(KEY_RESULT, result);
