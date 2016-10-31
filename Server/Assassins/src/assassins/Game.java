@@ -21,6 +21,7 @@ public class Game {
 	public static final String RESULT_OTHER_ERROR = "other_error"; // Value of Result when an error occurs
 	
 	public static final String VALID = "valid";
+	public static final String GAME_OVER = "game_over";
 	
 	public static final String KEY_GAME = "game";
 	
@@ -248,6 +249,11 @@ public class Game {
 	/** Return the duration of this Game */
 	public int getDuration() {
 		return duration;
+	}
+	
+	/** Returns the EndTime of this Game */
+	public String getEndTime() {
+		return end_time;
 	}
 	
 	/** Returns the validity of this Game object */
