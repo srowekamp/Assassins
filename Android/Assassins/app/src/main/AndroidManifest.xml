@@ -51,7 +51,8 @@
             android:theme="@style/NoActionBar" />
         <activity
             android:name=".UserAccountActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".MainMenuActivity"/>
         <activity
             android:name=".SettingsActivity"
             android:theme="@style/AppTheme"
