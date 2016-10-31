@@ -3,8 +3,6 @@ package assassins;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import org.json.simple.JSONObject;
 import assassins.DB;
@@ -87,17 +85,17 @@ public class Game {
 	/** Create a game object from the user request through CreateGame.
 	 *  Throws an Exception if any of the parameters are missing */
 	public Game(HttpServletRequest request) throws Exception {
-			gameID 			= request.getParameter(KEY_GAMEID);
-	        password 		= request.getParameter(KEY_PASSWORD);
-	        xcenter 		= Double.parseDouble(request.getParameter(KEY_X_CENTER)); // These throw exceptions if parameter is null
-	        ycenter 		= Double.parseDouble(request.getParameter(KEY_Y_CENTER));
-	        radius 			= Integer.parseInt(request.getParameter(KEY_RADIUS));
-	        hostID 			= Integer.parseInt(request.getParameter(KEY_HOSTID));
-	        duration  		= Integer.parseInt(request.getParameter(KEY_DURATION));
-	        players_list 	= null;
-	        players_alive	= null;
-	        end_time		= null;
-	        if (gameID == null || password == null) throw new Exception();
+		gameID 			= request.getParameter(KEY_GAMEID);
+        password 		= request.getParameter(KEY_PASSWORD);
+        xcenter 		= Double.parseDouble(request.getParameter(KEY_X_CENTER)); // These throw exceptions if parameter is null
+        ycenter 		= Double.parseDouble(request.getParameter(KEY_Y_CENTER));
+        radius 			= Integer.parseInt(request.getParameter(KEY_RADIUS));
+        hostID 			= Integer.parseInt(request.getParameter(KEY_HOSTID));
+        duration  		= Integer.parseInt(request.getParameter(KEY_DURATION));
+        players_list 	= null;
+        players_alive	= null;
+        end_time		= null;
+        if (gameID == null || password == null) throw new Exception();
 	}
 	
 	/** Only for use with DB.createGame(Game). Adds the fields stored in the game object to PreparedStatement */
@@ -232,9 +230,24 @@ public class Game {
 		return toJSONString();
 	}
 	
+	/** Return the id of this Game */
+	public int getID() {
+		return id;
+	}
+	
 	/** Return the gameID of this Game */
 	public String getGameID() {
 		return gameID;
+	}
+	
+	/** Return the hostID of this Game */
+	public int getHostID() {
+		return hostID;
+	}
+	
+	/** Return the duration of this Game */
+	public int getDuration() {
+		return duration;
 	}
 	
 	/** Returns the validity of this Game object */
