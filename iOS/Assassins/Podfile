@@ -7,4 +7,5 @@ target 'Assassins' do
   # Pods for Assassins
   pod 'Alamofire', '~> 4.0'
   pod 'SwiftyJSON'
+  pod 'SwiftyBase64', '~> 1.0'
 end
