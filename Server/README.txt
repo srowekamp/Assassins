@@ -1,5 +1,13 @@
 The Java servlet projects go here
 
+Useful server functions:
+	ssh into proj-309-la-05.cs.iastate.edu with your netid
+		Stop service: sudo service tomcat stop
+		Start service: sudo service tomcat start
+		View one type of log: sudo journalctl -u tomcat.service
+		Other logs located in: /var/log/tomcat/
+	.WAR files go here: /var/lib/tomcat/webapps/
+
 How to work on server files :
 
 1) Download "Eclipse IDE for Java EE Developers." I'm using Eclipse Neon 
