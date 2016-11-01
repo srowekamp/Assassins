@@ -212,7 +212,7 @@ public class Game {
 				newPlayersAlive += String.format("%d,", oldPlayersAlive[i]);
 			}
 		}
-		return DB.updateAlivePlayers(id, newPlayersAlive);
+		return DB.updateAlivePlayers(this, newPlayersAlive);
 	}
 	
 	/** Converts this game object into a JSONObject */

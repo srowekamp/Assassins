@@ -131,8 +131,21 @@ public class DB {
 		return null;
 	}
 	
-	public static Game updateAlivePlayers(int id, String newPlayersAlive){
-		return null; // TODO 
+	/** Update the alive_players list of the specified Game object with the provided new list in the database */
+	public static Game updateAlivePlayers(Game game, String newPlayersAlive){
+		Connection con = DBConnectionHandler.getConnection();
+		String sql = "UPDATE " + DATABASE + "." + GAMES_TABLE + " SET "
+				+ Game.KEY_PLAYERS_ALIVE + "=? WHERE " + Game.KEY_ID + "=?";
+		try {
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1, newPlayersAlive);
+			ps.setInt(2, game.getID());
+			ps.executeUpdate();
+			return getGame(game.getGameID());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	/** Return true if the user exists in the database */
