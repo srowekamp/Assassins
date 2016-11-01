@@ -9,7 +9,6 @@
 import UIKit
 import Alamofire
 import SwiftyJSON
-import SwiftyBase64
 
 class CreateAccountVC: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     
@@ -46,26 +45,30 @@ class CreateAccountVC: UIViewController, UIImagePickerControllerDelegate, UINavi
         
         // encode the image a base64 string
         let imageData = UIImageJPEGRepresentation(userIcon.image!, CGFloat(100))
-        let base64StringImageData:String = imageData!.base64EncodedString()
-        print("\n\(base64StringImageData)\n")
         
+        var B64_ImageData:String = (imageData?.base64EncodedString())!
+        
+        B64_ImageData = B64_ImageData.replacingOccurrences(of: "+", with: "%2B")
+        B64_ImageData = B64_ImageData.replacingOccurrences(of: "/", with: "%2F")
+        B64_ImageData = B64_ImageData.replacingOccurrences(of: "=", with: "%3D")
+        
+        //print("\n\n\(B64_ImageData)\n\n")
         
         // set up data for server call
         let parameters = ["username":username.text!,
                           "password":password.text!,
                           "real_name":realName.text!,
-                          "b64_jpg":base64StringImageData]
+                          "b64_jpg":B64_ImageData]
        
-        
-        
         // make server call
-        Alamofire.request(Constants.addUserURL, parameters: parameters).validate().responseJSON { response in
+        Alamofire.request(Constants.addUserURL, method:.post, parameters: parameters).validate().responseJSON { response in
             switch response.result {
             case .success(let value):
                 let json = JSON(value)
                 print("JSON: \(json)")
+                break
             case .failure(let error):
-                print(error)
+                print("There was an error: \(error)")
             }
         }
 
