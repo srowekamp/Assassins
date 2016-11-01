@@ -131,6 +131,10 @@ public class DB {
 		return null;
 	}
 	
+	public static Game updateAlivePlayers(int id, String newPlayersAlive){
+		return null;
+	}
+	
 	/** Return true if the user exists in the database */
 	public static boolean doesUserExist(String username) {
 		Connection con = DBConnectionHandler.getConnection();

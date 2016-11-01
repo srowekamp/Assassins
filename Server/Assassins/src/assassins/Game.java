@@ -204,8 +204,15 @@ public class Game {
 	}
 	
 	/** Returns an updated Game object after removing the specified player from the alive_players list in the database */
-	public Game kill(int playerID) {
-		return null;
+	public Game killPlayer(int playerID) {
+		int[] oldPlayersAlive = getPlayersAlive();
+		String newPlayersAlive = "";
+		for (int i = 0; i < oldPlayersAlive.length; i++) {
+			if (oldPlayersAlive[i] != playerID) {
+				newPlayersAlive += String.format("%d,", oldPlayersAlive[i]);
+			}
+		}
+		return DB.updateAlivePlayers(id, newPlayersAlive);
 	}
 	
 	/** Converts this game object into a JSONObject */
