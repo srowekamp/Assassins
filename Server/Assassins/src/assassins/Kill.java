@@ -15,7 +15,12 @@ public class Kill extends HttpServlet {
 	 * Auto-generated number
 	 */
 	private static final long serialVersionUID = 4322300821194882221L;
-
+	public static final String KEY_RESULT = "result";
+	
+	public static final String RESULT_PARAMETER_MISSING = "parameter_error";
+	public static final String RESULT_ERROR = "error"; // Result when there is an error. Shouldn't occur
+	public static final String RESULT_SUCCESS = "success"; // Result when the kill is processed successfully
+	
     /** 
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
@@ -31,7 +36,29 @@ public class Kill extends HttpServlet {
         boolean parameterMissing = false;
         String gameID = null;
         int playerID = -1;
-        
+        try {
+        	gameID = request.getParameter(Game.KEY_GAMEID);
+        	playerID = Integer.parseInt(request.getParameter(UserAccount.KEY_ID));
+        } catch (Exception e) {
+        	result = RESULT_PARAMETER_MISSING;
+        	parameterMissing = true;
+        }
+        if (!parameterMissing) { // TODO ensure values grabbed from request are valid
+        	Game game = DB.getGame(gameID);
+        	if (game == null) {
+        		result = RESULT_ERROR;
+        	}
+        	else {
+        		game = game.killPlayer(playerID);
+        		if (game == null) {
+        			result = RESULT_ERROR;
+        		}
+        		else {
+        			result = RESULT_SUCCESS;
+        		}
+        	}
+        }
+        jsonResponse.put(KEY_RESULT, result);
         //Write the JSON object to the response
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");

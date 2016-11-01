@@ -203,6 +203,11 @@ public class Game {
 	    return ret;
 	}
 	
+	/** Returns an updated Game object after removing the specified player from the alive_players list in the database */
+	public Game kill(int playerID) {
+		return null;
+	}
+	
 	/** Converts this game object into a JSONObject */
 	public JSONObject toJSON() {
 		JSONObject j = new JSONObject();
