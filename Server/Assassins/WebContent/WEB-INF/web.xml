@@ -70,6 +70,15 @@
         <url-pattern>/UpdateGame</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+        <servlet-name>Kill</servlet-name>
+        <servlet-class>assassins.Kill</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Kill</servlet-name>
+        <url-pattern>/Kill</url-pattern>
+    </servlet-mapping>
 
 
 </web-app>
