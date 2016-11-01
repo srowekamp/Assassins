@@ -132,7 +132,7 @@ public class DB {
 	}
 	
 	public static Game updateAlivePlayers(int id, String newPlayersAlive){
-		return null;
+		return null; // TODO 
 	}
 	
 	/** Return true if the user exists in the database */
@@ -253,7 +253,7 @@ public class DB {
 			BufferedImage img = ImageIO.read(new ByteArrayInputStream(imageBytes));
 			File outputImage = new File(filepath + filename);
 	    	ImageIO.write(img, "jpg", outputImage);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
