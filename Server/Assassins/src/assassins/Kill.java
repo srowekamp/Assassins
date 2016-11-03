@@ -49,12 +49,19 @@ public class Kill extends HttpServlet {
         		result = RESULT_ERROR;
         	}
         	else {
-        		game = game.killPlayer(playerID);
+        		UserAccount target = game.getTarget(playerID);
+        		game = game.killPlayer(target.getUserID());
         		if (game == null) {
         			result = RESULT_ERROR;
         		}
         		else {
-        			result = RESULT_SUCCESS;
+        			game = game.addKill(playerID);
+        			if (game == null) {
+        				result = RESULT_ERROR;
+        			} else {
+        				result = RESULT_SUCCESS;
+        			}
+        			
         		}
         	}
         }
