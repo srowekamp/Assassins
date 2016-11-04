@@ -95,9 +95,8 @@ public class DB {
 		int end_hour = end_time_seconds / 3600;
 		int end_minute = (end_time_seconds % 3600) / 60;
 		int end_second = end_time_seconds % 60;
-		String endTime = String.format("%d%d%d", end_hour, end_minute, end_second);
+		String endTime = String.format("%02d%02d%02d", end_hour, end_minute, end_second);
 		// TODO Account for end time past midnight
-		// TODO Update format to pad with 0s if necessary
 		Connection con = DBConnectionHandler.getConnection();
 		//UPDATE `db309la05`.`active_games` SET `end_time`='235959' WHERE `id`='1';
 		String sql = "UPDATE " + DATABASE + "." + GAMES_TABLE + " SET "
