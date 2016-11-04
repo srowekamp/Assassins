@@ -92,11 +92,11 @@ public class DB {
 		s = Integer.parseInt(start_time.substring(4, 6));
 		current_time = 60 * 60 * h + 60 * m + s;
 		end_time_seconds = current_time + game.getDuration();
+		end_time_seconds = (end_time_seconds % 86400);
 		int end_hour = end_time_seconds / 3600;
 		int end_minute = (end_time_seconds % 3600) / 60;
 		int end_second = end_time_seconds % 60;
 		String endTime = String.format("%02d%02d%02d", end_hour, end_minute, end_second);
-		// TODO Account for end time past midnight
 		Connection con = DBConnectionHandler.getConnection();
 		//UPDATE `db309la05`.`active_games` SET `end_time`='235959' WHERE `id`='1';
 		String sql = "UPDATE " + DATABASE + "." + GAMES_TABLE + " SET "
