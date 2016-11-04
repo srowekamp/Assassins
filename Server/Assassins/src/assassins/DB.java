@@ -96,7 +96,8 @@ public class DB {
 		int end_minute = (end_time_seconds % 3600) / 60;
 		int end_second = end_time_seconds % 60;
 		String endTime = String.format("%d%d%d", end_hour, end_minute, end_second);
-		// TODO set end time to string
+		// TODO Account for end time past midnight
+		// TODO Update format to pad with 0s if necessary
 		Connection con = DBConnectionHandler.getConnection();
 		//UPDATE `db309la05`.`active_games` SET `end_time`='235959' WHERE `id`='1';
 		String sql = "UPDATE " + DATABASE + "." + GAMES_TABLE + " SET "
@@ -120,6 +121,7 @@ public class DB {
 	public static Game setTargetList(Game game) {
 		int players[] = game.getPlayers();
 		Integer[] playersAlive = new Integer[players.length];
+		for (int i = 0; i < players.length; i++) playersAlive[i] = new Integer(players[i]);
 		Collections.shuffle(Arrays.asList(playersAlive));
 		String players_alive = String.format("%d,", players[0]);
 		for (int i = 0 ; i < players.length; i++) {
