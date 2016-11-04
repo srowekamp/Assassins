@@ -55,13 +55,12 @@ public class Kill extends HttpServlet {
         			result = RESULT_ERROR;
         		}
         		else {
-        			game = game.addKill(playerID);
-        			if (game == null) {
+        			UserAccount player = DB.addKill(playerID);
+        			if (player == null) {
         				result = RESULT_ERROR;
         			} else {
         				result = RESULT_SUCCESS;
         			}
-        			
         		}
         	}
         }
