@@ -73,10 +73,23 @@ Current functions of the server (needs VPN):
 	Return: JSONObject
 		keys:
 			result: A value indictating what happened. Result values can be found in GetPlayers.java in the Assassins src
+			game: A JSONObject representing the current game. Once end_time and and players_alive have been set via GameStart by host, 
+					the game has started and everyone should move to the game view and start calling UpdateGame
 			num_players: A value indicating the number of players in the game (int)
-			Player x: (x = 0 to num_players - 1) One UserAccount for each player in the game
+			Player x: (x = 0 to num_players - 1) One JSONObject UserAccount for each player in the game
+			
+6) GameStart: http://proj-309-la-05.cs.iastate.edu:8080/Assassins/GameStart?gameid=test1&start_time=235959
+	Called when the host starts the game
+	parameters:
+		gameid: The gameID of this game (String)
+		start_time: The time when the game was started (String : "hhmmss" in 24 hour time)
+	Returns: JSONObject
+		keys:
+			result: A value indictating what happened. Result values can be found in GameStart.java in the Assassins src
+			game: A JSONObject representing the current game.
+			target: A UserAccount object of the host's target
 
-6) UpdateGame: http://proj-309-la-05.cs.iastate.edu:8080/Assassins/UpdateGame?gameid=test1&id=4&x_location=-93.647220&y_location=42.025870
+7) UpdateGame: http://proj-309-la-05.cs.iastate.edu:8080/Assassins/UpdateGame?gameid=test1&id=4&x_location=-93.647220&y_location=42.025870
 	parameters:
 		gameid: The gameID of this game (String)
 		id: The id of the player making this request (int)
@@ -85,12 +98,25 @@ Current functions of the server (needs VPN):
 	Returns: JSONObject
 		keys:
 			result: A value indictating what happened. Result values can be found in UpdateGame.java in the Assassins src
+			game: A JSONObject representing the current game.
 			istop: A boolean value encoded as a String ("true" or "false") indicating whether or not this player is the top of the list. Top player calls EndGame
 			target: A UserAccount object of the player's target
+			
+8) Kill: http://proj-309-la-05.cs.iastate.edu:8080/Assassins/Kill?gameid=test1&id=6
+	Called by the player making a kill.
+	parameters:
+		gameid: The gameID of this game (String)
+		id: The id of the player who made the kill (int)
+	Returns: JSONObject
+		keys:
+			result: A value indictating what happened. Result values can be found in Kill.java in the Assassins src
 
-) Output Users table: http://proj-309-la-05.cs.iastate.edu/connect.php
+9) GameFinish: I'm not done yet
+	Called by the player at the top of the alive_players list (istop flag in update game) when game is over. 
+
+10) Output Users table: http://proj-309-la-05.cs.iastate.edu/connect.php
 	Outputs all data in the users table from the database
 	Just for testing. Don't use this in code. 
 	
-) User Photos: http://proj-309-la-05.cs.iastate.edu:8080/userImages/x.jpg
+11) User Photos: http://proj-309-la-05.cs.iastate.edu:8080/userImages/x.jpg
 	int x = id of user in database
