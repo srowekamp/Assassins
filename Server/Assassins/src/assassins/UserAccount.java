@@ -70,8 +70,14 @@ public class UserAccount {
 		return j.toJSONString();
 	}
 	
+	/** Return the id of this user */
 	public int getUserID() {
 		return id;
+	}
+	
+	/** Return the total kills of this player */
+	public int getTotalKills() {
+		return totalKills;
 	}
 	
     /** Checks the provided username for validity */

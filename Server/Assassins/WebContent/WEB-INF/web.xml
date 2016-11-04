@@ -41,6 +41,16 @@
     </servlet-mapping>
     
     <servlet>
+        <servlet-name>GameStart</servlet-name>
+        <servlet-class>assassins.GameStart</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GameStart</servlet-name>
+        <url-pattern>/GameStart</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
         <servlet-name>GetPlayers</servlet-name>
         <servlet-class>assassins.GetPlayers</servlet-class>
     </servlet>
@@ -60,6 +70,15 @@
         <url-pattern>/UpdateGame</url-pattern>
     </servlet-mapping>
     
+    <servlet>
+        <servlet-name>Kill</servlet-name>
+        <servlet-class>assassins.Kill</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Kill</servlet-name>
+        <url-pattern>/Kill</url-pattern>
+    </servlet-mapping>
 
 
 </web-app>

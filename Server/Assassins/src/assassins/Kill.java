@@ -9,21 +9,19 @@ import org.json.simple.JSONObject;
 import assassins.UserAccount;
 import assassins.DB;
 
-public class GetPlayers extends HttpServlet {
+public class Kill extends HttpServlet {
 	
-    /**
+	/**
 	 * Auto-generated number
 	 */
-	private static final long serialVersionUID = -8266407644996434044L;
-	
+	private static final long serialVersionUID = 4322300821194882221L;
 	public static final String KEY_RESULT = "result";
-	public static final String KEY_NUM_PLAYERS = "num_players";
 	
 	public static final String RESULT_PARAMETER_MISSING = "parameter_error";
-	public static final String RESULT_NORMAL = "normal";
 	public static final String RESULT_ERROR = "error"; // Result when there is an error. Shouldn't occur
-
-	/** 
+	public static final String RESULT_SUCCESS = "success"; // Result when the kill is processed successfully
+	
+    /** 
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -38,41 +36,31 @@ public class GetPlayers extends HttpServlet {
         boolean parameterMissing = false;
         String gameID = null;
         int playerID = -1;
-        double xlocation = -1;
-        double ylocation = -1;
         try {
         	gameID = request.getParameter(Game.KEY_GAMEID);
         	playerID = Integer.parseInt(request.getParameter(UserAccount.KEY_ID));
-        	xlocation = Double.parseDouble(request.getParameter(UserAccount.KEY_X_LOCATION));
-        	ylocation = Double.parseDouble(request.getParameter(UserAccount.KEY_Y_LOCATION));
         } catch (Exception e) {
         	result = RESULT_PARAMETER_MISSING;
         	parameterMissing = true;
         }
         if (!parameterMissing) { // TODO ensure values grabbed from request are valid
-        	// Get the latest game object
         	Game game = DB.getGame(gameID);
         	if (game == null) {
         		result = RESULT_ERROR;
         	}
         	else {
-        		// Get the list of player ids
-        		int[] players = game.getPlayers();
-        		// TODO ensure list is valid
-        		int numPlayers = players.length;
-        		jsonResponse.put(KEY_NUM_PLAYERS, numPlayers);
-        		// Add each player to the JSONObject response with Key: "Player %d" starting from 0 to numPlayers - 1
-        		if (numPlayers > 0) {
-        			for (int i = 0; i < numPlayers; i++) {
-        				jsonResponse.put(String.format("Player %d", i), DB.getUser(players[i]).toJSONString());
-        			}
-        			// Update the user's location so that the lobby can display the location of all in game while waiting for game to start
-        			DB.updateUserLocation(playerID, xlocation, ylocation);
-        			jsonResponse.put(Game.KEY_GAME, DB.getGame(gameID));
-        			result = RESULT_NORMAL;
+        		UserAccount target = game.getTarget(playerID);
+        		game = game.killPlayer(target.getUserID());
+        		if (game == null) {
+        			result = RESULT_ERROR;
         		}
         		else {
-	        		result = RESULT_ERROR;
+        			UserAccount player = DB.addKill(playerID);
+        			if (player == null) {
+        				result = RESULT_ERROR;
+        			} else {
+        				result = RESULT_SUCCESS;
+        			}
         		}
         	}
         }
