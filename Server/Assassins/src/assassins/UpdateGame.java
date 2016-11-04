@@ -80,7 +80,7 @@ public class UpdateGame extends HttpServlet {
 	        		if (isTop && target.getUserID() == playerID) {
 	        			result = RESULT_GAME_WIN;
 	        		}
-	        		if (game.getEndTime().equals(Game.GAME_OVER)) {
+	        		else if (game.getEndTime().equals(Game.GAME_OVER)) {
 	        			result = RESULT_GAME_OVER;
 	        		}
 	        		else {
