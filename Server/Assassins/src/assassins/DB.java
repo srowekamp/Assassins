@@ -32,6 +32,9 @@ public class DB {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		finally {
+			try { if (con != null) con.close(); } catch (Exception e) {};
+		}
 		return false;
 	}
 	
@@ -46,6 +49,9 @@ public class DB {
 			if (rs.next()) return new Game(rs);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		finally {
+			try { if (con != null) con.close(); } catch (Exception e) {};
 		}
 		return null;
 	}
@@ -70,6 +76,9 @@ public class DB {
 			return getGame(game.getGameID());
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		finally {
+			try { if (con != null) con.close(); } catch (Exception e) {};
 		}
 		return null;
 	}
@@ -101,6 +110,9 @@ public class DB {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		finally {
+			try { if (con != null) con.close(); } catch (Exception e) {};
+		}
 		return null;
 	}
 
@@ -128,6 +140,9 @@ public class DB {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		finally {
+			try { if (con != null) con.close(); } catch (Exception e) {};
+		}
 		return null;
 	}
 	
@@ -145,6 +160,9 @@ public class DB {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		finally {
+			try { if (con != null) con.close(); } catch (Exception e) {};
+		}
 		return null;
 	}
 	
@@ -159,6 +177,9 @@ public class DB {
 			if (rs.next()) return true;
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		finally {
+			try { if (con != null) con.close(); } catch (Exception e) {};
 		}
 		return false;
 	}
@@ -177,6 +198,9 @@ public class DB {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		finally {
+			try { if (con != null) con.close(); } catch (Exception e) {};
+		}
 		return false;
 	}
 	
@@ -191,6 +215,9 @@ public class DB {
 			if (rs.next()) return new UserAccount(rs);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		finally {
+			try { if (con != null) con.close(); } catch (Exception e) {};
 		}
 		return null;
 	}
@@ -207,6 +234,9 @@ public class DB {
 			if (rs.next()) return new UserAccount(rs);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		finally {
+			try { if (con != null) con.close(); } catch (Exception e) {};
 		}
 		return null;
 	}
@@ -235,6 +265,9 @@ public class DB {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		finally {
+			try { if (con != null) con.close(); } catch (Exception e) {};
+		}
 		return null;
 	}
 	
@@ -254,6 +287,9 @@ public class DB {
 			return getUser(userID); // Assumes update was successful
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		finally {
+			try { if (con != null) con.close(); } catch (Exception e) {};
 		}
 		return null;
 	}
@@ -291,6 +327,9 @@ Connection con = DBConnectionHandler.getConnection();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		finally {
+			try { if (con != null) con.close(); } catch (Exception e) {};
+		}
 		return null;
     }
     
@@ -312,6 +351,9 @@ Connection con = DBConnectionHandler.getConnection();
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
+		finally {
+			try { if (con != null) con.close(); } catch (Exception e) {};
+		}
     	return null;
     }
 }
