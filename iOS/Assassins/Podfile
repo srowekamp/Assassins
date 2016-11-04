@@ -6,4 +6,5 @@ target 'Assassins' do
   use_frameworks!
   # Pods for Assassins
   pod 'Alamofire', '~> 4.0'
+  pod 'SwiftyJSON'
 end
