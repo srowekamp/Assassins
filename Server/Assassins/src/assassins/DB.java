@@ -86,11 +86,28 @@ public class DB {
 	}
 	
 	public static Game joinGame(String gameID, String playerID){
-		Connection con = DBConnectionHandler.getConnectoin();
+		Connection con = DBConnectionHandler.getConnection();
 		String sql = "SELECT * FROM " + DATABASE + "." + GAMES_TABLE +  " WHERE " + Game.KEY_GAMEID + "=?";
 		try{
 			PreparedStatement ps = con.prepareStatement(sql);
-			ps.
+			ps.setString(1, gameID);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()){
+				return new Game(rs);
+			}
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				if(con != null){
+					con.close();
+				}
+			}
+			catch(Exception e){
+				
+			}
 		}
 	}
 	
