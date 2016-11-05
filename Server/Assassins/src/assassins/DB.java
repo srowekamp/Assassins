@@ -106,9 +106,9 @@ public class DB {
 				}
 			}
 			catch(Exception e){
-				
 			}
 		}
+		return null;
 	}
 	
 	/** Return true if the username and password provided match a user in the database */
