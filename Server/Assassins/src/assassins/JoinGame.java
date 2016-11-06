@@ -30,14 +30,25 @@ public class JoinGame extends HttpServlet{
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
 		JSONObject jsonResponse = new JSONObject();
+		String result = null;
 		String playerList = request.getParameter(Game.KEY_PLAYERS_LIST);
+		String playerID = request.getParameter(UserAccount.KEY_ID);
 		String gameID = request.getParameter(Game.KEY_GAMEID);
 		String password = request.getParameter(Game.KEY_PASSWORD);
 		Game tempGame = null;
 		
 		if(DB.doesGameExist(gameID)){
 			tempGame = DB.attemptJoinGame(gameID, password);
+			if(tempGame != null){
+				playerList += playerID + ",";
+				tempGame = DB.joinGame(tempGame, playerList);
+			}
 		}
+		//
+		/* write the json object to the response */
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().write(jsonResponse.toString());
 	}
 	
 	/** 
