@@ -86,10 +86,12 @@ public class DB {
 	}
 	
 	/**
-	 * attemptJoinGame checks the database for the given gameID and password
-	 * @param gameID
-	 * @param password
-	 * @return
+	 * attemptJoinGame checks the database for the given gameID and password and returns the game that it
+	 * finds
+	 * 
+	 * @param gameID to look for
+	 * @param password to look for
+	 * @return game it finds
 	 */
 	public static Game attemptJoinGame(String gameID, String password){
 		Connection con = DBConnectionHandler.getConnection();
@@ -119,6 +121,13 @@ public class DB {
 		return null;
 	}
 	
+	/**
+	 * joinGame adds the player to the joining player to the end of the player list.
+	 * 
+	 * @param game
+	 * @param playersList
+	 * @return game with new list
+	 */
 	public static Game joinGame(Game game, String playersList){
 		Connection con = DBConnectionHandler.getConnection();
 		String sql = "UPDATE " + DATABASE + "." + GAMES_TABLE +  " SET " + Game.KEY_PLAYERS_LIST + "=? WHERE "

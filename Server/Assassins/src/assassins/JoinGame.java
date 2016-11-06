@@ -35,7 +35,9 @@ public class JoinGame extends HttpServlet{
 		String password = request.getParameter(Game.KEY_PASSWORD);
 		Game tempGame = null;
 		
-		
+		if(DB.doesGameExist(gameID)){
+			tempGame = DB.attemptJoinGame(gameID, password);
+		}
 	}
 	
 	/** 
