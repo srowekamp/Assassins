@@ -85,16 +85,50 @@ public class DB {
 		return false;
 	}
 	
-	public static Game joinGame(String gameID, String playerID){
+	/**
+	 * attemptJoinGame checks the database for the given gameID and password
+	 * @param gameID
+	 * @param password
+	 * @return
+	 */
+	public static Game attemptJoinGame(String gameID, String password){
 		Connection con = DBConnectionHandler.getConnection();
-		String sql = "SELECT * FROM " + DATABASE + "." + GAMES_TABLE +  " WHERE " + Game.KEY_GAMEID + "=?";
+		String sql = "SELECT * FROM " + DATABASE + "." + GAMES_TABLE + " WHERE " + Game.KEY_GAMEID + "=? and "
+						+ Game.KEY_PASSWORD + "=?";
 		try{
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setString(1, gameID);
+			ps.setString(2, password);
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()){
 				return new Game(rs);
 			}
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				if(con != null){
+					con.close();
+				}
+			}
+			catch(Exception e){
+			}
+		}
+		return null;
+	}
+	
+	public static Game joinGame(Game game, String playersList){
+		Connection con = DBConnectionHandler.getConnection();
+		String sql = "UPDATE " + DATABASE + "." + GAMES_TABLE +  " SET " + Game.KEY_PLAYERS_LIST + "=? WHERE "
+						+ Game.KEY_ID + "=?";
+		try{
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1, playersList);
+			ps.setInt(2, game.getID());
+			ps.executeUpdate();
+			return getGame(game.getGameID());
 		}
 		catch (Exception e){
 			e.printStackTrace();

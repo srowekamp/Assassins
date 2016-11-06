@@ -15,8 +15,8 @@ public class JoinGame extends HttpServlet{
 	
 	public static final String KEY_RESULT = "result";
 	public static final String RESULT_PARAMETER_MISSING = "parameter_error";
-	public static final String RESULT_JOIN_GAME_SUCCESS = "joined game";
-	public static final String RESULT_JOIN_GAME_FAILURE = "unable to join game";
+	public static final String RESULT_JOIN_GAME_SUCCESS = "Joined game.";
+	public static final String RESULT_JOIN_GAME_FAILURE = "Unable to join game. Password or GameID incorrect.";
 	
 	
 	/**
@@ -30,28 +30,11 @@ public class JoinGame extends HttpServlet{
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
 		JSONObject jsonResponse = new JSONObject();
+		String playerList = request.getParameter(Game.KEY_PLAYERS_LIST);
+		String gameID = request.getParameter(Game.KEY_GAMEID);
+		String password = request.getParameter(Game.KEY_PASSWORD);
 		Game tempGame = null;
-		boolean missingParameter = false;
-		String result = null;
-		try{
-			tempGame = new Game(request);
-		}
-		catch(Exception e){
-			missingParameter = true;
-			result = RESULT_PARAMETER_MISSING;
-		}
-		Game game = null;
-		if(!missingParameter){
-			String validity = tempGame.checkValidity();
-			if(validity.equals(Game.VALID)){
-				if(DB.doesGameExist(tempGame.getGameID())){
-					result = game.RESULT_GAME_EXISTS;
-				}
-				else{
-					
-				}
-			}
-		}
+		
 		
 	}
 	
