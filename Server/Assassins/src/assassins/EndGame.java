@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.simple.JSONObject;
+
 public class EndGame extends HttpServlet{
 	
 	/**
@@ -28,6 +30,23 @@ public class EndGame extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException{
+		JSONObject jsonResponse = new JSONObject();
+		String result = null;
+		String currentTime = null;
+		String gameID = request.getParameter(Game.KEY_GAMEID);
+		
+		if((DB.getNumberPlayersAlive(Integer.parseInt(gameID)) == 1) ||
+			(DB.getTimeRemaining(Integer.parseInt(gameID), currentTime) < 1)){
+			result = KEY_SUCCESS;
+			/*
+			 * update stats
+			 */
+			
+		}
+		else {
+			
+		}
+		
 		
 	}
 	

@@ -31,7 +31,6 @@ public class JoinGame extends HttpServlet{
 			throws ServletException, IOException{
 		JSONObject jsonResponse = new JSONObject();
 		String result = null;
-		String playerList = request.getParameter(Game.KEY_PLAYERS_LIST);
 		String playerID = request.getParameter(UserAccount.KEY_ID);
 		String gameID = request.getParameter(Game.KEY_GAMEID);
 		String password = request.getParameter(Game.KEY_PASSWORD);
@@ -40,6 +39,12 @@ public class JoinGame extends HttpServlet{
 		if(DB.doesGameExist(gameID)){
 			tempGame = DB.attemptJoinGame(gameID, password);
 			if(tempGame != null){
+				int[] players = tempGame.getPlayers();
+				String playerList = "";
+				/* turns array into string */
+				for(int i = 0; i < players.length; i++){
+					playerList += String.format("%d,", players[i]);
+				}
 				playerList += playerID + ",";
 				tempGame = DB.joinGame(tempGame, playerList);
 			}

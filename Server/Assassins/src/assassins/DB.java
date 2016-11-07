@@ -83,6 +83,12 @@ public class DB {
 		return null;
 	}
 	
+	public static Game removeGame(Game game){
+		Connection con = DBConnectionHandler.getConnection();
+		String sql = "DELETE " + DATABASE + "." + GAMES_TABLE + " ";
+		return null;
+	}
+	
 	/** Return an updated Game object after adding the End Time of a game given the time it was started,
 	 *  using the duration specified on creation */
 	public static Game setEndTime(Game game, String start_time) {
