@@ -8,23 +8,52 @@
 
 import UIKit
 
-class CreateGameVC: UIViewController {
+class CreateGameVC: UIViewController, UITextFieldDelegate {
 
-    @IBOutlet weak var privateMatchSwitch: UISwitch!
-    @IBOutlet weak var rangeSlider: UISlider!
-    @IBOutlet weak var sliderValueLabel: UILabel!
+    @IBOutlet weak var gameID: UITextField!
+    @IBOutlet weak var gamePassword: UITextField!
+    @IBOutlet weak var gameDuration: UIDatePicker!
+    
+    var gameRadius = 10.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        privateMatchSwitch.setOn(false, animated: true)
-        sliderValueLabel.text = "\(rangeSlider.value)"
+        setUpTextField(textField: gameID)
+        setUpTextField(textField: gamePassword)
     }
     
-    @IBAction func sliderChanged(_ sender: AnyObject) {
-        sliderValueLabel.text = "\(rangeSlider.value)"
+    func setUpTextField(textField:UITextField) {
+        textField.delegate = self
+        textField.autocapitalizationType = .none
+        textField.autocorrectionType = .no
     }
     
-    @IBAction func privateMatchSwitced(_ sender: AnyObject) {
-        print("Switch Fliped")
+    // purely to test if variables are being transfered between classes properly. 
+    override func viewWillAppear(_ animated: Bool) {
+        print(gameRadius)
+    }
+    
+    @IBAction func mapPicker(_ sender: Any) {
+        performSegue(withIdentifier: "mapSelect", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        switch segue.identifier!{
+        case "mapSelect":
+            let mapSelectVC = segue.destination as? MapSelectVC
+            mapSelectVC?.mainSettingsVC = self
+            return
+        default:
+            return
+        }
+    }
+    
+    // MARK: Text Field Methods
+    
+    // delegate method to close keyboard when the return key is pressed
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        textField.resignFirstResponder()
+        return true
     }
 }
