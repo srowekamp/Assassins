@@ -55,6 +55,7 @@ public class JoinGame extends HttpServlet{
 				}
 				else result = RESULT_JOIN_GAME_FAILURE;
 			}
+			else result = RESULT_JOIN_GAME_FAILURE;
 		}
 		else result = RESULT_JOIN_GAME_FAILURE;
 		jsonResponse.put(KEY_RESULT, result);
