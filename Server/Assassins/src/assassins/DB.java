@@ -173,12 +173,12 @@ public class DB {
 	 * @param game to be checked
 	 * @return number of players, 0 if unable to execute query
 	 */
-	public static int getNumberPlayersAlive(Game game){
+	public static int getNumberPlayersAlive(int gameID){
 		Connection con = DBConnectionHandler.getConnection();
 		String sql = "SELECT * FROM " + DATABASE + "." + GAMES_TABLE + " WHERE " + Game.KEY_GAMEID + "?=";
 		try{
 			PreparedStatement ps = con.prepareStatement(sql);
-			ps.setInt(1, game.getID());
+			ps.setInt(1, gameID);
 			ResultSet rs = ps.executeQuery();
 			Game tempGame = new Game(rs);
 			return tempGame.getPlayersAlive().length;
@@ -198,12 +198,14 @@ public class DB {
 		return 0;
 	}
 	
-	public static String getTimeRemaining(Game game){
+	public static String getTimeRemaining(int gameID){
 		Connection con = DBConnectionHandler.getConnection();
 		String sql = "SELECT * FROM " + DATABASE + "." + GAMES_TABLE + " WHERE " + Game.KEY_GAMEID + "?=";
 		try{
 			PreparedStatement ps = con.prepareStatement(sql);
-			ps.
+			ps.setInt(1, gameID);
+			ResultSet rs = ps.executeQuery();
+			Game tempGame = new Game(rs);
 		}
 		catch(Exception e){
 			e.printStackTrace();
