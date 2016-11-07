@@ -32,17 +32,17 @@ public class EndGame extends HttpServlet{
 			throws ServletException, IOException{
 		JSONObject jsonResponse = new JSONObject();
 		String result = null;
-		String currentTime = null;
 		String gameID = request.getParameter(Game.KEY_GAMEID);
+		Game tempGame = null;
 		
-		if((DB.getNumberPlayersAlive(Integer.parseInt(gameID)) == 1) ||
-			(DB.getTimeRemaining(Integer.parseInt(gameID), currentTime) < 1)){
-			result = KEY_SUCCESS;
+		if(DB.doesGameExist(gameID)){
+			tempGame = DB.removeGame(gameID);
 			/*
 			 * update stats
 			 */
 			
 		}
+		
 		else {
 			
 		}

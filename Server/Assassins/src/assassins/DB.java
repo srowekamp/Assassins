@@ -83,9 +83,28 @@ public class DB {
 		return null;
 	}
 	
-	public static Game removeGame(Game game){
+	public static Game removeGame(String gameID){
 		Connection con = DBConnectionHandler.getConnection();
-		String sql = "DELETE " + DATABASE + "." + GAMES_TABLE + " ";
+		String sql = "DELETE " + DATABASE + "." + GAMES_TABLE + " WHERE " + Game.KEY_GAMEID + "=?";
+		try{
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1, gameID);
+			ResultSet rs = ps.executeQuery();
+			Game game = new Game(rs);
+			return game;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				if(con != null){
+					con.close();
+				}
+			}
+			catch(Exception e){
+			}
+		}
 		return null;
 	}
 	
