@@ -67,6 +67,18 @@ public class LobbyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
 
+
+        // Setup the Map
+        mapView = (MapView) findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                setUpMap(googleMap);
+                updateMap();
+            }
+        });
+
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mDrawerList = (ListView)findViewById(R.id.navList);
         addDrawerItems();
@@ -88,6 +100,9 @@ public class LobbyActivity extends AppCompatActivity {
             // If app has permission, setup Location service
             LocationListener locationListener = new MyLocationListener();
             LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+            lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
             // Request Location updates with static parameters
             locationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
@@ -96,16 +111,6 @@ public class LobbyActivity extends AppCompatActivity {
                     locationListener);
             updateTxt();
         }
-
-        // Setup the Map
-        mapView = (MapView) findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                setUpMap(googleMap);
-            }
-        });
 
         // Make Profile ImageView Rounded
         ImageView imageView = (ImageView)findViewById(R.id.imageView);

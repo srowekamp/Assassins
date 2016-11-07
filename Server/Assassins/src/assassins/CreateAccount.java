@@ -28,7 +28,7 @@ public class CreateAccount extends HttpServlet {
 	public static final String RESULT_NAME_INVALID = "name_error"; // Value of Result when an invalid real name is passed
 	public static final String RESULT_OTHER_ERROR = "other_error"; // Value of Result when an error occurs
 
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
      * @param response servlet response
