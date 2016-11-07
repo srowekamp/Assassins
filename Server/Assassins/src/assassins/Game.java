@@ -3,8 +3,6 @@ package assassins;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import org.json.simple.JSONObject;
 import assassins.DB;
@@ -19,9 +17,11 @@ public class Game {
 	public static final String RESULT_RADIUS_INVALID = "radius_error"; // Value of Result when an invalid radius is passed
 	public static final String RESULT_HOSTID_INVALID = "hostid_error"; // Value of Result when an invalid host ID is passed
 	public static final String RESULT_DURATION_INVALID = "duration_error"; // Value of Result when an invalid duration is passed
+	public static final String RESULT_START_TIME_INVALID = "start_time_error"; // Value of Result when an invalid start_time is passed to GameStart
 	public static final String RESULT_OTHER_ERROR = "other_error"; // Value of Result when an error occurs
 	
 	public static final String VALID = "valid";
+	public static final String GAME_OVER = "game_over";
 	
 	public static final String KEY_GAME = "game";
 	
@@ -38,6 +38,8 @@ public class Game {
 	public static final String KEY_PLAYERS_ALIVE = "players_alive";
 	public static final String KEY_END_TIME = "end_time";
 	
+	public static final String KEY_START_TIME = "start_time";
+	
 	public static final int GAMEID_MIN_LENGTH = 4;
 	public static final int GAMEID_MAX_LENGTH = 32;
 	public static final int PASSWORD_MIN_LENGTH = 5;
@@ -50,6 +52,7 @@ public class Game {
 	public static final int RADIUS_MAX_VALUE = 5000; // Maximum size of the game radius in m = 5km
 	public static final int DURATION_MIN_VALUE = 60 * 10; // Minimum duration of the game in seconds = 10 minutes
 	public static final int DURATION_MAX_VALUE = 60 * 60; // Maximum duration of the game in seconds = 1 hour
+	public static final int GAME_START_LENGTH = 6; // Correct length of start_time string
 	
 
 	private int id;
@@ -83,17 +86,17 @@ public class Game {
 	/** Create a game object from the user request through CreateGame.
 	 *  Throws an Exception if any of the parameters are missing */
 	public Game(HttpServletRequest request) throws Exception {
-			gameID 			= request.getParameter(KEY_GAMEID);
-	        password 		= request.getParameter(KEY_PASSWORD);
-	        xcenter 		= Double.parseDouble(request.getParameter(KEY_X_CENTER)); // These throw exceptions if parameter is null
-	        ycenter 		= Double.parseDouble(request.getParameter(KEY_Y_CENTER));
-	        radius 			= Integer.parseInt(request.getParameter(KEY_RADIUS));
-	        hostID 			= Integer.parseInt(request.getParameter(KEY_HOSTID));
-	        duration  		= Integer.parseInt(request.getParameter(KEY_DURATION));
-	        players_list 	= null;
-	        players_alive	= null;
-	        end_time		= null;
-	        if (gameID == null || password == null) throw new Exception();
+		gameID 			= request.getParameter(KEY_GAMEID);
+        password 		= request.getParameter(KEY_PASSWORD);
+        xcenter 		= Double.parseDouble(request.getParameter(KEY_X_CENTER)); // These throw exceptions if parameter is null
+        ycenter 		= Double.parseDouble(request.getParameter(KEY_Y_CENTER));
+        radius 			= Integer.parseInt(request.getParameter(KEY_RADIUS));
+        hostID 			= Integer.parseInt(request.getParameter(KEY_HOSTID));
+        duration  		= Integer.parseInt(request.getParameter(KEY_DURATION));
+        players_list 	= null;
+        players_alive	= null;
+        end_time		= null;
+        if (gameID == null || password == null) throw new Exception();
 	}
 	
 	/** Only for use with DB.createGame(Game). Adds the fields stored in the game object to PreparedStatement */
@@ -200,6 +203,18 @@ public class Game {
 	    return ret;
 	}
 	
+	/** Returns an updated Game object after removing the specified player from the alive_players list in the database */
+	public Game killPlayer(int playerID) {
+		int[] oldPlayersAlive = getPlayersAlive();
+		String newPlayersAlive = "";
+		for (int i = 0; i < oldPlayersAlive.length; i++) {
+			if (oldPlayersAlive[i] != playerID) {
+				newPlayersAlive += String.format("%d,", oldPlayersAlive[i]);
+			}
+		}
+		return DB.updateAlivePlayers(this, newPlayersAlive);
+	}
+	
 	/** Converts this game object into a JSONObject */
 	public JSONObject toJSON() {
 		JSONObject j = new JSONObject();
@@ -228,9 +243,29 @@ public class Game {
 		return toJSONString();
 	}
 	
+	/** Return the id of this Game */
+	public int getID() {
+		return id;
+	}
+	
 	/** Return the gameID of this Game */
 	public String getGameID() {
 		return gameID;
+	}
+	
+	/** Return the hostID of this Game */
+	public int getHostID() {
+		return hostID;
+	}
+	
+	/** Return the duration of this Game */
+	public int getDuration() {
+		return duration;
+	}
+	
+	/** Returns the EndTime of this Game */
+	public String getEndTime() {
+		return end_time;
 	}
 	
 	/** Returns the validity of this Game object */
@@ -279,5 +314,19 @@ public class Game {
     /** Checks the provided duration for validity */
     public static boolean isValidDuration(int d) {
     	return (d >= DURATION_MIN_VALUE && d <= DURATION_MAX_VALUE);
+    }
+    
+    /** Checks the provided start time for validity */
+    public static boolean isValidStartTime(String start_time) {
+    	if (start_time == null) return false;
+    	if (start_time.length() != GAME_START_LENGTH) return false;
+    	try {
+    		int h = Integer.parseInt(start_time.substring(0, 2));
+    		int m = Integer.parseInt(start_time.substring(2, 4));
+    		int s = Integer.parseInt(start_time.substring(4, 6));
+    	} catch (Exception e) {
+    		return false;
+    	}
+    	return true;
     }
 }

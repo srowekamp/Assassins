@@ -17,6 +17,8 @@ struct userInfo {
 
 var user = userInfo()
 
+var currentUser:Player?
+
 import UIKit
 import Alamofire
 import SwiftyJSON
@@ -26,14 +28,27 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var usernameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     
-    func switchView() {
+    func switchView(userJSON:JSON) {
+        // set up the current user object for use across the app
+        currentUser = Player(
+             id: userJSON["id"].int!,
+             username: userJSON["username"].string!,
+             password: userJSON["password"].string!,
+             real_Name: userJSON["real_name"].string!,
+             image_filename: userJSON["image_filename"].string!,
+             games_played: userJSON["games_played"].int!,
+             total_kills: userJSON["total_kills"].int!,
+             x_location: userJSON["x_location"].int!,
+             y_location: userJSON["y_location"].int!
+        )
         performSegue(withIdentifier: "loginToMain", sender: self)
     }
     
     func login(username:String, password:String) {
         // the url to login in to the server
         let loginURL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/Login"
-        let paramaters = ["username":"admin","password":"password"]
+        let paramaters = ["username":username,"password":password]
+        
         // make a request to the server and proccess the data
         Alamofire.request(loginURL, parameters: paramaters).responseJSON { response in
             if let data = response.result.value as? [String:String] {
@@ -43,16 +58,21 @@ class LoginVC: UIViewController, UITextFieldDelegate {
                     
                     // check that username and password are correct
                     if (json["username"].string! == username && json["password"].string! == password) {
-                        self.switchView()
+                        self.switchView(userJSON: json)
+                        return
                     } else {
-                        let alert = UIAlertController(title: "Login Failed", message: "You username or password is incorrect, please try again.", preferredStyle: UIAlertControllerStyle.alert)
-                        alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
+                        self.failedLogin()
                     }
-                    
                 }
             }
+            self.failedLogin()
         }
+    }
+    
+    func failedLogin(){
+        let alert = UIAlertController(title: "Login Failed", message: "You username or password is incorrect, please try again.", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     override func viewDidLoad() {
@@ -72,6 +92,10 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 
     // called when the user tries to log in
     @IBAction func tapLogin(_ sender: AnyObject) {
+        
+        // TODO: check that user name and password are of correct length
+        // username must be between 4 and 32 characters
+        // password must be between 5 and 32 characters
         login(username: usernameField.text!, password: passwordField.text! )
     }
     

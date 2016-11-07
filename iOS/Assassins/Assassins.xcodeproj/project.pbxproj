@@ -13,7 +13,6 @@
 		386735081D8B879300844D90 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 386735071D8B879300844D90 /* Assets.xcassets */; };
 		3867350B1D8B879300844D90 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 386735091D8B879300844D90 /* LaunchScreen.storyboard */; };
 		386BF4901DA428E300CDC02E /* PlayerListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386BF48F1DA428E300CDC02E /* PlayerListVC.swift */; };
-		388D0AAE1DA5F258006CF9E9 /* WebRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388D0AAD1DA5F258006CF9E9 /* WebRequest.swift */; };
 		38A6968D1DA3EA470061FE9A /* LobbyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A6968C1DA3EA470061FE9A /* LobbyVC.swift */; };
 		38B6557E1DA2EEA4004C9E02 /* CreateAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6557D1DA2EEA4004C9E02 /* CreateAccountVC.swift */; };
 		38B655841DA31FDB004C9E02 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B655831DA31FDB004C9E02 /* Player.swift */; };
@@ -38,7 +37,6 @@
 		3867350A1D8B879300844D90 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3867350C1D8B879300844D90 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		386BF48F1DA428E300CDC02E /* PlayerListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerListVC.swift; sourceTree = "<group>"; };
-		388D0AAD1DA5F258006CF9E9 /* WebRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebRequest.swift; sourceTree = "<group>"; };
 		38A6968C1DA3EA470061FE9A /* LobbyVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LobbyVC.swift; sourceTree = "<group>"; };
 		38B6557D1DA2EEA4004C9E02 /* CreateAccountVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateAccountVC.swift; sourceTree = "<group>"; };
 		38B655831DA31FDB004C9E02 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
@@ -121,7 +119,6 @@
 		38B655811DA31F1E004C9E02 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				388D0AAD1DA5F258006CF9E9 /* WebRequest.swift */,
 				38B655831DA31FDB004C9E02 /* Player.swift */,
 			);
 			name = Models;
@@ -186,7 +183,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0800;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = "LA-05";
 				TargetAttributes = {
 					386734F91D8B879300844D90 = {
@@ -282,7 +279,6 @@
 			files = (
 				38E8DBF41DA36196005EA2C2 /* GameEditorVC.swift in Sources */,
 				386735061D8B879300844D90 /* Assassins.xcdatamodeld in Sources */,
-				388D0AAE1DA5F258006CF9E9 /* WebRequest.swift in Sources */,
 				38E8DBF01DA3616D005EA2C2 /* JoinGameVC.swift in Sources */,
 				38A6968D1DA3EA470061FE9A /* LobbyVC.swift in Sources */,
 				38EB57F91DA4436100932027 /* TrackerVC.swift in Sources */,
@@ -419,8 +415,9 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 9W76SZUBMN;
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Assassins/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.LA-05.Assassins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
@@ -434,8 +431,9 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 9W76SZUBMN;
+				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Assassins/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.LA-05.Assassins";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;

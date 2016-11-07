@@ -21,6 +21,7 @@ public class UpdateGame extends HttpServlet {
 	public static final String RESULT_PLAYER_DEAD = "dead"; // Result when the player was killed since the last update
 	public static final String RESULT_NORMAL = "normal"; // Result when the game is proceeding as normal
 	public static final String RESULT_GAME_WIN = "win"; // Result when the player has won the game
+	public static final String RESULT_GAME_OVER = "game_over"; // Result when the game has ended because time ran out or host ended game early
 	public static final String RESULT_ERROR = "error"; // Result when there is an error. Shouldn't occur
 	
 	public static final String KEY_TARGET = "target"; // Key in the JSONObject response corresponding to the player's target represented by a JSONObject in String form
@@ -79,11 +80,16 @@ public class UpdateGame extends HttpServlet {
 	        		if (isTop && target.getUserID() == playerID) {
 	        			result = RESULT_GAME_WIN;
 	        		}
+	        		else if (game.getEndTime().equals(Game.GAME_OVER)) {
+	        			result = RESULT_GAME_OVER;
+	        		}
 	        		else {
 	        			// The game is proceeding as normal, first update the player's location in the database
 	        			DB.updateUserLocation(playerID, xlocation, ylocation);
 	        			// Now put the player's target in the response JSONObject
 	        			jsonResponse.put(KEY_TARGET, target.toJSONString());
+	        			// Also put the game in the response
+	        			jsonResponse.put(Game.KEY_GAME, game);
 	        			result = RESULT_NORMAL;
 	        		}
         		}

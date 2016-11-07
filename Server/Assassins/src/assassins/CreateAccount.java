@@ -61,7 +61,10 @@ public class CreateAccount extends HttpServlet {
         		else {
         			// Now save the provided image to the server and update the filename in the database
         			ua = DB.addUserImage(ua.getUserID(), b64Image);
-        			if (ua == null) jsonResponse.put(KEY_RESULT, RESULT_OTHER_ERROR); // shouldn't happen
+        			if (ua == null) {
+        				jsonResponse.put(KEY_RESULT, RESULT_OTHER_ERROR); // shouldn't happen
+        				jsonResponse.put("img", b64Image);
+        			}
         			else {
         				jsonResponse.put(KEY_RESULT, RESULT_ACCOUNT_CREATED);
         				jsonResponse.put(UserAccount.KEY_USER_ACCOUNT, ua.toJSONString());

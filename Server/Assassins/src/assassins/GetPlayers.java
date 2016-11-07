@@ -68,6 +68,7 @@ public class GetPlayers extends HttpServlet {
         			}
         			// Update the user's location so that the lobby can display the location of all in game while waiting for game to start
         			DB.updateUserLocation(playerID, xlocation, ylocation);
+        			jsonResponse.put(Game.KEY_GAME, DB.getGame(gameID));
         			result = RESULT_NORMAL;
         		}
         		else {
