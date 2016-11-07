@@ -97,7 +97,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     @IBAction func tapLogin(_ sender: AnyObject) {
         
         if(ignoreLogin){
-            performSegue(withIdentifier: "loginToMain", sender: self)
+            login(username: "admin", password: "password")
             return
         }
         

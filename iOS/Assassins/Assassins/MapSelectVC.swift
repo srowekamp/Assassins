@@ -56,7 +56,7 @@ class MapSelectVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegat
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        Slider.minimumValue = 10.0
+        Slider.minimumValue = 100.0
         Slider.maximumValue = 1000.0
         
         // Setup Location Manager
@@ -80,6 +80,8 @@ class MapSelectVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegat
     
     override func viewWillDisappear(_ animated: Bool) {
         mainSettingsVC.gameRadius = Double(Slider.value)
+        mainSettingsVC.xcord = Double((_center?.longitude)!)
+        mainSettingsVC.ycord = Double((_center?.latitude)!)
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {

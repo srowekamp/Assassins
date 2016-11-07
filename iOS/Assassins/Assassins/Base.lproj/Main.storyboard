@@ -394,10 +394,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="I8Q-OK-0y5">
-                                <rect key="frame" x="27.5" y="155" width="320" height="358.5"/>
+                                <rect key="frame" x="27.5" y="132.5" width="320" height="403.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="MNg-5t-1XK">
-                                        <rect key="frame" x="0.0" y="0.0" width="248.5" height="30"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Game ID:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A9i-UF-NF4">
                                                 <rect key="frame" x="0.0" y="0.0" width="70.5" height="30"/>
@@ -405,8 +405,8 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="the name of your game" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9D8-tQ-asT">
-                                                <rect key="frame" x="78.5" y="0.0" width="170" height="30"/>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name You Give to Other People" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9D8-tQ-asT">
+                                                <rect key="frame" x="78.5" y="0.0" width="241.5" height="30"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
@@ -414,7 +414,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="eFz-kI-LZt">
-                                        <rect key="frame" x="0.0" y="38" width="280" height="30"/>
+                                        <rect key="frame" x="0.0" y="38" width="320" height="30"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AN8-Lv-2Xa">
                                                 <rect key="frame" x="0.0" y="0.0" width="74" height="30"/>
@@ -422,8 +422,8 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="leave blank for public game" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Tgi-6p-3Lk">
-                                                <rect key="frame" x="82" y="0.0" width="198" height="30"/>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Leave Blank for Public Game" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Tgi-6p-3Lk">
+                                                <rect key="frame" x="82" y="0.0" width="238" height="30"/>
                                                 <nil key="textColor"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
@@ -431,27 +431,39 @@
                                         </subviews>
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="53r-zg-Jub">
-                                        <rect key="frame" x="0.0" y="76" width="320" height="30"/>
-                                        <state key="normal" title="Click to Set Game Center"/>
+                                        <rect key="frame" x="0.0" y="76" width="320" height="33"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <state key="normal" title="Configure Play Area"/>
                                         <connections>
                                             <action selector="mapPicker:" destination="RcS-F5-1lq" eventType="touchUpInside" id="IvG-kg-ap2"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Game Duration:" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bV4-2o-KwR">
-                                        <rect key="frame" x="0.0" y="114" width="320" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="117" width="320" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="countDownTimer" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="dab-zr-qe4">
-                                        <rect key="frame" x="0.0" y="142.5" width="320" height="216"/>
+                                        <rect key="frame" x="0.0" y="145.5" width="320" height="216"/>
                                         <date key="date" timeIntervalSinceReferenceDate="500160846.17714298">
                                             <!--2016-11-06 21:34:06 +0000-->
                                         </date>
                                     </datePicker>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b38-jf-ykM">
+                                        <rect key="frame" x="0.0" y="369.5" width="320" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <state key="normal" title="Create Game"/>
+                                        <connections>
+                                            <action selector="createGame:" destination="RcS-F5-1lq" eventType="touchUpInside" id="meb-TR-BWA"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="b38-jf-ykM" firstAttribute="centerX" secondItem="I8Q-OK-0y5" secondAttribute="centerX" id="9ob-Aw-SfZ"/>
+                                    <constraint firstItem="MNg-5t-1XK" firstAttribute="centerX" secondItem="I8Q-OK-0y5" secondAttribute="centerX" id="AW0-US-IjC"/>
                                     <constraint firstItem="dab-zr-qe4" firstAttribute="centerX" secondItem="I8Q-OK-0y5" secondAttribute="centerX" id="Irf-mi-y6F"/>
+                                    <constraint firstItem="eFz-kI-LZt" firstAttribute="centerX" secondItem="I8Q-OK-0y5" secondAttribute="centerX" id="XOF-03-J0M"/>
                                     <constraint firstItem="53r-zg-Jub" firstAttribute="centerX" secondItem="I8Q-OK-0y5" secondAttribute="centerX" id="h7m-Tr-L6M"/>
                                     <constraint firstItem="bV4-2o-KwR" firstAttribute="centerX" secondItem="I8Q-OK-0y5" secondAttribute="centerX" id="qrn-lJ-qhH"/>
                                 </constraints>
@@ -470,6 +482,7 @@
                         <outlet property="gameID" destination="9D8-tQ-asT" id="2Wm-39-DO2"/>
                         <outlet property="gamePassword" destination="Tgi-6p-3Lk" id="tf3-iM-9Az"/>
                         <segue destination="Ppm-Yh-lZm" kind="show" identifier="mapSelect" id="EaR-Qf-Qch"/>
+                        <segue destination="XP6-r0-jAk" kind="show" identifier="createGameToGameView" id="iNO-gi-WW2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eal-u2-9QZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -495,13 +508,13 @@
                                 <rect key="frame" x="8" y="629" width="359" height="30"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Radius:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j9J-9p-ptJ">
-                                        <rect key="frame" x="0.0" y="5" width="45" height="21"/>
+                                        <rect key="frame" x="0.0" y="5" width="41" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="d2n-WA-5Wn">
-                                        <rect key="frame" x="51" y="0.0" width="310" height="31"/>
+                                        <rect key="frame" x="47" y="0.0" width="314" height="31"/>
                                         <connections>
                                             <action selector="sliderValueChanged:" destination="Ppm-Yh-lZm" eventType="valueChanged" id="EpU-rw-UYD"/>
                                         </connections>
@@ -528,7 +541,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bey-UB-oxU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2557.5999999999999" y="-501.49925037481262"/>
+            <point key="canvasLocation" x="3014" y="-357"/>
         </scene>
         <!--Join Game-->
         <scene sceneID="j6d-dP-l9k">
@@ -885,5 +898,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="mkb-pQ-9dg"/>
+        <segue reference="iNO-gi-WW2"/>
     </inferredMetricsTieBreakers>
 </document>

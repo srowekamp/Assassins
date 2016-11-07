@@ -14,6 +14,11 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     let locationManager = CLLocationManager();
     
+    var gameObject:Game?
+    var gameID:String!
+    
+    var center:CLLocationCoordinate2D?
+    
     private var _playArea: MKCircle = MKCircle()
     var playArea:MKCircle {
         get {
@@ -47,6 +52,8 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         mapView.mapType = MKMapType.hybrid
     }
     
+    func downloadGameData() 
+    
     override func viewDidAppear(_ animated: Bool) {
         locationManager.startUpdatingLocation()
     }
@@ -55,9 +62,13 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         let location = locations.last
         let center = CLLocationCoordinate2DMake((location?.coordinate.latitude)!, (location?.coordinate.longitude)!)
         let region = MKCoordinateRegion(center: center, span: MKCoordinateSpanMake(0.005, 0.005))
+        self.center = center
         mapView.setRegion(region, animated: false)
         playArea = MKCircle(center: center, radius: 100 as CLLocationDistance)
         locationManager.stopUpdatingLocation()
+        
+        // Once location has been determined, try to download game stats and update the ui
+        
     }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {

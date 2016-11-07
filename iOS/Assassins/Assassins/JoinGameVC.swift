@@ -29,6 +29,17 @@ class JoinGameVC: UIViewController, UITextFieldDelegate {
         }
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        switch segue.identifier! {
+        case "joinToGame":
+            let lobbyVC = segue.destination as? LobbyVC
+            lobbyVC?.gameID = gameID.text!
+            break
+        default:
+            break
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         gameID.delegate = self
