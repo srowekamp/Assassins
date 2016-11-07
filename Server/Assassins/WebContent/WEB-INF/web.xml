@@ -79,6 +79,15 @@
         <servlet-name>Kill</servlet-name>
         <url-pattern>/Kill</url-pattern>
     </servlet-mapping>
+    
+        <servlet>
+        <servlet-name>JoinGame</servlet-name>
+        <servlet-class>assassins.JoinGame</servlet-class>
+    </servlet>
 
+    <servlet-mapping>
+        <servlet-name>JoinGame</servlet-name>
+        <url-pattern>/JoinGame</url-pattern>
+    </servlet-mapping>
 
 </web-app>
