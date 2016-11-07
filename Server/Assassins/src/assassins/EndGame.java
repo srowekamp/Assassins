@@ -33,10 +33,11 @@ public class EndGame extends HttpServlet{
 			throws ServletException, IOException{
 		JSONObject jsonResponse = new JSONObject();
 		String result = null;
-		String gameID = request.getParameter(Game.KEY_GAMEID);
+		int gameID = Integer.parseInt(request.getParameter(Game.KEY_ID));
+		String gameName = request.getParameter(Game.KEY_GAMEID);
 		Game tempGame = null;
 		
-		if(DB.doesGameExist(gameID)){
+		if(DB.doesGameExist(gameName)){
 			tempGame = DB.removeGame(gameID);
 			/*
 			 * update stats
