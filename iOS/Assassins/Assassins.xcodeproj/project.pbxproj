@@ -14,8 +14,10 @@
 		3867350B1D8B879300844D90 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 386735091D8B879300844D90 /* LaunchScreen.storyboard */; };
 		386BF4901DA428E300CDC02E /* PlayerListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386BF48F1DA428E300CDC02E /* PlayerListVC.swift */; };
 		38A6968D1DA3EA470061FE9A /* LobbyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A6968C1DA3EA470061FE9A /* LobbyVC.swift */; };
+		38B0CF881DD029B000FAC736 /* MapPin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B0CF871DD029B000FAC736 /* MapPin.swift */; };
 		38B6557E1DA2EEA4004C9E02 /* CreateAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B6557D1DA2EEA4004C9E02 /* CreateAccountVC.swift */; };
 		38B655841DA31FDB004C9E02 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38B655831DA31FDB004C9E02 /* Player.swift */; };
+		38C90E221DCFDE1B008B0013 /* MapSelectVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C90E211DCFDE1B008B0013 /* MapSelectVC.swift */; };
 		38E8DBF01DA3616D005EA2C2 /* JoinGameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBEF1DA3616D005EA2C2 /* JoinGameVC.swift */; };
 		38E8DBF21DA3617E005EA2C2 /* CreateGameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBF11DA3617E005EA2C2 /* CreateGameVC.swift */; };
 		38E8DBF41DA36196005EA2C2 /* GameEditorVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBF31DA36196005EA2C2 /* GameEditorVC.swift */; };
@@ -38,8 +40,10 @@
 		3867350C1D8B879300844D90 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		386BF48F1DA428E300CDC02E /* PlayerListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerListVC.swift; sourceTree = "<group>"; };
 		38A6968C1DA3EA470061FE9A /* LobbyVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LobbyVC.swift; sourceTree = "<group>"; };
+		38B0CF871DD029B000FAC736 /* MapPin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapPin.swift; sourceTree = "<group>"; };
 		38B6557D1DA2EEA4004C9E02 /* CreateAccountVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateAccountVC.swift; sourceTree = "<group>"; };
 		38B655831DA31FDB004C9E02 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		38C90E211DCFDE1B008B0013 /* MapSelectVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapSelectVC.swift; sourceTree = "<group>"; };
 		38E8DBEF1DA3616D005EA2C2 /* JoinGameVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinGameVC.swift; sourceTree = "<group>"; };
 		38E8DBF11DA3617E005EA2C2 /* CreateGameVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateGameVC.swift; sourceTree = "<group>"; };
 		38E8DBF31DA36196005EA2C2 /* GameEditorVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameEditorVC.swift; sourceTree = "<group>"; };
@@ -66,7 +70,6 @@
 			isa = PBXGroup;
 			children = (
 				386734FC1D8B879300844D90 /* Assassins */,
-				386734FB1D8B879300844D90 /* Products */,
 				CE300855160EF9682D22E389 /* Pods */,
 				BE3E6353340E1A7A4DBDB1A0 /* Frameworks */,
 			);
@@ -78,6 +81,7 @@
 				386734FA1D8B879300844D90 /* Assassins.app */,
 			);
 			name = Products;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		386734FC1D8B879300844D90 /* Assassins */ = {
@@ -98,6 +102,7 @@
 				38E8DBF81DA361FA005EA2C2 /* LoginVC.swift */,
 				38E8DBF71DA361FA005EA2C2 /* MainMenuVC.swift */,
 				38B6557D1DA2EEA4004C9E02 /* CreateAccountVC.swift */,
+				38C90E211DCFDE1B008B0013 /* MapSelectVC.swift */,
 				38A6968C1DA3EA470061FE9A /* LobbyVC.swift */,
 				38E8DBEF1DA3616D005EA2C2 /* JoinGameVC.swift */,
 				38E8DBF11DA3617E005EA2C2 /* CreateGameVC.swift */,
@@ -112,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				386735011D8B879300844D90 /* Main.storyboard */,
+				38B0CF871DD029B000FAC736 /* MapPin.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -120,6 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				38B655831DA31FDB004C9E02 /* Player.swift */,
+				386734FB1D8B879300844D90 /* Products */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -283,9 +290,11 @@
 				38A6968D1DA3EA470061FE9A /* LobbyVC.swift in Sources */,
 				38EB57F91DA4436100932027 /* TrackerVC.swift in Sources */,
 				386BF4901DA428E300CDC02E /* PlayerListVC.swift in Sources */,
+				38B0CF881DD029B000FAC736 /* MapPin.swift in Sources */,
 				38E8DBF21DA3617E005EA2C2 /* CreateGameVC.swift in Sources */,
 				38E8DBFA1DA361FA005EA2C2 /* LoginVC.swift in Sources */,
 				38B6557E1DA2EEA4004C9E02 /* CreateAccountVC.swift in Sources */,
+				38C90E221DCFDE1B008B0013 /* MapSelectVC.swift in Sources */,
 				38B655841DA31FDB004C9E02 /* Player.swift in Sources */,
 				386734FE1D8B879300844D90 /* AppDelegate.swift in Sources */,
 				38E8DBF61DA3619E005EA2C2 /* SettingsVC.swift in Sources */,
