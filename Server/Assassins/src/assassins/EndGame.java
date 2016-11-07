@@ -33,16 +33,22 @@ public class EndGame extends HttpServlet{
 			throws ServletException, IOException{
 		JSONObject jsonResponse = new JSONObject();
 		String result = null;
-		int gameID = Integer.parseInt(request.getParameter(Game.KEY_ID));
 		String gameName = request.getParameter(Game.KEY_GAMEID);
-		Game tempGame = null;
+		Game tempGame = null, game = null;
 		
 		if(DB.doesGameExist(gameName)){
-			tempGame = DB.removeGame(gameID);
+			game = DB.getGame(gameName);
+			tempGame = DB.removeGame(game.getID(), gameName);
 			/*
 			 * update stats for all players when stats exist
 			 */
-			result = RESULT_REMOVE_GAME_SUCCESS;
+			if (tempGame == null) {
+				result = RESULT_REMOVE_GAME_SUCCESS;
+				jsonResponse.put(Game.KEY_GAME, game);
+			}
+			else {
+				result = RESULT_REMOVE_GAME_FAILURE;
+			}
 		}
 		else {
 			result = RESULT_REMOVE_GAME_FAILURE;

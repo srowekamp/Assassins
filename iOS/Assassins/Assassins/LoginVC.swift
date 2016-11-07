@@ -24,6 +24,9 @@ import Alamofire
 import SwiftyJSON
 
 class LoginVC: UIViewController, UITextFieldDelegate {
+    
+    // ignores login for testing purposes
+    let ignoreLogin = true
 
     @IBOutlet weak var usernameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
@@ -92,6 +95,11 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 
     // called when the user tries to log in
     @IBAction func tapLogin(_ sender: AnyObject) {
+        
+        if(ignoreLogin){
+            login(username: "admin", password: "password")
+            return
+        }
         
         // TODO: check that user name and password are of correct length
         // username must be between 4 and 32 characters

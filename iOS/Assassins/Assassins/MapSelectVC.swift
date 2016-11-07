@@ -1,34 +1,22 @@
 //
-//  LobbyVC.swift
+//  MapSelectVC.swift
 //  Assassins
 //
-//  Created by Scott Rowekamp on 10/4/16.
+//  Created by Scott Rowekamp on 11/6/16.
 //  Copyright © 2016 LA-05. All rights reserved.
 //
 
 import UIKit
 import MapKit
 import CoreLocation
-import Alamofire
-import SwiftyJSON
 
-
-class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
+class MapSelectVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     let locationManager = CLLocationManager();
     
-    var gameObject:Game?
-    var gameID:String!
-    var playerIsTop = false
-    var gametarget:Player?
+    var mainSettingsVC:CreateGameVC!
     
-    var sendingFromJoin = false
-    
-    var center:CLLocationCoordinate2D? {
-        didSet{
-            downloadGameData()
-        }
-    }
+    private var _center:CLLocationCoordinate2D?
     
     private var _playArea: MKCircle = MKCircle()
     var playArea:MKCircle {
@@ -41,14 +29,35 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             mapView.add(newValue)
         }
     }
+    
+    /* Used for Center Pin
+    
+    var _centerPin:MKAnnotation!
+    var centerPin:MKAnnotation {
+        get {
+            return _centerPin
+        }
+        set {
+            mapView.removeAnnotation(_centerPin)
+            _centerPin = newValue
+            mapView.addAnnotation(_centerPin)
+        }
+    }
+    
+    */
 
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var Slider: UISlider!
     
-    @IBAction func goBack(_ sender: AnyObject) {
-        self.dismiss(animated: true, completion: nil)
+    @IBAction func sliderValueChanged(_ sender: Any) {
+        playArea = MKCircle(center: _center!, radius: Double(Slider.value) as CLLocationDistance)
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        Slider.minimumValue = 100.0
+        Slider.maximumValue = 1000.0
         
         // Setup Location Manager
         self.locationManager.delegate = self
@@ -61,47 +70,35 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         mapView.userTrackingMode = MKUserTrackingMode(rawValue: 1)!
         mapView.showsUserLocation = true
         mapView.mapType = MKMapType.hybrid
-    }
-    
-    func downloadGameData()  {
         
-        let baseURL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/GetPlayers"
-        var parameters = [String:Any]()
         
-        print()
-        print(gameID)
-        
-        parameters["gameid"] = gameID
-        parameters["id"] = currentUser?.id
-        parameters["x_location"] = String(Double(center!.longitude))
-        parameters["y_location"] = String(Double(center!.latitude))
-        
-        Alamofire.request(baseURL, parameters: parameters).responseJSON { response in
-            
-            print(parameters)
-            if response.result.isSuccess {
-                let json = JSON(response.result.value!)
-                let gameData = json["game"]
-                
-                self.gameObject = Game(gameID: gameData["gameid"].string!, password: gameData["password"].string!, xcenter: gameData["xcenter"].double!, ycenter: gameData["ycenter"].double!, radius: gameData["radius"].int!, hostID: gameData["hostid"].int!, duration: gameData["duration"].int!, serverID: gameData["id"].int!)
-                
-                print("JSON: \(json)")
-            }
-        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         locationManager.startUpdatingLocation()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        mainSettingsVC.gameRadius = Double(Slider.value)
+        mainSettingsVC.xcord = Double((_center?.longitude)!)
+        mainSettingsVC.ycord = Double((_center?.latitude)!)
+    }
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let location = locations.last
         let center = CLLocationCoordinate2DMake((location?.coordinate.latitude)!, (location?.coordinate.longitude)!)
+        _center = center
         let region = MKCoordinateRegion(center: center, span: MKCoordinateSpanMake(0.005, 0.005))
-        self.center = center
         mapView.setRegion(region, animated: false)
-        playArea = MKCircle(center: center, radius: 100 as CLLocationDistance)
         locationManager.stopUpdatingLocation()
+        
+        /*  Used for Center Pin
+        
+        let pin = MapPin(title: "Center", cord: center)
+        _centerPin = pin
+        mapView.addAnnotation(pin)
+ 
+        */
     }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
@@ -115,4 +112,23 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             return MKOverlayRenderer(overlay: overlay)
         }
     }
+    
+    /*
+     
+    // Code used to creat pin that will eventually become the center of the map. For now I am just going to use the users location as the center of the map.
+     
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if annotation is MKPointAnnotation {
+            let pinAnnotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "myPin")
+            
+            pinAnnotationView.isDraggable = true
+            pinAnnotationView.canShowCallout = true
+            pinAnnotationView.animatesDrop = true
+            
+            return pinAnnotationView
+        }
+        
+        return nil
+    }
+    */
 }
