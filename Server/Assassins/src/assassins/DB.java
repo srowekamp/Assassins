@@ -167,6 +167,11 @@ public class DB {
 		return null;
 	}
 	
+	public static String getPlayersAlive(Game game){
+		Connection con = DBConnectionHandler.getConnection();
+		String sql = "SELECT * FROM " + DATABASE + "." + 
+	}
+	
 	/** Return true if the user exists in the database */
 	public static boolean doesUserExist(String username) {
 		Connection con = DBConnectionHandler.getConnection();
