@@ -198,7 +198,15 @@ public class DB {
 		return 0;
 	}
 	
-	public static String getTimeRemaining(int gameID){
+	/**
+	 * uses the game ID to grab game from database and determine how many seconds are left in the game.
+	 * calculates seconds by subtracting current time from game's end time.
+	 * 
+	 * @param gameID
+	 * @param currentTime HH MM SS
+	 * @return seconds left in game
+	 */
+	public static int getTimeRemaining(int gameID, String currentTime){
 		Connection con = DBConnectionHandler.getConnection();
 		String sql = "SELECT * FROM " + DATABASE + "." + GAMES_TABLE + " WHERE " + Game.KEY_GAMEID + "?=";
 		try{
@@ -206,6 +214,13 @@ public class DB {
 			ps.setInt(1, gameID);
 			ResultSet rs = ps.executeQuery();
 			Game tempGame = new Game(rs);
+			int currH = Integer.parseInt(currentTime.substring(0, 2)) * 60 * 60; /* current hours in seconds */
+			int currM = Integer.parseInt(currentTime.substring(2, 4)) * 60; /* current minutes in seconds */
+			int currS = Integer.parseInt(currentTime.substring(4, 6)); /* current seconds in seconds */
+			int endH = Integer.parseInt(tempGame.getEndTime().substring(0, 2)) * 60 * 60; /* end hours in seconds */
+			int endM = Integer.parseInt(tempGame.getEndTime().substring(2, 4)) * 60; /* end minutes in seconds */
+			int endS = Integer.parseInt(tempGame.getEndTime().substring(4, 6)); /* end seconds in seconds */
+			return (endH + endM + endS) - (currH + currM + currS);
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -219,7 +234,7 @@ public class DB {
 			catch(Exception e){
 			}
 		}
-		return null;
+		return 0;
 		
 	}
 	
