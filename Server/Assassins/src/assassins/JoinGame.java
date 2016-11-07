@@ -49,7 +49,7 @@ public class JoinGame extends HttpServlet{
 				tempGame = DB.joinGame(tempGame, playerList);
 			}
 		}
-		//
+		//Nate delete this
 		/* write the json object to the response */
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
