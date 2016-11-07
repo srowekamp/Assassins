@@ -17,8 +17,9 @@ public class EndGame extends HttpServlet{
 	private static final long serialVersionUID = 3390648842666208917L;
 	
 	public static final String KEY_RESULT = "result";
-	public static final String KEY_SUCCESS = "Game over";
-	public static final String KEY_FAILURE = "game still going";
+	public static final String KEY_PARAMETER_MISSING = "parameter_error";
+	public static final String RESULT_REMOVE_GAME_SUCCESS = "success";
+	public static final String RESULT_REMOVE_GAME_FAILURE = "fail";
 
 	/**
      * Handles the HTTP <code>GET</code> method.
@@ -40,13 +41,16 @@ public class EndGame extends HttpServlet{
 			/*
 			 * update stats
 			 */
-			
+			result = RESULT_REMOVE_GAME_SUCCESS;
 		}
-		
 		else {
-			
+			result = RESULT_REMOVE_GAME_FAILURE;
 		}
-		
+		jsonResponse.put(KEY_RESULT, result);
+		/* write the json object to the response */
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().write(jsonResponse.toString());
 		
 	}
 	
