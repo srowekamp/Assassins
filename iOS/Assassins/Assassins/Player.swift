@@ -10,19 +10,27 @@ import Foundation
 
 class Player {
 
-    var name:String
+    var id:Int
     var username:String
     var password:String
-    var userPhoto:String?
+    var real_name:String
+    var image_filename:String
     
+    var games_played:Int
+    var total_kills:Int
     
-    init(name: String, username: String, password:String, userPhoto:String?) {
-        self.name = name
+    var x_location:Int
+    var y_location:Int
+    
+    init(id:Int, username:String, password:String, real_Name:String, image_filename:String, games_played:Int, total_kills:Int, x_location:Int, y_location:Int){
+        self.id = id
         self.username = username
         self.password = password
-        if userPhoto != nil {
-            self.userPhoto = userPhoto!
-        }
-        return
+        self.real_name = real_Name
+        self.image_filename = image_filename
+        self.games_played = games_played
+        self.total_kills = total_kills
+        self.x_location = x_location
+        self.y_location = y_location
     }
 }

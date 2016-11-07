@@ -1,5 +1,6 @@
 package la_05.com.assassins;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Handler;
@@ -15,18 +16,17 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
     public static final String JSON_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/";
-    public static final String BASIC_LOGIN = "LoginBasic";
-    public static final String JSON_LOGIN = "LoginJSON"; // Currently NOT implemented
+    public static final String BASIC_LOGIN = "Login";
 
     public static final String KEY_USERNAME = "username";
     public static final String KEY_PASSWORD = "password";
@@ -37,6 +37,9 @@ public class LoginActivity extends AppCompatActivity {
     public static final String RESULT_USERNAME_INVALID = "username_error"; // Value of Result when user enters an invalid username
     public static final String RESULT_PASSWORD_INVALID = "password_error"; // Value of Result when user enters an invalid password
     public static final String RESULT_OTHER_ERROR = "other_error"; // Value of Result when an error occurs
+
+    private String username;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,94 +53,91 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /** Called when user clicks the Login button */
-    public void logIn(View view) {
+    public void login(View view) {
         // Interact with server to log in and open the Home Page
-        EditText username = (EditText) findViewById(R.id.editTextCreateUserName);
-        EditText password = (EditText) findViewById(R.id.editTextCreatePassword);
+        EditText editTextUsername = (EditText) findViewById(R.id.editTextCreateUserName);
+        EditText editTextPassword = (EditText) findViewById(R.id.editTextCreatePassword);
 
-        String usernameString = username.getText().toString();
-        String passwordString = password.getText().toString();
+        username = editTextUsername.getText().toString();
+        password = editTextPassword.getText().toString();
 
-        if (usernameString.equals("")|| passwordString.equals("")) {
+        if (username.equals("")|| password.equals("")) {
             return;
         }
 
-        loginString(usernameString, passwordString);
+        // Attempt Server Authentication
+        login();
     }
 
-    /** Send a formatted string using URL parameters to server for authentication */
-    private void loginString(String username, String password) {
-        //http://proj-309-la-05.cs.iastate.edu:8080/AssassinsLogin/AssassinsLoginBasic?username=nathan&password=password1
-
-        String requestURL = JSON_URL + BASIC_LOGIN + "?username=" + username + "&password=" + password;
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.POST, requestURL, null,
-                new Response.Listener<JSONObject>() {
+    /** Send the provided account information to the server for authentication */
+    private void login() {
+        String requestURL = JSON_URL + BASIC_LOGIN;
+        final ProgressDialog loading = ProgressDialog.show(this, "Uploading...", "Please wait...", false, false);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, requestURL,
+                new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        authenticate(response); // Got a response from the server, check if valid
+                    public void onResponse(String response) {
+                        //Dismiss the progress dialog
+                        loading.dismiss();
+                        try {
+                            JSONObject responseJSON = new JSONObject(response);
+                            authenticate(responseJSON); // Got a response from the server, check if valid
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            //show a toast and log the error
+                            Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            Log.d("ERROR", "error => " + e.getMessage()); // Print the error to the device log
+                        }
+
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("ERROR","error => "+error.toString()); // Print the error to the device log
-                    }
-                });
+                        //Dismiss the progress dialog
+                        loading.dismiss();
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(jsonObjectRequest);
-    }
-
-    /** Send a JSON object to the string for authentication (Currently NOT implemented) */
-    private void loginJSON(String username, String password) {
-        JSONObject jsLogin = new JSONObject();
-        try {
-            jsLogin.put(KEY_USERNAME, username);
-            jsLogin.put(KEY_PASSWORD, password);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.POST, JSON_URL, jsLogin,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        authenticate(response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("ERROR","error => "+error.toString());
+                        //show a toast and log the error
+                        Toast.makeText(LoginActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("ERROR", "error => " + error.toString()); // Print the error to the device log
                     }
                 }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("Content-Type", "application/json; charset=utf-8");
-                return headers;
+            protected Map<String, String> getParams() throws AuthFailureError {
+                //Add the parameters to the request
+                Map<String, String> params = new Hashtable<String, String>();
+                params.put(KEY_USERNAME, username);
+                params.put(KEY_PASSWORD, password);
+
+                return params;
             }
         };
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(jsonObjectRequest);
+        requestQueue.add(stringRequest);
     }
 
     /** Check the JSON object from the server to check if user has entered valid credentials */
     private void authenticate(JSONObject response) {
         String result = null;
-        String error = "Unknown Error Occurred (1)";;
+        String error = "Unknown Error Occurred (1)";
         try {
             result = (String) response.get(KEY_RESULT);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         if (result != null && result.equals(RESULT_LOGIN_SUCCESS)){
+            UserAccount user = null;
+            try {
+                JSONObject account = new JSONObject (response.getString(UserAccount.KEY_USER_ACCOUNT));
+                user = new UserAccount(account);
+                Toast.makeText(this, "Welcome, " + account.getString(UserAccount.KEY_REAL_NAME), Toast.LENGTH_LONG).show();
+            }catch (JSONException e) {
+                e.printStackTrace();
+            }
             // Switch to the Main Menu Activity
             Intent intent = new Intent(this, MainMenuActivity.class);
+            intent.putExtra(UserAccount.KEY_USER_ACCOUNT, user);
             startActivity(intent);
             finish(); // Closes the current activity, stops user from returning to it with back button
             return;
@@ -155,6 +155,13 @@ public class LoginActivity extends AppCompatActivity {
             error = "Invalid Password";
         }
         Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
+    }
+
+    public void enterAdminCred(View view) {
+        EditText editTextUsername = (EditText) findViewById(R.id.editTextCreateUserName);
+        EditText editTextPassword = (EditText) findViewById(R.id.editTextCreatePassword);
+        editTextUsername.setText("admin");
+        editTextPassword.setText("password");
     }
 
     /** Called when user clicks the create account text */

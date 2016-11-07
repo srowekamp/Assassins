@@ -17,21 +17,70 @@ struct userInfo {
 
 var user = userInfo()
 
+var currentUser:Player?
+
 import UIKit
+import Alamofire
+import SwiftyJSON
 
 class LoginVC: UIViewController, UITextFieldDelegate {
+    
+    // ignores login for testing purposes
+    let ignoreLogin = true
 
     @IBOutlet weak var usernameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     
-    let web = WebRequest()
+    func switchView(userJSON:JSON) {
+        // set up the current user object for use across the app
+        currentUser = Player(
+             id: userJSON["id"].int!,
+             username: userJSON["username"].string!,
+             password: userJSON["password"].string!,
+             real_Name: userJSON["real_name"].string!,
+             image_filename: userJSON["image_filename"].string!,
+             games_played: userJSON["games_played"].int!,
+             total_kills: userJSON["total_kills"].int!,
+             x_location: userJSON["x_location"].int!,
+             y_location: userJSON["y_location"].int!
+        )
+        performSegue(withIdentifier: "loginToMain", sender: self)
+    }
+    
+    func login(username:String, password:String) {
+        // the url to login in to the server
+        let loginURL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/Login"
+        let paramaters = ["username":username,"password":password]
+        
+        // make a request to the server and proccess the data
+        Alamofire.request(loginURL, parameters: paramaters).responseJSON { response in
+            if let data = response.result.value as? [String:String] {
+                if let jsonString = data["account"]?.data(using: .utf8, allowLossyConversion: false) {
+                    let json = JSON(data: jsonString)
+                    print(json)
+                    
+                    // check that username and password are correct
+                    if (json["username"].string! == username && json["password"].string! == password) {
+                        self.switchView(userJSON: json)
+                        return
+                    } else {
+                        self.failedLogin()
+                    }
+                }
+            }
+            self.failedLogin()
+        }
+    }
+    
+    func failedLogin(){
+        let alert = UIAlertController(title: "Login Failed", message: "You username or password is incorrect, please try again.", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initTextFields()
-        web.getUser {
-            return
-        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -46,45 +95,16 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 
     // called when the user tries to log in
     @IBAction func tapLogin(_ sender: AnyObject) {
-        if checkUser(username: usernameField.text!, password: passwordField.text!) {
-            user.username = usernameField.text!
-            user.password = passwordField.text!
+        
+        if(ignoreLogin){
             performSegue(withIdentifier: "loginToMain", sender: self)
-        } else {
-            let alert = UIAlertController(title: "Login Failed", message: "You username or password is incorrect, please try again.", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            return
         }
-    }
-    
-    // verifiy a user is valid before loggin in
-    // there are also three dummy usernames to test app features
-    func checkUser(username: String, password: String) -> Bool{
-        if(username == "" || password == "") {
-            return false
-        }
-        switch(username){
-        case "admin2":
-            user.adminFlag = true
-            user.modFlag = true
-            return true
-        case "mod":
-            user.modFlag = true
-            return true
-        default:
-            user.adminFlag = false
-            user.modFlag = false
-            
-            // We will eventually have a method that asks the server to validate a username and password combination. 
-            // Right now we are just downloading a table of users and looking at the first item in the returned JSON
-            
-            // check if username and password are correct the web. items are from the WebRequest
-            print("\(web.username) , \(web.password)")
-            if username == web.username && password == web.password {
-                return true
-            }
-            return false
-        }
+        
+        // TODO: check that user name and password are of correct length
+        // username must be between 4 and 32 characters
+        // password must be between 5 and 32 characters
+        login(username: usernameField.text!, password: passwordField.text! )
     }
     
     // MARK: Text Field Methods

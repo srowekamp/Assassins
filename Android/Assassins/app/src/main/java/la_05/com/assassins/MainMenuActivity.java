@@ -9,10 +9,13 @@ import android.widget.Toast;
 
 public class MainMenuActivity extends AppCompatActivity{
 
+    UserAccount user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+        user = (UserAccount) getIntent().getSerializableExtra(UserAccount.KEY_USER_ACCOUNT);
     }
 
     /**
@@ -36,6 +39,9 @@ public class MainMenuActivity extends AppCompatActivity{
     }
 
     public void account(View view){
+        Intent intent = new Intent(this, UserAccountActivity.class);
+        intent.putExtra(UserAccount.KEY_USER_ACCOUNT, user);
+        startActivity(intent);
         // TODO
     }
 

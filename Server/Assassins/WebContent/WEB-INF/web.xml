@@ -17,7 +17,7 @@
 
     <servlet-mapping>
         <servlet-name>CreateAccount</servlet-name>
-        <url-pattern>/CreateAccountBasic</url-pattern>
+        <url-pattern>/CreateAccount</url-pattern>
     </servlet-mapping>
     
     <servlet>
@@ -27,7 +27,58 @@
 
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
-        <url-pattern>/LoginBasic</url-pattern>
+        <url-pattern>/Login</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>CreateGame</servlet-name>
+        <servlet-class>assassins.CreateGame</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>CreateGame</servlet-name>
+        <url-pattern>/CreateGame</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>GameStart</servlet-name>
+        <servlet-class>assassins.GameStart</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GameStart</servlet-name>
+        <url-pattern>/GameStart</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>GetPlayers</servlet-name>
+        <servlet-class>assassins.GetPlayers</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GetPlayers</servlet-name>
+        <url-pattern>/GetPlayers</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>UpdateGame</servlet-name>
+        <servlet-class>assassins.UpdateGame</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>UpdateGame</servlet-name>
+        <url-pattern>/UpdateGame</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>Kill</servlet-name>
+        <servlet-class>assassins.Kill</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Kill</servlet-name>
+        <url-pattern>/Kill</url-pattern>
+    </servlet-mapping>
+
 
 </web-app>
