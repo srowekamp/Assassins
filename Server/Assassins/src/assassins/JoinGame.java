@@ -15,8 +15,8 @@ public class JoinGame extends HttpServlet{
 	
 	public static final String KEY_RESULT = "result";
 	public static final String RESULT_PARAMETER_MISSING = "parameter_error";
-	public static final String RESULT_JOIN_GAME_SUCCESS = "Joined game.";
-	public static final String RESULT_JOIN_GAME_FAILURE = "Unable to join game. Password or GameID incorrect.";
+	public static final String RESULT_JOIN_GAME_SUCCESS = "success";
+	public static final String RESULT_JOIN_GAME_FAILURE = "fail";
 	
 	
 	/**
@@ -36,6 +36,8 @@ public class JoinGame extends HttpServlet{
 		String password = request.getParameter(Game.KEY_PASSWORD);
 		Game tempGame = null;
 		
+		// TODO add null pointer protection and make sure playerID is valid
+		// TODO check if player is already in game
 		if(DB.doesGameExist(gameID)){
 			tempGame = DB.attemptJoinGame(gameID, password);
 			if(tempGame != null){
@@ -47,9 +49,16 @@ public class JoinGame extends HttpServlet{
 				}
 				playerList += playerID + ",";
 				tempGame = DB.joinGame(tempGame, playerList);
+				if (tempGame != null) {
+					result = RESULT_JOIN_GAME_SUCCESS;
+					jsonResponse.put(Game.KEY_GAME, tempGame);
+				}
+				else result = RESULT_JOIN_GAME_FAILURE;
 			}
+			else result = RESULT_JOIN_GAME_FAILURE;
 		}
-		//Nate delete this
+		else result = RESULT_JOIN_GAME_FAILURE;
+		jsonResponse.put(KEY_RESULT, result);
 		/* write the json object to the response */
 		response.setContentType("application/json");
 		response.setCharacterEncoding("UTF-8");
