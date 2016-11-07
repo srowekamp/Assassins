@@ -9,6 +9,9 @@
 import UIKit
 import MapKit
 import CoreLocation
+import Alamofire
+import SwiftyJSON
+
 
 class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
@@ -16,8 +19,16 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     var gameObject:Game?
     var gameID:String!
+    var playerIsTop = false
+    var gametarget:Player?
     
-    var center:CLLocationCoordinate2D?
+    var sendingFromJoin = false
+    
+    var center:CLLocationCoordinate2D? {
+        didSet{
+            downloadGameData()
+        }
+    }
     
     private var _playArea: MKCircle = MKCircle()
     var playArea:MKCircle {
@@ -52,7 +63,32 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         mapView.mapType = MKMapType.hybrid
     }
     
-    func downloadGameData() 
+    func downloadGameData()  {
+        
+        let baseURL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/GetPlayers"
+        var parameters = [String:Any]()
+        
+        print()
+        print(gameID)
+        
+        parameters["gameid"] = gameID
+        parameters["id"] = currentUser?.id
+        parameters["x_location"] = String(Double(center!.longitude))
+        parameters["y_location"] = String(Double(center!.latitude))
+        
+        Alamofire.request(baseURL, parameters: parameters).responseJSON { response in
+            
+            print(parameters)
+            if response.result.isSuccess {
+                let json = JSON(response.result.value!)
+                let gameData = json["game"]
+                
+                self.gameObject = Game(gameID: gameData["gameid"].string!, password: gameData["password"].string!, xcenter: gameData["xcenter"].double!, ycenter: gameData["ycenter"].double!, radius: gameData["radius"].int!, hostID: gameData["hostid"].int!, duration: gameData["duration"].int!, serverID: gameData["id"].int!)
+                
+                print("JSON: \(json)")
+            }
+        }
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         locationManager.startUpdatingLocation()
@@ -66,9 +102,6 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         mapView.setRegion(region, animated: false)
         playArea = MKCircle(center: center, radius: 100 as CLLocationDistance)
         locationManager.stopUpdatingLocation()
-        
-        // Once location has been determined, try to download game stats and update the ui
-        
     }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {

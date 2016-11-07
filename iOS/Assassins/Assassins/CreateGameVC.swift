@@ -94,7 +94,7 @@ class CreateGameVC: UIViewController, UITextFieldDelegate {
             mapSelectVC?.mainSettingsVC = self
             return
         case "createGameToGameView":
-            let gameViewVC = segue.destination as? LobbyVC
+            let gameViewVC = segue.destination.childViewControllers.first?.childViewControllers.first as? LobbyVC
             gameViewVC?.gameObject = self.gameObject
         default:
             return
