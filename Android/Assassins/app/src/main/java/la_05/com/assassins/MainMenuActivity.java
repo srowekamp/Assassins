@@ -31,7 +31,9 @@ public class MainMenuActivity extends AppCompatActivity{
     }
 
     public void createGame(View view){
-        // TODO
+        Intent intent = new Intent(this, CreateGameActivity.class);
+        intent.putExtra(UserAccount.KEY_USER_ACCOUNT, user);
+        startActivity(intent);
     }
 
     public void options(View view){

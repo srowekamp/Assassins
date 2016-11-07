@@ -32,7 +32,7 @@
         android:id="@+id/button2"
         android:onClick="CreateGame"
         android:layout_alignParentBottom="true"
-        android:layout_alignEnd="@+id/switchPrivate" />
+         />
 
 
     <Button
@@ -97,9 +97,6 @@
         android:layout_below="@+id/editTextPlayers"
         android:layout_alignStart="@+id/editTextPlayers" />
     <![CDATA[
-
-
-
 
 
 

@@ -44,20 +44,18 @@ public class CreateGameActivity extends AppCompatActivity {
     public static final String KEY_RESULT = "result";
     public static final String RESULT_GAME_CREATED = "success"; // Value of Result when account successfully created
 
-
-
-
     private String gameID;
     private String numPlayers;
     private String sizeofGame;
     private String password;
 
+    private UserAccount user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_game);
-
+        user = (UserAccount) getIntent().getSerializableExtra(UserAccount.KEY_USER_ACCOUNT);
 
     }
 
@@ -65,6 +63,7 @@ public class CreateGameActivity extends AppCompatActivity {
     //called when create game button is pressed
     public void CreateGame(View view) {
         //creates all the values on the activity create game xml
+
         EditText GameID = (EditText) findViewById(R.id.editText);
         EditText NumPlayers = (EditText) findViewById(R.id.editTextPlayers);
         EditText SizeGame = (EditText) findViewById(R.id.editTextSize);
@@ -133,10 +132,12 @@ public class CreateGameActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getparameters() throws AuthFailureError{
                 Map<String, String> parameters = new Hashtable<String, String>();
-
-
-
-
+                parameters.put(Game.KEY_GAMEID, gameID);
+                parameters.put(Game.KEY_PASSWORD, password);
+                parameters.put(xcenter);
+                parameters.put(ycenter);
+                parameters.put(Game.KEY_RADIUS, sizeofGame);
+                parameters.put(Game.KEY_HOSTID, )
                 return parameters;
             }
         };
