@@ -83,6 +83,12 @@ public class DB {
 		return null;
 	}
 	
+	public static Game removeGame(Game game){
+		Connection con = DBConnectionHandler.getConnection();
+		String sql = "DELETE " + DATABASE + "." + GAMES_TABLE + " ";
+		return null;
+	}
+	
 	/** Return an updated Game object after adding the End Time of a game given the time it was started,
 	 *  using the duration specified on creation */
 	public static Game setEndTime(Game game, String start_time) {
@@ -167,6 +173,77 @@ public class DB {
 		return null;
 	}
 	
+	/**
+	 * determines the number of players left alive in the game.
+	 * 
+	 * @param game to be checked
+	 * @return number of players, 0 if unable to execute query
+	 */
+	public static int getNumberPlayersAlive(int gameID){
+		Connection con = DBConnectionHandler.getConnection();
+		String sql = "SELECT * FROM " + DATABASE + "." + GAMES_TABLE + " WHERE " + Game.KEY_GAMEID + "?=";
+		try{
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setInt(1, gameID);
+			ResultSet rs = ps.executeQuery();
+			Game tempGame = new Game(rs);
+			return tempGame.getPlayersAlive().length;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				if(con != null){
+					con.close();
+				}
+			}
+			catch(Exception e){
+			}
+		}
+		return 0;
+	}
+	
+	/**
+	 * uses the game ID to grab game from database and determine how many seconds are left in the game.
+	 * calculates seconds by subtracting current time from game's end time.
+	 * 
+	 * @param gameID
+	 * @param currentTime HH MM SS
+	 * @return seconds left in game
+	 */
+	public static int getTimeRemaining(int gameID, String currentTime){
+		Connection con = DBConnectionHandler.getConnection();
+		String sql = "SELECT * FROM " + DATABASE + "." + GAMES_TABLE + " WHERE " + Game.KEY_GAMEID + "?=";
+		try{
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setInt(1, gameID);
+			ResultSet rs = ps.executeQuery();
+			Game tempGame = new Game(rs);
+			int currH = Integer.parseInt(currentTime.substring(0, 2)) * 60 * 60; /* current hours in seconds */
+			int currM = Integer.parseInt(currentTime.substring(2, 4)) * 60; /* current minutes in seconds */
+			int currS = Integer.parseInt(currentTime.substring(4, 6)); /* current seconds in seconds */
+			int endH = Integer.parseInt(tempGame.getEndTime().substring(0, 2)) * 60 * 60; /* end hours in seconds */
+			int endM = Integer.parseInt(tempGame.getEndTime().substring(2, 4)) * 60; /* end minutes in seconds */
+			int endS = Integer.parseInt(tempGame.getEndTime().substring(4, 6)); /* end seconds in seconds */
+			return (endH + endM + endS) - (currH + currM + currS);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				if(con != null){
+					con.close();
+				}
+			}
+			catch(Exception e){
+			}
+		}
+		return 0;
+		
+	}
+	
 	/** Return true if the user exists in the database */
 	public static boolean doesUserExist(String username) {
 		Connection con = DBConnectionHandler.getConnection();
@@ -183,6 +260,75 @@ public class DB {
 			try { if (con != null) con.close(); } catch (Exception e) {};
 		}
 		return false;
+	}
+	
+	/**
+	 * attemptJoinGame checks the database for the given gameID and password and returns the game that it
+	 * finds
+	 * 
+	 * @param gameID to look for
+	 * @param password to look for
+	 * @return game it finds
+	 */
+	public static Game attemptJoinGame(String gameID, String password){
+		Connection con = DBConnectionHandler.getConnection();
+		String sql = "SELECT * FROM " + DATABASE + "." + GAMES_TABLE + " WHERE " + Game.KEY_GAMEID + "=? and "
+						+ Game.KEY_PASSWORD + "=?";
+		try{
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1, gameID);
+			ps.setString(2, password);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()){
+				return new Game(rs);
+			}
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				if(con != null){
+					con.close();
+				}
+			}
+			catch(Exception e){
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * joinGame adds the player to the joining player to the end of the player list.
+	 * 
+	 * @param game
+	 * @param playersList
+	 * @return game with new list
+	 */
+	public static Game joinGame(Game game, String playersList){
+		Connection con = DBConnectionHandler.getConnection();
+		String sql = "UPDATE " + DATABASE + "." + GAMES_TABLE +  " SET " + Game.KEY_PLAYERS_LIST + "=? WHERE "
+						+ Game.KEY_ID + "=?";
+		try{
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setString(1, playersList);
+			ps.setInt(2, game.getID());
+			ps.executeUpdate();
+			return getGame(game.getGameID());
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				if(con != null){
+					con.close();
+				}
+			}
+			catch(Exception e){
+			}
+		}
+		return null;
 	}
 	
 	/** Return true if the username and password provided match a user in the database */
