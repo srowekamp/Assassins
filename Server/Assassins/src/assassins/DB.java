@@ -83,15 +83,14 @@ public class DB {
 		return null;
 	}
 	
-	public static Game removeGame(int gameID){
+	public static Game removeGame(int gameID, String gameName){
 		Connection con = DBConnectionHandler.getConnection();
 		String sql = "DELETE FROM " + DATABASE + "." + GAMES_TABLE + " WHERE " + Game.KEY_ID + "=?";
 		try{
 			PreparedStatement ps = con.prepareStatement(sql);
 			ps.setInt(1, gameID);
-			ResultSet rs = ps.executeQuery();
-			Game game = new Game(rs);
-			return game;
+			ps.executeUpdate();
+			return getGame(gameName);
 		}
 		catch(Exception e){
 			e.printStackTrace();
