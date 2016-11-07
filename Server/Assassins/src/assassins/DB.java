@@ -198,6 +198,29 @@ public class DB {
 		return 0;
 	}
 	
+	public static String getTimeRemaining(Game game){
+		Connection con = DBConnectionHandler.getConnection();
+		String sql = "SELECT * FROM " + DATABASE + "." + GAMES_TABLE + " WHERE " + Game.KEY_GAMEID + "?=";
+		try{
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				if(con != null){
+					con.close();
+				}
+			}
+			catch(Exception e){
+			}
+		}
+		return null;
+		
+	}
+	
 	/** Return true if the user exists in the database */
 	public static boolean doesUserExist(String username) {
 		Connection con = DBConnectionHandler.getConnection();
