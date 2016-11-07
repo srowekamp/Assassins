@@ -167,9 +167,35 @@ public class DB {
 		return null;
 	}
 	
-	public static String getPlayersAlive(Game game){
+	/**
+	 * determines the number of players left alive in the game.
+	 * 
+	 * @param game to be checked
+	 * @return number of players, 0 if unable to execute query
+	 */
+	public static int getNumberPlayersAlive(Game game){
 		Connection con = DBConnectionHandler.getConnection();
-		String sql = "SELECT * FROM " + DATABASE + "." + 
+		String sql = "SELECT * FROM " + DATABASE + "." + GAMES_TABLE + " WHERE " + Game.KEY_GAMEID + "?=";
+		try{
+			PreparedStatement ps = con.prepareStatement(sql);
+			ps.setInt(1, game.getID());
+			ResultSet rs = ps.executeQuery();
+			Game tempGame = new Game(rs);
+			return tempGame.getPlayersAlive().length;
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				if(con != null){
+					con.close();
+				}
+			}
+			catch(Exception e){
+			}
+		}
+		return 0;
 	}
 	
 	/** Return true if the user exists in the database */
