@@ -40,7 +40,7 @@ public class EndGame extends HttpServlet{
 		if(DB.doesGameExist(gameName)){
 			tempGame = DB.removeGame(gameID);
 			/*
-			 * update stats
+			 * update stats for all players when stats exist
 			 */
 			result = RESULT_REMOVE_GAME_SUCCESS;
 		}
