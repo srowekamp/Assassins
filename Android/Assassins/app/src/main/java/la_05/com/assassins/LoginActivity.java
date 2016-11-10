@@ -129,7 +129,8 @@ public class LoginActivity extends AppCompatActivity {
         if (result != null && result.equals(RESULT_LOGIN_SUCCESS)){
             UserAccount user = null;
             try {
-                JSONObject account = new JSONObject (response.getString(UserAccount.KEY_USER_ACCOUNT));
+                //JSONObject account = new JSONObject (response.getString(UserAccount.KEY_USER_ACCOUNT));
+                JSONObject account = response.getJSONObject(UserAccount.KEY_USER_ACCOUNT);
                 user = new UserAccount(account);
                 Toast.makeText(this, "Welcome, " + account.getString(UserAccount.KEY_REAL_NAME), Toast.LENGTH_LONG).show();
             }catch (JSONException e) {
