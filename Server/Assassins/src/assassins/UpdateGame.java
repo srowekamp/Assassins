@@ -55,6 +55,7 @@ public class UpdateGame extends HttpServlet {
         	parameterMissing = true;
         }
         if (!parameterMissing) { // TODO ensure values grabbed from request are valid
+        	// TODO check if game has been started
         	// Get the latest game object
         	Game game = DB.getGame(gameID);
         	if (game == null) {

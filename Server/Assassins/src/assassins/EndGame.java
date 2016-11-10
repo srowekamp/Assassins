@@ -36,6 +36,7 @@ public class EndGame extends HttpServlet{
 		String gameName = request.getParameter(Game.KEY_GAMEID);
 		Game tempGame = null, game = null;
 		
+		// TODO check if game has been started
 		if(DB.doesGameExist(gameName)){
 			game = DB.getGame(gameName);
 			tempGame = DB.removeGame(game.getID(), gameName);
