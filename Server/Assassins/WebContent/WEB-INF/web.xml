@@ -41,13 +41,13 @@
     </servlet-mapping>
     
     <servlet>
-        <servlet-name>GameStart</servlet-name>
-        <servlet-class>assassins.GameStart</servlet-class>
+        <servlet-name>JoinGame</servlet-name>
+        <servlet-class>assassins.JoinGame</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>GameStart</servlet-name>
-        <url-pattern>/GameStart</url-pattern>
+        <servlet-name>JoinGame</servlet-name>
+        <url-pattern>/JoinGame</url-pattern>
     </servlet-mapping>
     
     <servlet>
@@ -58,6 +58,16 @@
     <servlet-mapping>
         <servlet-name>GetPlayers</servlet-name>
         <url-pattern>/GetPlayers</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>GameStart</servlet-name>
+        <servlet-class>assassins.GameStart</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GameStart</servlet-name>
+        <url-pattern>/GameStart</url-pattern>
     </servlet-mapping>
     
     <servlet>
@@ -78,16 +88,6 @@
     <servlet-mapping>
         <servlet-name>Kill</servlet-name>
         <url-pattern>/Kill</url-pattern>
-    </servlet-mapping>
-    
-    <servlet>
-        <servlet-name>JoinGame</servlet-name>
-        <servlet-class>assassins.JoinGame</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>JoinGame</servlet-name>
-        <url-pattern>/JoinGame</url-pattern>
     </servlet-mapping>
     
     <servlet>
