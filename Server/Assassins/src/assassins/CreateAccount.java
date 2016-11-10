@@ -67,7 +67,7 @@ public class CreateAccount extends HttpServlet {
         			}
         			else {
         				jsonResponse.put(KEY_RESULT, RESULT_ACCOUNT_CREATED);
-        				jsonResponse.put(UserAccount.KEY_USER_ACCOUNT, ua.toJSONString());
+        				jsonResponse.put(UserAccount.KEY_USER_ACCOUNT, ua);
         			}
         		}
 	        }

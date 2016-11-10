@@ -87,7 +87,7 @@ public class UpdateGame extends HttpServlet {
 	        			// The game is proceeding as normal, first update the player's location in the database
 	        			DB.updateUserLocation(playerID, xlocation, ylocation);
 	        			// Now put the player's target in the response JSONObject
-	        			jsonResponse.put(KEY_TARGET, target.toJSONString());
+	        			jsonResponse.put(KEY_TARGET, target);
 	        			// Also put the game in the response
 	        			jsonResponse.put(Game.KEY_GAME, game);
 	        			result = RESULT_NORMAL;

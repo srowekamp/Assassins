@@ -64,7 +64,7 @@ public class GetPlayers extends HttpServlet {
         		// Add each player to the JSONObject response with Key: "Player %d" starting from 0 to numPlayers - 1
         		if (numPlayers > 0) {
         			for (int i = 0; i < numPlayers; i++) {
-        				jsonResponse.put(String.format("Player %d", i), DB.getUser(players[i]).toJSONString());
+        				jsonResponse.put(String.format("Player %d", i), DB.getUser(players[i]));
         			}
         			// Update the user's location so that the lobby can display the location of all in game while waiting for game to start
         			DB.updateUserLocation(playerID, xlocation, ylocation);
