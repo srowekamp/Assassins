@@ -9,7 +9,7 @@ $dbname="db309la05";
 $con = new mysqli($host, $user, $password, $dbname, $port, $socket) 
 		or die ('Could not connect to the database server' . mysqli_connect_error());
 		
-$query = "SELECT * FROM db309la05.users3";
+$query = "SELECT * FROM db309la05.users";
 
 $result = mysqli_query($con, $query) or die("Error in selelecting" / mysqli_error($con));
 
