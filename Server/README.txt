@@ -62,7 +62,16 @@ Current functions of the server (needs VPN):
 		Result values can be found in CreateGame.java in the Assassins src
 	Also within the response is a JSON object with key "game" holding all database info for this game (look in Game.java)
 	
-4) Join Game: Tyler not done
+4) Join Game: I'm not really sure to put as the url here?
+    parameters:
+        playerList: List of players in the game. (String)
+        playerID: ID of the player trying to join the game. (int)
+        gameID: ID of the game that you are trying to join. (String)
+        Password: password of the game you are trying to join. (String)
+            (everything below here is a potentially complete bullshit)
+    Returns a JSON object with key "result" with one value indicating what happened
+		Result values can be found in JoinGame.java in the Assassins servlet src
+	Also within the response is a JSON object with key "game" holding all database info in this game (look at Game.java)
 
 5) GetPlayers: http://proj-309-la-05.cs.iastate.edu:8080/Assassins/GetPlayers?gameid=test1&id=4&x_location=-93.647220&y_location=42.02588
 	parameters:

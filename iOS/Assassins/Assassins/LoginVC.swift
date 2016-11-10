@@ -24,6 +24,9 @@ import Alamofire
 import SwiftyJSON
 
 class LoginVC: UIViewController, UITextFieldDelegate {
+    
+    // ignores login for testing purposes
+    let ignoreLogin = true
 
     @IBOutlet weak var usernameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
@@ -61,18 +64,12 @@ class LoginVC: UIViewController, UITextFieldDelegate {
                         self.switchView(userJSON: json)
                         return
                     } else {
-                        self.failedLogin()
+                        self.popUpAlert(title: "Login Faled:", message: "The username or password is incorrect, please try again.", handler:nil)
                     }
                 }
             }
-            self.failedLogin()
+            self.popUpAlert(title: "Login Faled:", message: "The username or password is incorrect, please try again.", handler: nil)
         }
-    }
-    
-    func failedLogin(){
-        let alert = UIAlertController(title: "Login Failed", message: "You username or password is incorrect, please try again.", preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
     }
     
     override func viewDidLoad() {
@@ -85,17 +82,33 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         passwordField.text = ""
     }
     
-    // called when he user wants to create a new account
+    // called when user taps create a new account
     @IBAction func showCreateAccount(_ sender: AnyObject) {
         performSegue(withIdentifier: "createAccount", sender: self)
     }
 
-    // called when the user tries to log in
+    // called when user taps log in
     @IBAction func tapLogin(_ sender: AnyObject) {
         
-        // TODO: check that user name and password are of correct length
-        // username must be between 4 and 32 characters
-        // password must be between 5 and 32 characters
+        // used for debuging purposed to make logging in faster
+        if(ignoreLogin){
+            login(username: "admin", password: "password")
+            return
+        }
+        
+        // checks if username is correct length
+        if((usernameField.text?.characters.count)! < 4 || (usernameField.text?.characters.count)! > 32){
+            popUpAlert(title: "Bad Username", message: "a username must be between 4 and 32 characters long", handler: nil)
+            return
+        }
+        
+        // checks if password is correct length
+        if((passwordField.text?.characters.count)! < 5 || (passwordField.text?.characters.count)! > 32){
+            popUpAlert(title: "Bad Password", message: "a password must be between 5 and 32 characters long", handler: nil)
+            return
+        }
+        
+        // attempt to log in
         login(username: usernameField.text!, password: passwordField.text! )
     }
     
