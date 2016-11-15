@@ -22,7 +22,6 @@
 		38E2B3391DD04AFC005BAE45 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E2B3381DD04AFC005BAE45 /* Game.swift */; };
 		38E8DBF01DA3616D005EA2C2 /* JoinGameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBEF1DA3616D005EA2C2 /* JoinGameVC.swift */; };
 		38E8DBF21DA3617E005EA2C2 /* CreateGameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBF11DA3617E005EA2C2 /* CreateGameVC.swift */; };
-		38E8DBF41DA36196005EA2C2 /* GameEditorVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBF31DA36196005EA2C2 /* GameEditorVC.swift */; };
 		38E8DBF61DA3619E005EA2C2 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBF51DA3619E005EA2C2 /* SettingsVC.swift */; };
 		38E8DBF91DA361FA005EA2C2 /* MainMenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBF71DA361FA005EA2C2 /* MainMenuVC.swift */; };
 		38E8DBFA1DA361FA005EA2C2 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBF81DA361FA005EA2C2 /* LoginVC.swift */; };
@@ -50,7 +49,6 @@
 		38E2B3381DD04AFC005BAE45 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		38E8DBEF1DA3616D005EA2C2 /* JoinGameVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinGameVC.swift; sourceTree = "<group>"; };
 		38E8DBF11DA3617E005EA2C2 /* CreateGameVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateGameVC.swift; sourceTree = "<group>"; };
-		38E8DBF31DA36196005EA2C2 /* GameEditorVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameEditorVC.swift; sourceTree = "<group>"; };
 		38E8DBF51DA3619E005EA2C2 /* SettingsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		38E8DBF71DA361FA005EA2C2 /* MainMenuVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuVC.swift; sourceTree = "<group>"; };
 		38E8DBF81DA361FA005EA2C2 /* LoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
@@ -108,7 +106,6 @@
 				38E8DBF71DA361FA005EA2C2 /* MainMenuVC.swift */,
 				38E8DBF11DA3617E005EA2C2 /* CreateGameVC.swift */,
 				38C90E211DCFDE1B008B0013 /* MapSelectVC.swift */,
-				38E8DBF31DA36196005EA2C2 /* GameEditorVC.swift */,
 				38E8DBF51DA3619E005EA2C2 /* SettingsVC.swift */,
 				38E8DBEF1DA3616D005EA2C2 /* JoinGameVC.swift */,
 				38A6968C1DA3EA470061FE9A /* LobbyVC.swift */,
@@ -290,7 +287,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				38E8DBF41DA36196005EA2C2 /* GameEditorVC.swift in Sources */,
 				386735061D8B879300844D90 /* Assassins.xcdatamodeld in Sources */,
 				38E8DBF01DA3616D005EA2C2 /* JoinGameVC.swift in Sources */,
 				38A6968D1DA3EA470061FE9A /* LobbyVC.swift in Sources */,
