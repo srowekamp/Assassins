@@ -2,7 +2,6 @@ package la_05.com.assassins;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.Serializable;
 
 /**
@@ -44,21 +43,21 @@ public class Game implements Serializable{
 
     public Game (JSONObject Game){
         try {
-            id = Game.getInt(KEY_ID);
-            gameID = Game.getString(KEY_GAMEID);
-            password = Game.getString(KEY_PASSWORD);
-            xcenter = Game.getDouble(KEY_X_CENTER);
-            ycenter = Game.getDouble(KEY_Y_CENTER);
-            radius = Game.getInt(KEY_RADIUS);
-            hostID = Game.getInt(KEY_HOSTID);
-            duration = Game.getInt(KEY_DURATION);
+            id          = Game.getInt(KEY_ID);
+            gameID      = Game.getString(KEY_GAMEID);
+            password    = Game.getString(KEY_PASSWORD);
+            xcenter     = Game.getDouble(KEY_X_CENTER);
+            ycenter     = Game.getDouble(KEY_Y_CENTER);
+            radius      = Game.getInt(KEY_RADIUS);
+            hostID      = Game.getInt(KEY_HOSTID);
+            duration    = Game.getInt(KEY_DURATION);
 
-            players_list = Game.getString(KEY_PLAYERS_LIST);
-            players_alive = Game.getString(KEY_PLAYERS_ALIVE);
-            end_time = Game.getString(KEY_END_TIME);
+            players_list    = Game.getString(KEY_PLAYERS_LIST);
+            players_alive   = Game.getString(KEY_PLAYERS_ALIVE);
+            end_time        = Game.getString(KEY_END_TIME);
 
         } catch (JSONException e){
-            e.printStackTrace();;
+            e.printStackTrace();
         }
         GameJSONSerialized = Game.toString();
     }
@@ -66,15 +65,19 @@ public class Game implements Serializable{
     public String getGameID (){
         return gameID;
     }
+
     public int getHostID(){
         return hostID;
     }
+
     public String getEnd_time() {
         return end_time;
     }
+
     public String getPlayers_list(){
         return players_list;
     }
+
     public String getPlayers_alive(){
         return players_alive;
     }

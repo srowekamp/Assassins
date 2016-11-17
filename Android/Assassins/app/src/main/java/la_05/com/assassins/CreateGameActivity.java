@@ -34,8 +34,17 @@ public class CreateGameActivity extends AppCompatActivity {
 
     public static final String JSON_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/";
     public static final String BASIC_CG = "CreateGame";
+
     public static final String KEY_RESULT = "result";
-    public static final String RESULT_GAME_CREATED = "success"; // Value of Result when account successfully created
+    public static final String RESULT_GAME_CREATED = "success"; // Value of Result when game successfully created
+    public static final String RESULT_GAME_EXISTS = "exists"; // Value of Result when game with the name provided already exists
+    public static final String RESULT_GAMEID_INVALID = "gameid_error"; // Value of Result when user enters an invalid gameID/name
+    public static final String RESULT_PASSWORD_INVALID = "password_error"; // Value of Result when user enters an invalid password
+    public static final String RESULT_CENTER_INVALID = "center_error"; // Value of Result when either center coordinate is not valid
+    public static final String RESULT_RADIUS_INVALID = "radius_error"; // Value of Result when an invalid radius is passed
+    public static final String RESULT_HOSTID_INVALID = "hostid_error"; // Value of Result when an invalid host ID is passed
+    public static final String RESULT_DURATION_INVALID = "duration_error"; // Value of Result when an invalid duration is passed
+    public static final String RESULT_OTHER_ERROR = "other_error"; // Value of Result when an error occurs
 
     private String gameName;
     private String password;
@@ -138,39 +147,62 @@ public class CreateGameActivity extends AppCompatActivity {
 
     private void authenticate(JSONObject response) {
         String result = null;
-        String error = "Unknown Error Occurred (1)";;
+        String error = "Unknown Error Occurred (1)";
         try {
             result = (String) response.get(KEY_RESULT);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (result != null && result.equals(RESULT_GAME_CREATED)){
-            // Switch to the Main Menu Activity
-            Game game = null;
+        if (result == null) {
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
+            return;
+        }
+        if (result.equals(RESULT_GAME_CREATED)){
+            // Switch to the Lobby Activity
+            Game game;
             try{
-                JSONObject gameinst = new JSONObject(response.getString(Game.KEY_GAME));
-                game = new Game(gameinst);
-
-
+                JSONObject gameJSON = response.getJSONObject(Game.KEY_GAME);
+                game = new Game(gameJSON);
             }catch(JSONException e){
                 e.printStackTrace();
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+                return;
             }
             Intent intent = new Intent(this, LobbyActivity.class);
+            intent.putExtra(UserAccount.KEY_USER_ACCOUNT, user);
+            intent.putExtra(Game.KEY_GAME, game);
             startActivity(intent);
             finish(); // Closes the current activity, stops user from returning to it with back button
             return;
         }
-
-
-    }
-
-
-    public void SwitchToMainMenu(View view){
-        //switches to Main Menu when pressed
-        Intent intent = new Intent(this, MainMenuActivity.class);
-        startActivity(intent);
-        finish();
-
-
+        switch (result) {
+            case RESULT_OTHER_ERROR:
+                error = "Unknown Error Occurred (2)";
+                break;
+            case RESULT_GAME_EXISTS:
+                error = "A Game with that name already Exists";
+                break;
+            case RESULT_GAMEID_INVALID:
+                error = "Invalid game name";
+                break;
+            case RESULT_PASSWORD_INVALID:
+                error = "Invalid password";
+                break;
+            case RESULT_CENTER_INVALID:
+                error = "Invalid center";
+                break;
+            case RESULT_RADIUS_INVALID:
+                error = "Invalid radius";
+                break;
+            case RESULT_HOSTID_INVALID:
+                error = "Invalid hostID";
+                break;
+            case RESULT_DURATION_INVALID:
+                error = "Invalid Duration";
+                break;
+            default:
+                break;
+        }
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
     }
 }

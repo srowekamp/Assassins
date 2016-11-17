@@ -33,6 +33,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class LobbyActivity extends AppCompatActivity {
 
+    public static final String RESULT_START_TIME_INVALID = "start_time_error"; // Value of Result when an invalid start_time is passed to GameStart
+
     public static final int LOCATION_UPDATE_INTERVAL = 10000; // Minimum time between location updates in milliseconds
     public static final float LOCATION_UPDATE_DISTANCE = 2; // Minimum distance between location updates in meters
     public static final int MAP_ZOOM_SCALE_FACTOR = 350; // Constant used to determine map zoom
