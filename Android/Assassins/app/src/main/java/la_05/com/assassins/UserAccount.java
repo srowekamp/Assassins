@@ -49,6 +49,10 @@ public class UserAccount implements Serializable{
         accountJSONSerialized = account.toString();
     }
 
+    public int getID() {
+        return id;
+    }
+
     public String getRealName () {
         return realName;
     }

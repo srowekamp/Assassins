@@ -4,14 +4,12 @@ package la_05.com.assassins;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.Toast;
 
 
@@ -20,7 +18,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -29,25 +26,23 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
 
 public class CreateGameActivity extends AppCompatActivity {
 
-
-
-
     public static final String JSON_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/";
-    public static final String BASIC_CG = "CreateGameBasic";
+    public static final String BASIC_CG = "CreateGame";
     public static final String KEY_RESULT = "result";
     public static final String RESULT_GAME_CREATED = "success"; // Value of Result when account successfully created
 
-    private String gameID;
-    private String numPlayers;
-    private String sizeofGame;
+    private String gameName;
     private String password;
+    private String duration;
+    private String radius;
+    private String xcenter;
+    private String ycenter;
 
     private UserAccount user;
 
@@ -57,54 +52,48 @@ public class CreateGameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_game);
         user = (UserAccount) getIntent().getSerializableExtra(UserAccount.KEY_USER_ACCOUNT);
 
+        //Fix editTextPassword Font
+        EditText password = (EditText) findViewById(R.id.createGameEditTextPassword);
+        password.setTypeface(Typeface.DEFAULT);
+        password.setTransformationMethod(new PasswordTransformationMethod());
     }
 
 
     //called when create game button is pressed
-    public void CreateGame(View view) {
+    public void createGame(View view) {
         //creates all the values on the activity create game xml
 
-        EditText GameID = (EditText) findViewById(R.id.editText);
-        EditText NumPlayers = (EditText) findViewById(R.id.editTextPlayers);
-        EditText SizeGame = (EditText) findViewById(R.id.editTextSize);
-        EditText LengthGame = (EditText) findViewById(R.id.Length);
-        EditText Password = (EditText) findViewById(R.id.PasswordGame);
-        //Switch Mod = (Switch) findViewById(R.id.switchMod);
-        //Switch PrivateGame = (Switch) findViewById(R.id.switchPrivate);
+        EditText GameName = (EditText) findViewById(R.id.createGameEditTextGameName);
+        EditText Password = (EditText) findViewById(R.id.createGameEditTextPassword);
+        EditText Duration = (EditText) findViewById(R.id.createGameEditTextDuration);
+        EditText Radius = (EditText) findViewById(R.id.createGameEditTextRadius);
+        EditText XCenter = (EditText) findViewById(R.id.createGameEditTextXCenter);
+        EditText YCenter = (EditText) findViewById(R.id.createGameEditTextYCenter);
 
+        // Set local variables to hold user-entered values
+        this.gameName = GameName.getText().toString();
+        this.password = Password.getText().toString();
+        this.duration = Duration.getText().toString();
+        this.radius   = Radius.getText().toString();
+        this.xcenter  = XCenter.getText().toString();
+        this.ycenter  = YCenter.getText().toString();
 
-        this.gameID = GameID.getText().toString();
-        this.numPlayers = NumPlayers.getText().toString();
-        this.sizeofGame  = SizeGame.getText().toString();
-        this.password  = Password.getText().toString();
-        //String ModString = Mod.getText().toString();
-        //String PrivateGameString = PrivateGame.getText().toString();
-
-
-        //Here until server is fully connected and authentication is ready
-        //Intent intent = new Intent(this, LobbyActivity.class);
-        //startActivity(intent);
-        //finish();
+        // Attempt to create game with server
         createGame();
-
-
-
-
     }
-    /*
+
+    /**
     Upon getting required info from UI, creates the game and updates the server.
      */
     private void createGame() {
         String requestURL = JSON_URL + BASIC_CG;
         final ProgressDialog loading = ProgressDialog.show(this, "Creating Game...", "Please wait...", false, false);
 
-
         StringRequest stringRequest = new StringRequest(Request.Method.POST, requestURL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response){
-
-
+                        // Dismiss the progress dialog
                         loading.dismiss();
                         try {
                             JSONObject responseJSON = new JSONObject(response);
@@ -123,24 +112,27 @@ public class CreateGameActivity extends AppCompatActivity {
                         //Dismiss the progress dialog
                         loading.dismiss();
 
-
                         //show a toast and log the error
                         Toast.makeText(CreateGameActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
                         Log.d("ERROR", "error => " + error.toString()); // Print the error to the device log
                     }
                 }) {
             @Override
-            protected Map<String, String> getparameters() throws AuthFailureError{
+            protected Map<String, String> getParams() throws AuthFailureError{
                 Map<String, String> parameters = new Hashtable<String, String>();
-                parameters.put(Game.KEY_GAMEID, gameID);
+                parameters.put(Game.KEY_GAMEID, gameName);
                 parameters.put(Game.KEY_PASSWORD, password);
-                parameters.put(xcenter);
-                parameters.put(ycenter);
-                parameters.put(Game.KEY_RADIUS, sizeofGame);
-                parameters.put(Game.KEY_HOSTID, )
+                parameters.put(Game.KEY_X_CENTER, xcenter);
+                parameters.put(Game.KEY_Y_CENTER, ycenter);
+                parameters.put(Game.KEY_RADIUS, radius);
+                parameters.put(Game.KEY_HOSTID, String.format("%d", user.getID()));
+                parameters.put(Game.KEY_DURATION, duration);
                 return parameters;
             }
         };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 
 
