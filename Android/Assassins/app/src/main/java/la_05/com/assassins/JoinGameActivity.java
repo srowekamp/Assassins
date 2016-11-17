@@ -30,7 +30,10 @@ public class JoinGameActivity extends AppCompatActivity {
 
     public static final String KEY_RESULT = "result";
     public static final String RESULT_JOIN_GAME_SUCCESS = "success";
-    public static final String RESULT_JOIN_GAME_FAILURE = "fail";
+    public static final String RESULT_ALREADY_JOINED = "already_joined";
+    public static final String RESULT_PASSWORD_INCORRECT = "password_incorrect";
+    public static final String RESULT_GAME_NOT_FOUND = "game_not_found";
+    public static final String RESULT_ERROR = "error"; // Result when there is an error. Shouldn't occur
 
     private String gameName;
     private String password;
@@ -120,7 +123,10 @@ public class JoinGameActivity extends AppCompatActivity {
             Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
             return;
         }
-        if (result.equals(RESULT_JOIN_GAME_SUCCESS)){
+        if (result.equals(RESULT_JOIN_GAME_SUCCESS) || result.equals(RESULT_ALREADY_JOINED)){
+            if (result.equals(RESULT_ALREADY_JOINED)){
+                Toast.makeText(this, "You have already joined this game", Toast.LENGTH_LONG).show();
+            }
             // Switch to the Lobby Activity
             Game game;
             try{
@@ -139,15 +145,21 @@ public class JoinGameActivity extends AppCompatActivity {
             return;
         }
         switch (result) {
-            case RESULT_JOIN_GAME_FAILURE:
+            case RESULT_ERROR:
                 error = "Unknown Error Occurred (2)";
+                break;
+            case RESULT_PASSWORD_INCORRECT:
+                error = "Password incorrect";
+                break;
+            case RESULT_GAME_NOT_FOUND:
+                error = "No game found with that name";
                 break;
             default:
                 break;
         }
         Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
     }
-
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
