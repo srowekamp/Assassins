@@ -9,9 +9,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="la_05.com.assassins.CreateGameActivity">
 
-
-
-
     <EditText
         android:hint="Game Name"
         android:layout_width="wrap_content"
@@ -48,7 +45,6 @@
         android:ems="10"
         android:id="@+id/createGameEditTextDuration" />
 
-
     <EditText
         android:hint="Radius of game area in meters"
         android:layout_width="wrap_content"
@@ -69,7 +65,7 @@
         android:layout_marginTop="10dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:inputType="number"
+        android:inputType="numberSigned|numberDecimal"
         android:ems="10"
         android:id="@+id/createGameEditTextXCenter" />
 
@@ -81,7 +77,7 @@
         android:layout_marginTop="10dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:inputType="number"
+        android:inputType="numberSigned|numberDecimal"
         android:ems="10"
         android:id="@+id/createGameEditTextYCenter" />
 
@@ -96,6 +92,5 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/createGameButtonCreateGame"
         android:onClick="createGame" />
-
 
 </RelativeLayout>

@@ -44,22 +44,26 @@ public class LobbyActivity extends AppCompatActivity {
     private Location lastLocation;
     private LatLng lastLatLng;
     private GoogleMap googleMap;
-    private double gameCircleRadius = 300;
+    //private double gameCircleRadius = 300;
     private float cameraZoomLevel = 0;
     private LatLng circleLatLng;
-    private boolean mapReady = false;
-    private boolean mapCircleDrawn = false;
+    //private boolean mapReady = false;
+    //private boolean mapCircleDrawn = false;
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ArrayAdapter<String> mAdapter;
 
+    UserAccount user;
+    Game game;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
-
-
+        user = (UserAccount) getIntent().getSerializableExtra(UserAccount.KEY_USER_ACCOUNT);
+        game = (Game) getIntent().getSerializableExtra(Game.KEY_GAME);
+        circleLatLng = new LatLng(game.getYCenter(), game.getXCenter());
         // Setup the Map
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
@@ -118,16 +122,6 @@ public class LobbyActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * delete after demo 1
-     */
-    public void useless(View view){
-        // Switch to the game activity
-        Intent intent = new Intent(this, GameActivity.class);
-        startActivity(intent);
-        //finish(); // Closes the current activity, stops user from returning to it with back button
-    }
-
     private void addDrawerItems() {
         String[] osArray = { "Radius", "Start Time", "Lobby Host", "Game Option", "Another Game Option" };
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
@@ -164,22 +158,16 @@ public class LobbyActivity extends AppCompatActivity {
     /** Set up the map once it is ready*/
     private void setUpMap(GoogleMap map) {
         googleMap = map;
-        googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        mapReady = true;
+        googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        googleMap.addCircle(new CircleOptions().center(circleLatLng).radius(game.getRadius()).strokeColor(Color.CYAN)); // Add game radius circle to map
+        cameraZoomLevel = getZoomLevel((double) game.getRadius());
+        // For zooming automatically to the location of the circle
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(circleLatLng).zoom(cameraZoomLevel).build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
     /** Update the user's location within the map (not sure if this is needed)*/
     private void updateMap() {
-        if (!mapReady) return;
-        if (!mapCircleDrawn) {
-            circleLatLng = lastLatLng; // TODO update with game options and move to setUpMap after
-            googleMap.addCircle(new CircleOptions().center(circleLatLng).radius(gameCircleRadius).strokeColor(Color.CYAN)); // Add game radius circle to map
-            cameraZoomLevel = getZoomLevel(gameCircleRadius);
-            // For zooming automatically to the location of the circle
-            CameraPosition cameraPosition = new CameraPosition.Builder().target(lastLatLng).zoom(cameraZoomLevel).build();
-            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            mapCircleDrawn = true;
-        }
         try {
             googleMap.setMyLocationEnabled(true);
         } catch (SecurityException e) {

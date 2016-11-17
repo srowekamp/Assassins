@@ -62,6 +62,18 @@ public class Game implements Serializable{
         GameJSONSerialized = Game.toString();
     }
 
+    public int getRadius() {
+        return radius;
+    }
+
+    public double getXCenter() {
+        return xcenter;
+    }
+
+    public double getYCenter() {
+        return ycenter;
+    }
+
     public String getGameID (){
         return gameID;
     }
