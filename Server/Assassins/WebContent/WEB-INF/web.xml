@@ -99,5 +99,15 @@
         <servlet-name>EndGame</servlet-name>
         <url-pattern>/EndGame</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>LeaveGame</servlet-name>
+        <servlet-class>assassins.LeaveGame</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>LeaveGame</servlet-name>
+        <url-pattern>/LeaveGame</url-pattern>
+    </servlet-mapping>
 
 </web-app>

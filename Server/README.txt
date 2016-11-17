@@ -128,12 +128,20 @@ Current functions of the server (needs VPN):
 		keys:
 			result: A value indictating what happened. Result values can be found in UpdateGame.java in the Assassins src
 			game: A JSONObject representing the current game.
+			
+10) LeaveGame: http://proj-309-la-05.cs.iastate.edu:8080/Assassins/LeaveGame?gameid=test1&id=1
+	Called by a player who wants to leave a game
+	parameters:
+        id: ID of the player trying to leave the game. (int)
+        gameid: ID of the game that you are trying to leave. (String)
+    Returns a JSON object with key "result" with one value indicating what happened
+		Result values can be found in LeaveGame.java in the Assassins servlet src
 
-10) Output users table: http://proj-309-la-05.cs.iastate.edu/users.php
+11) Output users table: http://proj-309-la-05.cs.iastate.edu/users.php
 	Outputs all data in the users table from the database
 	
-11) Output active_games table: http://proj-309-la-05.cs.iastate.edu/active_games.php
+12) Output active_games table: http://proj-309-la-05.cs.iastate.edu/active_games.php
 	Outputs all data in the active_games table from the database
 	
-12) User Photos: http://proj-309-la-05.cs.iastate.edu:8080/userImages/x.jpg
+13) User Photos: http://proj-309-la-05.cs.iastate.edu:8080/userImages/x.jpg
 	int x = id of user in database
