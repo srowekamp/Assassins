@@ -126,7 +126,11 @@ public class LoginActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (result != null && result.equals(RESULT_LOGIN_SUCCESS)){
+        if (result == null) {
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
+            return;
+        }
+        if (result.equals(RESULT_LOGIN_SUCCESS)){
             UserAccount user = null;
             try {
                 //JSONObject account = new JSONObject (response.getString(UserAccount.KEY_USER_ACCOUNT));
@@ -135,6 +139,8 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, "Welcome, " + account.getString(UserAccount.KEY_REAL_NAME), Toast.LENGTH_LONG).show();
             }catch (JSONException e) {
                 e.printStackTrace();
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+                return;
             }
             // Switch to the Main Menu Activity
             Intent intent = new Intent(this, MainMenuActivity.class);
@@ -143,17 +149,21 @@ public class LoginActivity extends AppCompatActivity {
             finish(); // Closes the current activity, stops user from returning to it with back button
             return;
         }
-        if (result != null && result.equals(RESULT_OTHER_ERROR)) {
-            error = "Unknown Error Occurred (2)";
-        }
-        else if (result != null && result.equals(RESULT_LOGIN_FAIL)) {
-            error = "Unknown Username or Password";
-        }
-        else if (result != null && result.equals(RESULT_USERNAME_INVALID)) {
-            error = "Invalid Username";
-        }
-        else if (result != null && result.equals(RESULT_PASSWORD_INVALID)) {
-            error = "Invalid Password";
+        switch (result) {
+            case RESULT_OTHER_ERROR:
+                error = "Unknown Error Occurred (2)";
+                break;
+            case RESULT_LOGIN_FAIL:
+                error = "Unknown Username or Password";
+                break;
+            case RESULT_USERNAME_INVALID:
+                error = "Invalid Username";
+                break;
+            case RESULT_PASSWORD_INVALID:
+                error = "Invalid Password";
+                break;
+            default:
+                break;
         }
         Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
     }

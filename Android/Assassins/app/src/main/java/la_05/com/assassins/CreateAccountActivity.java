@@ -207,15 +207,20 @@ public class CreateAccountActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (result != null && result.equals(RESULT_ACCOUNT_CREATED)){
+        if (result == null) {
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
+            return;
+        }
+        if (result.equals(RESULT_ACCOUNT_CREATED)){
             UserAccount user = null;
             try {
-                //JSONObject account = new JSONObject (response.getString(UserAccount.KEY_USER_ACCOUNT));
                 JSONObject account = response.getJSONObject(UserAccount.KEY_USER_ACCOUNT);
                 user = new UserAccount(account);
                 Toast.makeText(this, "Welcome, " + account.getString(UserAccount.KEY_REAL_NAME), Toast.LENGTH_LONG).show();
             }catch (JSONException e) {
                 e.printStackTrace();
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+                return;
             }
             // Switch to the Main Menu Activity
             Intent intent = new Intent(this, MainMenuActivity.class);
@@ -224,23 +229,27 @@ public class CreateAccountActivity extends AppCompatActivity {
             finish(); // Closes the current activity, stops user from returning to it with back button
             return;
         }
-        if (result != null && result.equals(RESULT_OTHER_ERROR)) {
-            error = "Unknown Error Occurred (2)";
-        }
-        else if (result != null && result.equals(RESULT_ACCOUNT_EXISTS)) {
-            error = "An Account with that Username already Exists";
-        }
-        else if (result != null && result.equals(RESULT_USERNAME_INVALID)) {
-            error = "Invalid Username";
-        }
-        else if (result != null && result.equals(RESULT_PASSWORD_INVALID)) {
-            error = "Invalid Password";
-        }
-        else if (result != null && result.equals(RESULT_IMAGE_INVALID)) {
-            error = "Image Error";
-        }
-        else if (result != null && result.equals(RESULT_NAME_INVALID)) {
-            error = "Name Error";
+        switch (result) {
+            case RESULT_OTHER_ERROR:
+                error = "Unknown Error Occurred (2)";
+                break;
+            case RESULT_ACCOUNT_EXISTS:
+                error = "An Account with that Username already Exists";
+                break;
+            case RESULT_USERNAME_INVALID:
+                error = "Invalid Username";
+                break;
+            case RESULT_PASSWORD_INVALID:
+                error = "Invalid Password";
+                break;
+            case RESULT_IMAGE_INVALID:
+                error = "Image Error";
+                break;
+            case RESULT_NAME_INVALID:
+                error = "Name Error";
+                break;
+            default:
+                break;
         }
         Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
     }
