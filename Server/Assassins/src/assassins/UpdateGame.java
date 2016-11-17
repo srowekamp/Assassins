@@ -55,6 +55,7 @@ public class UpdateGame extends HttpServlet {
         	parameterMissing = true;
         }
         if (!parameterMissing) { // TODO ensure values grabbed from request are valid
+        	// TODO check if game has been started
         	// Get the latest game object
         	Game game = DB.getGame(gameID);
         	if (game == null) {
@@ -87,7 +88,7 @@ public class UpdateGame extends HttpServlet {
 	        			// The game is proceeding as normal, first update the player's location in the database
 	        			DB.updateUserLocation(playerID, xlocation, ylocation);
 	        			// Now put the player's target in the response JSONObject
-	        			jsonResponse.put(KEY_TARGET, target.toJSONString());
+	        			jsonResponse.put(KEY_TARGET, target);
 	        			// Also put the game in the response
 	        			jsonResponse.put(Game.KEY_GAME, game);
 	        			result = RESULT_NORMAL;

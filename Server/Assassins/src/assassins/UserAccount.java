@@ -70,6 +70,11 @@ public class UserAccount {
 		return j.toJSONString();
 	}
 	
+	@Override
+	public String toString() {
+		return toJSONString();
+	}
+	
 	/** Return the id of this user */
 	public int getUserID() {
 		return id;

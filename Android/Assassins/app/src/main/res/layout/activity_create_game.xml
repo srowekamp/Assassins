@@ -9,96 +9,88 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="la_05.com.assassins.CreateGameActivity">
 
-
     <EditText
-        android:hint="GameID"
+        android:hint="Game Name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
         android:inputType="textPersonName"
-        android:text="GameId"
         android:ems="10"
-        android:layout_alignStart="@+id/editTextPlayers"
-        android:layout_marginTop="14dp"
-        android:id="@+id/editText" />
+        android:id="@+id/createGameEditTextGameName" />
 
     <EditText
-        android:hint="SizeGame"
+        android:hint="Password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="numberSigned"
+        android:layout_below="@+id/createGameEditTextGameName"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:inputType="textPassword"
         android:ems="10"
-        android:layout_marginTop="39dp"
-        android:id="@+id/editTextSize"
-        android:text="Size of Game"
-        android:layout_below="@+id/editTextPlayers"
-        android:layout_alignStart="@+id/editTextPlayers" />
+        android:id="@+id/createGameEditTextPassword" />
 
     <EditText
-        android:hint="LengthGame"
+        android:hint="Length of game in seconds"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/createGameEditTextPassword"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
         android:inputType="number"
         android:ems="10"
-        android:id="@+id/Length"
-        android:text="Length of Game"
-        android:layout_below="@+id/editTextSize"
-        android:layout_alignStart="@+id/editTextSize"
-        android:layout_marginTop="32dp" />
+        android:id="@+id/createGameEditTextDuration" />
+
+    <EditText
+        android:hint="Radius of game area in meters"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/createGameEditTextDuration"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/createGameEditTextRadius" />
+
+    <EditText
+        android:hint="X coordinate of game center (longitude)"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/createGameEditTextRadius"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:inputType="numberSigned|numberDecimal"
+        android:ems="10"
+        android:id="@+id/createGameEditTextXCenter" />
+
+    <EditText
+        android:hint="Y coordinate of game center (latitude)"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/createGameEditTextXCenter"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:inputType="numberSigned|numberDecimal"
+        android:ems="10"
+        android:id="@+id/createGameEditTextYCenter" />
 
     <Button
         android:text="Create Game"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="27dp"
-        android:id="@+id/button2"
-        android:onClick="CreateGame"
-        android:layout_alignParentBottom="true"
-        android:layout_alignEnd="@+id/switchPrivate" />
-
-    <Button
-        android:text="Main Menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/buttonMain"
-        android:layout_alignBaseline="@+id/button2"
-        android:layout_alignBottom="@+id/button2"
+        android:layout_below="@+id/createGameEditTextYCenter"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="24dp"
-        android:onClick="SwitchToMainMenu"/>
+        android:layout_centerHorizontal="true"
+        android:id="@+id/createGameButtonCreateGame"
+        android:onClick="createGame" />
 
-    <Switch
-        android:hint="PrivateGame"
-        android:text="Private Game"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/switchPrivate"
-        android:layout_marginStart="17dp"
-        android:layout_marginBottom="15dp"
-        android:layout_above="@+id/button2"
-        android:layout_alignParentStart="true" />
-
-    <Switch
-        android:hint="Mod"
-        android:text="Moderator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="22dp"
-        android:id="@+id/switchMod"
-        android:layout_below="@+id/Length"
-        android:layout_alignStart="@+id/switchPrivate" />
-
-    <EditText
-        android:hint="NumPlayers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="numberSigned"
-        android:ems="10"
-        android:layout_marginTop="29dp"
-        android:id="@+id/editTextPlayers"
-        android:text="Number of Players"
-        android:layout_below="@+id/editText"
-        android:layout_centerHorizontal="true" />
-
-    =======
-    >>>>>>> origin/Martinson_exp
 </RelativeLayout>

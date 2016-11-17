@@ -43,7 +43,7 @@ public class Login extends HttpServlet {
         		if (ua == null) jsonResponse.put(CreateAccount.KEY_RESULT, CreateAccount.RESULT_OTHER_ERROR);
         		else {
         			jsonResponse.put(CreateAccount.KEY_RESULT, RESULT_LOGIN_SUCCESS);
-        			jsonResponse.put(UserAccount.KEY_USER_ACCOUNT, ua.toJSONString());
+        			jsonResponse.put(UserAccount.KEY_USER_ACCOUNT, ua);
         		}
         	}
         	else {

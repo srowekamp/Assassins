@@ -6,7 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import org.json.simple.JSONObject;
 
-public class JoinGame extends HttpServlet{
+public class LeaveGame extends HttpServlet{
 	
 	/**
 	 * Auto-generated number
@@ -15,9 +15,8 @@ public class JoinGame extends HttpServlet{
 	
 	public static final String KEY_RESULT = "result";
 	public static final String RESULT_PARAMETER_MISSING = "parameter_error";
-	public static final String RESULT_JOIN_GAME_SUCCESS = "success";
-	public static final String RESULT_ALREADY_JOINED = "already_joined";
-	public static final String RESULT_PASSWORD_INCORRECT = "password_incorrect";
+	public static final String RESULT_LEAVE_GAME_SUCCESS = "success";
+	public static final String RESULT_NOT_IN_GAME = "not_in_game";
 	public static final String RESULT_GAME_NOT_FOUND = "game_not_found";
 	public static final String RESULT_ERROR = "error"; // Result when there is an error. Shouldn't occur
 	
@@ -37,39 +36,34 @@ public class JoinGame extends HttpServlet{
 		int playerID = -1;
 		String gameID = null;
 		String password = null;
-		Game tempGame = null;
-		boolean alreadyJoined = false;
+		Game game = null;
+		boolean inGame = false;
 		
 		try {
         	gameID = request.getParameter(Game.KEY_GAMEID);
         	playerID = Integer.parseInt(request.getParameter(UserAccount.KEY_ID));
-        	password = request.getParameter(Game.KEY_PASSWORD);
         } catch (Exception e) {
         	result = RESULT_PARAMETER_MISSING;
         	parameterMissing = true;
         }
 		if(!parameterMissing) {
-			if (DB.doesGameExist(gameID)){
-				tempGame = DB.attemptJoinGame(gameID, password);
-				if(tempGame != null){
-					int[] players = tempGame.getPlayers();
+			if (DB.doesGameExist(gameID)) {
+				game = DB.getGame(gameID);
+				if(game != null) {
+					int[] players = game.getPlayers();
 					String playerList = "";
-					for (int i = 0; i < players.length; i++){
-						playerList += String.format("%d,", players[i]);
-						if (players[i] == playerID) alreadyJoined = true;
+					for (int i = 0; i < players.length; i++) {
+						if (players[i] == playerID) inGame = true;
+						else playerList += String.format("%d,", players[i]);
 					}
-					if (!alreadyJoined) {
-						playerList += String.format("%d,", playerID);
-						tempGame = DB.joinGame(tempGame, playerList);
-						if (tempGame != null) {
-							result = RESULT_JOIN_GAME_SUCCESS;
-							jsonResponse.put(Game.KEY_GAME, tempGame);
-						}
-						else result = RESULT_ERROR;
+					if (inGame) {
+						//update player list
+						//update players_alive if game started
+						//remove game from active_games if last player
 					}
-					else result = RESULT_ALREADY_JOINED;
+					else result = RESULT_NOT_IN_GAME;
 				}
-				else result = RESULT_PASSWORD_INCORRECT;
+				else result = RESULT_ERROR;
 			}
 			else result = RESULT_GAME_NOT_FOUND;
 		}

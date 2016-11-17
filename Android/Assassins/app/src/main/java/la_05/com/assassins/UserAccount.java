@@ -1,10 +1,7 @@
 package la_05.com.assassins;
 
-import android.app.Application;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.Serializable;
 
 /**
@@ -47,6 +44,10 @@ public class UserAccount implements Serializable{
             e.printStackTrace();
         }
         accountJSONSerialized = account.toString();
+    }
+
+    public int getID() {
+        return id;
     }
 
     public String getRealName () {

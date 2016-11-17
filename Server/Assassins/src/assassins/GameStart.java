@@ -43,7 +43,7 @@ public class GameStart extends HttpServlet {
         	game = DB.setEndTime(game, startTime);
         	game = DB.setTargetList(game);
         	UserAccount target = game.getTarget(game.getHostID());
-        	jsonResponse.put(KEY_TARGET, target.toJSONString());
+        	jsonResponse.put(KEY_TARGET, target);
         	jsonResponse.put(Game.KEY_GAME, game);
         	result = RESULT_GAME_STARTED;
         }

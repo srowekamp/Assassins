@@ -19,33 +19,35 @@ public class MainMenuActivity extends AppCompatActivity{
     }
 
     /**
-     *  This method will bring the user to the Join Game Screen
-     *  10/05/2016 - brings you to the lobby
+     *  Open the join game activity
      */
-    public void joinGame(View view){
-        //currently not what it is going to do, however, this is here for just now purposes
-        // Switch to the Lobby Activity
-        Intent intent = new Intent(this, LobbyActivity.class);
+    public void gotoJoinGame(View view){
+        Intent intent = new Intent(this, JoinGameActivity.class);
+        intent.putExtra(UserAccount.KEY_USER_ACCOUNT, user);
         startActivity(intent);
-        finish(); // Closes the current activity, stops user from returning to it with back button
     }
 
-    public void createGame(View view){
+    /**
+     * Open the create game activity
+     */
+    public void gotoCreateGame(View view){
+        Intent intent = new Intent(this, CreateGameActivity.class);
+        intent.putExtra(UserAccount.KEY_USER_ACCOUNT, user);
+        startActivity(intent);
+    }
+
+    public void gotoOptions(View view){
         // TODO
     }
 
-    public void options(View view){
-        // TODO
-    }
-
-    public void account(View view){
+    public void gotoAccount(View view){
         Intent intent = new Intent(this, UserAccountActivity.class);
         intent.putExtra(UserAccount.KEY_USER_ACCOUNT, user);
         startActivity(intent);
         // TODO
     }
 
-    public void gameEditor(View view){
+    public void gotoGameEditor(View view){
         // TODO
     }
 
