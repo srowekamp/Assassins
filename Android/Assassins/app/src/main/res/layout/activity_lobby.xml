@@ -50,17 +50,17 @@
                 android:text="Lobby Name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textLobbyName"
+                android:id="@+id/lobbyTextViewGameName"
                 android:layout_toRightOf="@id/imageViewDrawer"
                 android:paddingLeft="16dp"
                 android:layout_centerVertical="true"
                 android:textColor="?android:attr/textColorPrimaryInverse" />
 
             <TextView
-                android:text="Time Remaining"
+                android:text="Waiting for host to start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textTimeRemaining"
+                android:id="@+id/lobbyTextViewTimeRemaining"
                 android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
                 android:textColor="?android:attr/textColorPrimaryInverse" />
@@ -78,7 +78,7 @@
                 android:text="X Players in Lobby"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textPlayerCount"
+                android:id="@+id/lobbyTextViewPlayerCount"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:textColor="?android:attr/textColorPrimaryInverse"
@@ -90,7 +90,7 @@
                 android:layout_height="wrap_content"
                 app:srcCompat="@mipmap/ic_launcher"
                 android:layout_alignParentStart="true"
-                android:id="@+id/imageView"
+                android:id="@+id/lobbyImageViewProfile"
                 android:layout_centerVertical="true" />
         </RelativeLayout>
 
@@ -111,28 +111,18 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
-            android:id="@+id/imageViewCenterCircle"
+            android:id="@+id/lobbyImageViewCenterCircle"
             android:onClick="centerMapToMe" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@android:drawable/ic_menu_mylocation"
-            android:id="@+id/imageViewMyLocation"
+            android:id="@+id/lobbyImageViewMyLocation"
             android:layout_marginBottom="12dp"
-            android:layout_alignStart="@id/imageViewCenterCircle"
-            android:layout_above="@id/imageViewCenterCircle"
+            android:layout_alignStart="@id/lobbyImageViewCenterCircle"
+            android:layout_above="@id/lobbyImageViewCenterCircle"
             android:onClick="centerMapToCircle" />
 
-        <Button
-            android:text="Go To Game"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/relativeLayout"
-            android:layout_toStartOf="@+id/textGPSTest"
-            android:layout_marginEnd="36dp"
-            android:layout_marginTop="46dp"
-            android:id="@+id/notForFuture"
-            android:onClick="useless"/>
     </RelativeLayout>
 </android.support.v4.widget.DrawerLayout>

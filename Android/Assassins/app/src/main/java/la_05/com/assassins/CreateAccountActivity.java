@@ -22,7 +22,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -31,7 +30,6 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -67,24 +65,24 @@ public class CreateAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
 
-        imageView = (ImageView) findViewById(R.id.imageView);
+        imageView = (ImageView) findViewById(R.id.createAccountImageView);
 
         //Fix editTextPassword Font
-        EditText password = (EditText) findViewById(R.id.editTextCreatePassword);
+        EditText password = (EditText) findViewById(R.id.createAccountEditTextPassword);
         password.setTypeface(Typeface.DEFAULT);
         password.setTransformationMethod(new PasswordTransformationMethod());
 
-        password = (EditText) findViewById(R.id.editTextConfirmPassword);
+        password = (EditText) findViewById(R.id.createAccountEditTextConfirmPassword);
         password.setTypeface(Typeface.DEFAULT);
         password.setTransformationMethod(new PasswordTransformationMethod());
     }
 
     /** Called when user clicks the Create Account button */
     public void createAccount(View view) {
-        EditText name = (EditText) findViewById(R.id.editTextCreateName);
-        EditText username = (EditText) findViewById(R.id.editTextCreateUserName);
-        EditText password = (EditText) findViewById(R.id.editTextCreatePassword);
-        EditText confirmPassword = (EditText) findViewById(R.id.editTextConfirmPassword);
+        EditText name = (EditText) findViewById(R.id.createAccountEditTextRealName);
+        EditText username = (EditText) findViewById(R.id.createAccountEditTextUserName);
+        EditText password = (EditText) findViewById(R.id.createAccountEditTextPassword);
+        EditText confirmPassword = (EditText) findViewById(R.id.createAccountEditTextConfirmPassword);
 
         this.realName = name.getText().toString();
         this.username = username.getText().toString();

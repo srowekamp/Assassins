@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         //Fix editTextPassword Font
-        EditText password = (EditText) findViewById(R.id.editTextCreatePassword);
+        EditText password = (EditText) findViewById(R.id.loginEditTextPassword);
         password.setTypeface(Typeface.DEFAULT);
         password.setTransformationMethod(new PasswordTransformationMethod());
     }
@@ -55,8 +55,8 @@ public class LoginActivity extends AppCompatActivity {
     /** Called when user clicks the Login button */
     public void login(View view) {
         // Interact with server to log in and open the Home Page
-        EditText editTextUsername = (EditText) findViewById(R.id.editTextCreateUserName);
-        EditText editTextPassword = (EditText) findViewById(R.id.editTextCreatePassword);
+        EditText editTextUsername = (EditText) findViewById(R.id.loginEditTextUserName);
+        EditText editTextPassword = (EditText) findViewById(R.id.loginEditTextPassword);
 
         username = editTextUsername.getText().toString();
         password = editTextPassword.getText().toString();
@@ -159,8 +159,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void enterAdminCred(View view) {
-        EditText editTextUsername = (EditText) findViewById(R.id.editTextCreateUserName);
-        EditText editTextPassword = (EditText) findViewById(R.id.editTextCreatePassword);
+        EditText editTextUsername = (EditText) findViewById(R.id.loginEditTextUserName);
+        EditText editTextPassword = (EditText) findViewById(R.id.loginEditTextPassword);
         editTextUsername.setText("admin");
         editTextPassword.setText("password");
     }
