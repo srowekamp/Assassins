@@ -102,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_above="@+id/RelativeLayoutBottom"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="16dp"
             android:id="@+id/textGPSTest"
             android:textColor="?android:attr/textColorPrimary" />
 
@@ -126,6 +126,16 @@
             android:layout_alignStart="@id/lobbyImageViewCenterCircle"
             android:layout_above="@id/lobbyImageViewCenterCircle"
             android:onClick="centerMapToCircle" />
+
+        <Button
+            android:text="Start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textGPSTest"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="24dp"
+            android:id="@+id/lobbyButtonStart"
+            android:onClick="startGame"/>
 
     </RelativeLayout>
 </android.support.v4.widget.DrawerLayout>

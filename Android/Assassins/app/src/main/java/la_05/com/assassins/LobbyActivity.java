@@ -1,6 +1,7 @@
 package la_05.com.assassins;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.content.Context;
@@ -16,16 +17,22 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -35,8 +42,25 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Hashtable;
+import java.util.Map;
+
 public class LobbyActivity extends AppCompatActivity {
 
+    public static final String JSON_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/";
+    //public static final String GETPLAYERS = "GetPlayers";
+    public static final String GAMESTART = "GameStart";
+    //public static final String LEAVEGAME = "LeaveGame";
+
+    public static final String KEY_RESULT = "result";
+    // Results for GameStart
+    public static final String RESULT_PARAMETER_MISSING = "parameter_error";
+    public static final String RESULT_GAME_STARTED = "success";
+    public static final String RESULT_NOT_ENOUGH_PLAYERS = "not_enough_players";
+    public static final String RESULT_GAMEID_INVALID = "gameid_error";
     public static final String RESULT_START_TIME_INVALID = "start_time_error"; // Value of Result when an invalid start_time is passed to GameStart
 
     public static final int LOCATION_UPDATE_INTERVAL = 10000; // Minimum time between location updates in milliseconds
@@ -48,11 +72,8 @@ public class LobbyActivity extends AppCompatActivity {
     private Location lastLocation;
     private LatLng lastLatLng;
     private GoogleMap googleMap;
-    //private double gameCircleRadius = 300;
     private float cameraZoomLevel = 0;
     private LatLng circleLatLng;
-    //private boolean mapReady = false;
-    //private boolean mapCircleDrawn = false;
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -60,16 +81,23 @@ public class LobbyActivity extends AppCompatActivity {
 
     LocationListener locationListener;
 
-    UserAccount user;
-    Game game;
+    private UserAccount user;
+    private Game game;
+
+    private String start_time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
+
+        // Get the Game and UserAccount objects from the previous activity
         user = (UserAccount) getIntent().getSerializableExtra(UserAccount.KEY_USER_ACCOUNT);
         game = (Game) getIntent().getSerializableExtra(Game.KEY_GAME);
+
+        // Set the center of the game radius circle
         circleLatLng = new LatLng(game.getYCenter(), game.getXCenter());
+
         // Setup the Map
         mapView = (MapView) findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
@@ -123,9 +151,8 @@ public class LobbyActivity extends AppCompatActivity {
         String numPlayersString = String.format("%d Players in Lobby", game.getNumPlayers());
         NumPlayers.setText(numPlayersString);
 
-        //Get Profile image
+        // Get Profile image
         ImageRequest ir = new ImageRequest(user.getImageURL(), new Response.Listener<Bitmap>() {
-
             @Override
             public void onResponse(Bitmap response) {
                 ImageView imageView = (ImageView)findViewById(R.id.lobbyImageViewProfile);
@@ -136,9 +163,15 @@ public class LobbyActivity extends AppCompatActivity {
                 imageView.setImageDrawable(roundDrawable);
             }
         }, 0, 0, null, null);
-
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(ir);
+
+        // Add a start game button if the user is the host
+        Button ButtonStart = (Button) findViewById(R.id.lobbyButtonStart);
+        if (game.getHostID() == user.getID()) {
+            ButtonStart.setVisibility(View.VISIBLE);
+        }
+        else ButtonStart.setVisibility(View.INVISIBLE);
     }
 
     public void toggleDrawer(View view) {
@@ -271,10 +304,118 @@ public class LobbyActivity extends AppCompatActivity {
         txtLatLong.setText(lastLatLng.toString());
     }
 
+    /** Go to the list of players in the lobby/game */
     public void gotoPlayerList(View view) {
         // Switch to the Player List activity
         Intent intent = new Intent(this, PlayersListActivity.class);
         startActivity(intent);
+        // TODO Pass an array of UserAccounts to put in the view
+    }
+
+    /** Attempt to start the game. Only available to host of game. */
+    public void startGame(View view) {
+        int h, m, s;
+        int secondsPerDay = 60 * 60 * 24;
+        int currentTimeSeconds = (int) (System.currentTimeMillis() / 1000) % secondsPerDay;
+        h = currentTimeSeconds / 3600;
+        m = (currentTimeSeconds % 3600) / 60;
+        s = currentTimeSeconds % 60;
+        start_time = String.format("%02d%02d%02d", h, m, s);
+        Toast.makeText(this, start_time, Toast.LENGTH_LONG).show();
+        startGame();
+    }
+
+    /** Attempt to start the game */
+    private void startGame() {
+        String requestURL = JSON_URL + GAMESTART;
+        final ProgressDialog loading = ProgressDialog.show(this, "Starting Game...", "Please wait...", false, false);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, requestURL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response){
+                        // Dismiss the progress dialog
+                        loading.dismiss();
+                        try {
+                            JSONObject responseJSON = new JSONObject(response);
+                            authenticateGameStart(responseJSON); // Got a response from the server, check if valid
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            //show a toast and log the error
+                            Toast.makeText(LobbyActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            Log.d("ERROR", "error => " + e.getMessage()); // Print the error to the device log
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Dismiss the progress dialog
+                        loading.dismiss();
+
+                        //show a toast and log the error
+                        Toast.makeText(LobbyActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("ERROR", "error => " + error.toString()); // Print the error to the device log
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parameters = new Hashtable<String, String>();
+                parameters.put(Game.KEY_GAMEID, game.getGameID());
+                parameters.put(Game.KEY_START_TIME, start_time);
+                return parameters;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
+    /** Process JSON response from server */
+    private void authenticateGameStart(JSONObject response) {
+        String result = null;
+        String error = "Unknown Error Occurred (1)";
+        try {
+            result = (String) response.get(KEY_RESULT);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (result == null) {
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
+            return;
+        }
+        if (result.equals(RESULT_GAME_STARTED)){
+            // Switch to the GameView Activity
+            Game game;
+            try{
+                JSONObject gameJSON = response.getJSONObject(Game.KEY_GAME);
+                game = new Game(gameJSON);
+            }catch(JSONException e){
+                e.printStackTrace();
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+                return;
+            }
+            Intent intent = new Intent(this, GameActivity.class);
+            intent.putExtra(UserAccount.KEY_USER_ACCOUNT, user);
+            intent.putExtra(Game.KEY_GAME, game);
+            startActivity(intent);
+            finish(); // Closes the current activity, stops user from returning to it with back button
+            return;
+        }
+        switch (result) {
+            case RESULT_NOT_ENOUGH_PLAYERS:
+                error = "Not enough players to start game";
+                break;
+            case RESULT_START_TIME_INVALID: // shouldn't happen; for debugging
+                error = "Start time was invalid";
+                break;
+            case RESULT_GAMEID_INVALID: // shouldn't happen; for debugging
+                error = "Provided game name (gameID) was invalid";
+                break;
+            default:
+                break;
+        }
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
     }
 
     boolean doubleBackToExitPressedOnce = false;
