@@ -54,6 +54,8 @@ public class LobbyActivity extends AppCompatActivity {
     private ListView mDrawerList;
     private ArrayAdapter<String> mAdapter;
 
+    LocationListener locationListener;
+
     UserAccount user;
     Game game;
 
@@ -94,7 +96,7 @@ public class LobbyActivity extends AppCompatActivity {
         }
         else {
             // If app has permission, setup Location service
-            LocationListener locationListener = new MyLocationListener();
+            locationListener = new MyLocationListener();
             LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
             lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
@@ -107,6 +109,15 @@ public class LobbyActivity extends AppCompatActivity {
                     locationListener);
             updateTxt();
         }
+
+        // Set game name
+        TextView GameName = (TextView) findViewById(R.id.lobbyTextViewGameName);
+        GameName.setText(game.getGameID());
+
+        // Set number of players alive
+        TextView NumPlayers = (TextView) findViewById(R.id.lobbyTextViewPlayerCount);
+        String numPlayersString = String.format("%d Players in Lobby", game.getNumPlayers());
+        NumPlayers.setText(numPlayersString);
 
         // Make Profile ImageView Rounded
         ImageView imageView = (ImageView)findViewById(R.id.lobbyImageViewProfile);
@@ -124,6 +135,11 @@ public class LobbyActivity extends AppCompatActivity {
 
     private void addDrawerItems() {
         String[] osArray = { "Radius", "Start Time", "Lobby Host", "Game Option", "Another Game Option" };
+        osArray[0] = String.format("Radius = %dm", game.getRadius());
+        osArray[1] = String.format("Lobby Host = %d", game.getHostID());
+        osArray[2] = String.format("Duration = %d", game.getDuration());
+        osArray[4] = String.format("Longitude = %f", game.getXCenter());
+        osArray[3] = String.format("Latitude = %f", game.getYCenter());
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
         mDrawerList.setAdapter(mAdapter);
     }
@@ -254,6 +270,12 @@ public class LobbyActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
+            LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            try {
+                locationManager.removeUpdates(locationListener);
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
             return;
         }
 
