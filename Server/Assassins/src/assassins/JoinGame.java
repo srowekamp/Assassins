@@ -67,7 +67,10 @@ public class JoinGame extends HttpServlet{
 						}
 						else result = RESULT_ERROR;
 					}
-					else result = RESULT_ALREADY_JOINED;
+					else {
+						result = RESULT_ALREADY_JOINED;
+						jsonResponse.put(Game.KEY_GAME, tempGame);
+					}
 				}
 				else result = RESULT_PASSWORD_INCORRECT;
 			}
