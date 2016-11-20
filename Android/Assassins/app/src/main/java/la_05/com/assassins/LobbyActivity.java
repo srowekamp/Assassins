@@ -23,6 +23,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -119,12 +123,22 @@ public class LobbyActivity extends AppCompatActivity {
         String numPlayersString = String.format("%d Players in Lobby", game.getNumPlayers());
         NumPlayers.setText(numPlayersString);
 
-        // Make Profile ImageView Rounded
-        ImageView imageView = (ImageView)findViewById(R.id.lobbyImageViewProfile);
-        Bitmap avatar = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-        RoundedBitmapDrawable roundDrawable = RoundedBitmapDrawableFactory.create(getResources(), avatar);
-        roundDrawable.setCircular(true);
-        imageView.setImageDrawable(roundDrawable);
+        //Get Profile image
+        ImageRequest ir = new ImageRequest(user.getImageURL(), new Response.Listener<Bitmap>() {
+
+            @Override
+            public void onResponse(Bitmap response) {
+                ImageView imageView = (ImageView)findViewById(R.id.lobbyImageViewProfile);
+                imageView.setImageBitmap(response);
+                // Make Profile ImageView Rounded
+                RoundedBitmapDrawable roundDrawable = RoundedBitmapDrawableFactory.create(getResources(), response);
+                roundDrawable.setCircular(true);
+                imageView.setImageDrawable(roundDrawable);
+            }
+        }, 0, 0, null, null);
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(ir);
     }
 
     public void toggleDrawer(View view) {
