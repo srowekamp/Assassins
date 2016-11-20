@@ -40,6 +40,7 @@ public class LeaveGame extends HttpServlet{
 		String password = null;
 		Game game = null;
 		boolean inGame = false;
+		boolean t = true; // Variable to store whether or not to remove the player from the players_list in database
 		
 		try {
         	gameID = request.getParameter(Game.KEY_GAMEID);
@@ -61,16 +62,20 @@ public class LeaveGame extends HttpServlet{
 							// if there are there other players alive, remove the player from players_alive
 							if (game.getPlayersAlive().length > 1) {
 								game = game.killPlayer(playerID);
-								result = RESULT_PLAYER_DEAD;
 							}
 							// if the player is the last one alive, they won.
 							else {
 								result = RESULT_PLAYER_WON;
+								t = false;
 							}
 						}
+						else {
+							result = RESULT_PLAYER_DEAD;
+							t = false;
+						}
 					}
-					// The game isn't started, remove player from players_list
-					else {
+					// The game isn't started or player left while in progress, so remove player from players_list
+					if (t) {
 						// Build a new players_list
 						int[] players = game.getPlayers();
 						String playersList = "";
