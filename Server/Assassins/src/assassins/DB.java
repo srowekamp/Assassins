@@ -491,4 +491,28 @@ Connection con = DBConnectionHandler.getConnection();
 		}
     	return null;
     }
+    
+    /** Update the given user's games played in the database by incrementing the existing value by 1 */
+    public static UserAccount addGamePlayed(int playerID) {
+    	UserAccount user = getUser(playerID);
+    	int games_played = user.getGamesPlayed();
+    	games_played = games_played + 1;
+    	Connection con = DBConnectionHandler.getConnection();
+    	String sql = "UPDATE " + DATABASE + "." + USERS_TABLE
+    			+ " SET " + UserAccount.KEY_GAMES_PLAYED + "=?"
+    			+ " WHERE " + UserAccount.KEY_ID + "=?";
+    	try {
+    		PreparedStatement ps = con.prepareStatement(sql);
+    		ps.setInt(1, games_played);
+    		ps.setInt(2, playerID);
+    		ps.executeUpdate();
+    		return getUser(playerID);
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+		finally {
+			try { if (con != null) con.close(); } catch (Exception e) {};
+		}
+    	return null;
+    }
 }

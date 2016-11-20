@@ -44,6 +44,7 @@ public class EndGame extends HttpServlet{
 			 * update stats for all players when stats exist
 			 */
 			if (tempGame == null) {
+				game.updateGamesPlayed();
 				result = RESULT_REMOVE_GAME_SUCCESS;
 				jsonResponse.put(Game.KEY_GAME, game);
 			}

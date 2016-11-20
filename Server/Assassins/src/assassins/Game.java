@@ -215,8 +215,17 @@ public class Game {
 		return DB.updateAlivePlayers(this, newPlayersAlive);
 	}
 	
+	/** Returns true if the game has been started, false otherwise */
 	public boolean isStarted() {
 		return (players_alive != null && end_time != null);
+	}
+	
+	/** Increment the games played stat for each player in the game */
+	public void updateGamesPlayed() {
+		int[] players = getPlayers();
+		for (int i = 0; i < players.length; i++) {
+			DB.addGamePlayed(players[i]);
+		}
 	}
 	
 	/** Converts this game object into a JSONObject */
