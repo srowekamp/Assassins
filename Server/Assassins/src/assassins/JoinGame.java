@@ -60,7 +60,7 @@ public class JoinGame extends HttpServlet{
 					}
 					if (!alreadyJoined) {
 						playerList += String.format("%d,", playerID);
-						tempGame = DB.joinGame(tempGame, playerList);
+						tempGame = DB.updatePlayersList(tempGame, playerList);
 						if (tempGame != null) {
 							result = RESULT_JOIN_GAME_SUCCESS;
 							jsonResponse.put(Game.KEY_GAME, tempGame);

@@ -215,6 +215,10 @@ public class Game {
 		return DB.updateAlivePlayers(this, newPlayersAlive);
 	}
 	
+	public boolean isStarted() {
+		return (players_alive != null && end_time != null);
+	}
+	
 	/** Converts this game object into a JSONObject */
 	public JSONObject toJSON() {
 		JSONObject j = new JSONObject();
