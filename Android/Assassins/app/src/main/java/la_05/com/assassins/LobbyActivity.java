@@ -84,7 +84,7 @@ public class LobbyActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ArrayAdapter<String> mAdapter;
-    private ArrayList<UserAccount> players;
+    private UserAccount[] players;
 
     LocationListener locationListener;
 
@@ -320,10 +320,29 @@ public class LobbyActivity extends AppCompatActivity {
     public void gotoPlayerList(View view) {
         // Switch to the Player List activity
         Intent intent = new Intent(this, PlayersListActivity.class);
+        intent.putExtra(KEY_NUM_PLAYERS, players.length);
+        for (int i = 0; i < players.length; i++) {
+            String playerIKey = String.format("Player %d", i);
+            intent.putExtra(playerIKey, players[i]);
+        }
         startActivity(intent);
         // TODO Pass an array of UserAccounts to put in the view
     }
 
+    private void updatePlayers(JSONObject response) {
+        try {
+            int numPlayers = response.getInt(KEY_NUM_PLAYERS);
+            UserAccount[] newPlayers = new UserAccount[numPlayers];
+            for (int i = 0; i < numPlayers; i++) {
+                String playerIKey = String.format("Player %d", i);
+                JSONObject tempJSON = response.getJSONObject(playerIKey);
+                newPlayers[i] = new UserAccount(tempJSON);
+            }
+            players = newPlayers;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void getPlayers() {
         String requestURL = JSON_URL + GETPLAYERS;
@@ -395,7 +414,17 @@ public class LobbyActivity extends AppCompatActivity {
         }
         if (result.equals(RESULT_NORMAL)){
             // TODO update players list and check for start
-            Toast.makeText(this, "normal", Toast.LENGTH_LONG).show(); // indicate failure
+            Toast.makeText(this, "normal", Toast.LENGTH_LONG).show();
+            try {
+                game = new Game(response.getJSONObject(Game.KEY_GAME));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (game.getEnd_time() != null && game.getPlayers_alive() != null) {
+                // TODO Switch to game view and pass game and user object along
+                return;
+            }
+            updatePlayers(response);
             return;
         }
         switch (result) {
