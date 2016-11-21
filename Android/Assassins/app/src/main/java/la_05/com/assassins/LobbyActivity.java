@@ -45,13 +45,14 @@ import com.google.android.gms.maps.model.LatLng;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
 public class LobbyActivity extends AppCompatActivity {
 
     public static final String JSON_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/";
-    //public static final String GETPLAYERS = "GetPlayers";
+    public static final String GETPLAYERS = "GetPlayers";
     public static final String GAMESTART = "GameStart";
     //public static final String LEAVEGAME = "LeaveGame";
 
@@ -63,8 +64,13 @@ public class LobbyActivity extends AppCompatActivity {
     public static final String RESULT_GAMEID_INVALID = "gameid_error";
     public static final String RESULT_START_TIME_INVALID = "start_time_error"; // Value of Result when an invalid start_time is passed to GameStart
 
+    // Data for GetPlayers
+    public static final String KEY_NUM_PLAYERS = "num_players";
+    public static final String RESULT_NORMAL = "normal";
+    public static final String RESULT_ERROR = "error"; // Result when there is an error. Shouldn't occur
+
     public static final int LOCATION_UPDATE_INTERVAL = 10000; // Minimum time between location updates in milliseconds
-    public static final float LOCATION_UPDATE_DISTANCE = 2; // Minimum distance between location updates in meters
+    public static final float LOCATION_UPDATE_DISTANCE = 5; // Minimum distance between location updates in meters
     public static final int MAP_ZOOM_SCALE_FACTOR = 350; // Constant used to determine map zoom
 
     private TextView txtLatLong;
@@ -78,6 +84,7 @@ public class LobbyActivity extends AppCompatActivity {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ArrayAdapter<String> mAdapter;
+    private ArrayList<UserAccount> players;
 
     LocationListener locationListener;
 
@@ -85,6 +92,7 @@ public class LobbyActivity extends AppCompatActivity {
     private Game game;
 
     private String start_time;
+    boolean gameStart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -172,6 +180,10 @@ public class LobbyActivity extends AppCompatActivity {
             ButtonStart.setVisibility(View.VISIBLE);
         }
         else ButtonStart.setVisibility(View.INVISIBLE);
+
+        // Start GetPlayers
+        gameStart = false;
+        getPlayers();
     }
 
     public void toggleDrawer(View view) {
@@ -312,6 +324,90 @@ public class LobbyActivity extends AppCompatActivity {
         // TODO Pass an array of UserAccounts to put in the view
     }
 
+
+    private void getPlayers() {
+        String requestURL = JSON_URL + GETPLAYERS;
+        final ProgressDialog loading = ProgressDialog.show(this, "Updating Lobby...", "Please wait...", false, false); // TODO only for demo
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, requestURL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response){
+                        // Dismiss the progress dialog
+                        loading.dismiss();
+                        try {
+                            JSONObject responseJSON = new JSONObject(response);
+                            authenticateGetPlayers(responseJSON); // Got a response from the server, check if valid
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            //show a toast and log the error
+                            Toast.makeText(LobbyActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            Log.d("ERROR", "error => " + e.getMessage()); // Print the error to the device log
+                        }
+                        if (!gameStart) {
+                            new Handler().postDelayed(new Runnable() {
+                                public void run() {
+                                    getPlayers();
+                                }
+                            }, 10000);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Dismiss the progress dialog
+                        loading.dismiss();
+
+                        //show a toast and log the error
+                        Toast.makeText(LobbyActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("ERROR", "error => " + error.toString()); // Print the error to the device log
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parameters = new Hashtable<String, String>();
+                parameters.put(Game.KEY_GAMEID, game.getGameID());
+                parameters.put(UserAccount.KEY_ID, String.format("%d", user.getID()));
+                parameters.put(UserAccount.KEY_X_LOCATION, String.format("%f", lastLatLng.longitude));
+                parameters.put(UserAccount.KEY_Y_LOCATION, String.format("%f", lastLatLng.latitude));
+
+                return parameters;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
+    /** Process JSON response from server */
+    private void authenticateGetPlayers(JSONObject response) {
+        String result = null;
+        String error = "Unknown Error Occurred (1)";
+        try {
+            result = (String) response.get(KEY_RESULT);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (result == null) {
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
+            return;
+        }
+        if (result.equals(RESULT_NORMAL)){
+            // TODO update players list and check for start
+            Toast.makeText(this, "normal", Toast.LENGTH_LONG).show(); // indicate failure
+            return;
+        }
+        switch (result) {
+            case RESULT_ERROR:
+                error = "An unknown server error occured";
+                break;
+            default:
+                break;
+        }
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
+    }
+
     /** Attempt to start the game. Only available to host of game. */
     public void startGame(View view) {
         int h, m, s;
@@ -398,6 +494,15 @@ public class LobbyActivity extends AppCompatActivity {
             Intent intent = new Intent(this, GameActivity.class);
             intent.putExtra(UserAccount.KEY_USER_ACCOUNT, user);
             intent.putExtra(Game.KEY_GAME, game);
+            // Cancel Location Updates for this activity
+            LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            try {
+                locationManager.removeUpdates(locationListener);
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
+            // Cancel the looping GetPlayers method
+            gameStart = false; // TODO does this work? iastate down
             startActivity(intent);
             finish(); // Closes the current activity, stops user from returning to it with back button
             return;

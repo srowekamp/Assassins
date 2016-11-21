@@ -18,8 +18,12 @@ public class UserAccount implements Serializable{
     public static final String KEY_IMAGE_PATH = "image_filename";
     public static final String KEY_TOTAL_KILLS = "total_kills";
     public static final String KEY_GAMES_PLAYED = "games_played";
+    public static final String KEY_X_LOCATION = "x_location";
+    public static final String KEY_Y_LOCATION = "y_location";
 
     public static final String USER_IMAGE_URL = "http://proj-309-la-05.cs.iastate.edu:8080/userImages/";
+
+    public static final double LAT_LONG_UNKNOWN = 200.0;
 
     private int id;
     private String username;
@@ -28,6 +32,8 @@ public class UserAccount implements Serializable{
     private String userImagePath;
     private int totalKills;
     private int gamesPlayed;
+    private double xlocation;
+    private double ylocation;
 
     private String accountJSONSerialized;
 
@@ -42,6 +48,13 @@ public class UserAccount implements Serializable{
             gamesPlayed = account.getInt(KEY_GAMES_PLAYED);
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+        try {
+            xlocation = account.getDouble(KEY_X_LOCATION);
+            ylocation = account.getDouble(KEY_Y_LOCATION);
+        } catch (Exception e) {
+            // not initialized yet, ignore exception
+            xlocation = ylocation = LAT_LONG_UNKNOWN;
         }
         accountJSONSerialized = account.toString();
     }
