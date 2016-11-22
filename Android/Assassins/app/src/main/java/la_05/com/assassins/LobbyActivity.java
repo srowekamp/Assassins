@@ -86,6 +86,7 @@ public class LobbyActivity extends AppCompatActivity {
 
     // Player list
     private UserAccount[] players;
+    private boolean isPlayerListReady = false;
 
     // Variables to be passed to GameActivity
     private UserAccount user;
@@ -157,11 +158,6 @@ public class LobbyActivity extends AppCompatActivity {
         // Set game name
         TextView GameName = (TextView) findViewById(R.id.lobbyTextViewGameName);
         GameName.setText(game.getGameID());
-
-        // Set number of players alive
-        TextView NumPlayers = (TextView) findViewById(R.id.lobbyTextViewPlayerCount);
-        String numPlayersString = String.format("%d Players in Lobby", game.getNumPlayers());
-        NumPlayers.setText(numPlayersString);
 
         // Get Profile image
         ImageRequest ir = new ImageRequest(user.getImageURL(), new Response.Listener<Bitmap>() {
@@ -328,6 +324,7 @@ public class LobbyActivity extends AppCompatActivity {
 
     /** Go to the list of players in the lobby/game */
     public void gotoPlayerList(View view) {
+        if (!isPlayerListReady) return;
         // Switch to the Player List activity
         Intent intent = new Intent(this, PlayersListActivity.class);
         intent.putExtra(KEY_NUM_PLAYERS, players.length);
@@ -336,12 +333,16 @@ public class LobbyActivity extends AppCompatActivity {
             intent.putExtra(playerIKey, players[i]);
         }
         startActivity(intent);
-        // TODO Pass an array of UserAccounts to put in the view
     }
 
     private void updatePlayers(JSONObject response) {
         try {
             int numPlayers = response.getInt(KEY_NUM_PLAYERS);
+            // Update number of players alive
+            TextView NumPlayers = (TextView) findViewById(R.id.lobbyTextViewPlayerCount);
+            String numPlayersString = String.format("%d Players in Lobby", numPlayers);
+            NumPlayers.setText(numPlayersString);
+            // Update the array of UserAccounts in the game
             UserAccount[] newPlayers = new UserAccount[numPlayers];
             for (int i = 0; i < numPlayers; i++) {
                 String playerIKey = String.format("Player %d", i);
@@ -349,8 +350,10 @@ public class LobbyActivity extends AppCompatActivity {
                 newPlayers[i] = new UserAccount(tempJSON);
             }
             players = newPlayers;
+            isPlayerListReady = true;
         } catch (JSONException e) {
             e.printStackTrace();
+
         }
     }
 
@@ -427,7 +430,7 @@ public class LobbyActivity extends AppCompatActivity {
             }
             if (game.getEnd_time() != null && game.getPlayers_alive() != null) {
                 // TODO Switch to game view and pass game and user object along
-                return;
+                //return;
             }
             updatePlayers(response);
             return;
@@ -574,6 +577,7 @@ public class LobbyActivity extends AppCompatActivity {
             } catch (SecurityException e) {
                 e.printStackTrace();
             }
+            getPlayersHandler.removeCallbacks(getPlayersRunnable);
             return;
         }
 
