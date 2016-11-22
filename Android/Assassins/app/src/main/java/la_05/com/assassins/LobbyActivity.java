@@ -434,8 +434,8 @@ public class LobbyActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             if (game.getEnd_time() != null && game.getPlayers_alive() != null) {
-                // TODO Switch to game view and pass game and user object along
-                //return;
+                gotoGameView(response);
+                return;
             }
             updatePlayers(response);
             return;
@@ -523,34 +523,7 @@ public class LobbyActivity extends AppCompatActivity {
             return;
         }
         if (result.equals(RESULT_GAME_STARTED)){
-            // Switch to the GameView Activity
-            Game game;
-            try{
-                JSONObject gameJSON = response.getJSONObject(Game.KEY_GAME);
-                game = new Game(gameJSON);
-            }catch(JSONException e){
-                e.printStackTrace();
-                Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-                return;
-            }
-            Intent intent = new Intent(this, GameActivity.class);
-            intent.putExtra(UserAccount.KEY_USER_ACCOUNT, user);
-            intent.putExtra(Game.KEY_GAME, game);
-
-            // Cancel Location Updates for this activity
-            LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            try {
-                locationManager.removeUpdates(locationListener);
-            } catch (SecurityException e) {
-                e.printStackTrace();
-            }
-
-            // Cancel the looping GetPlayers calls
-            getPlayersHandler.removeCallbacks(getPlayersRunnable);
-
-            // Start the game activity
-            startActivity(intent);
-            finish(); // Closes the current activity, stops user from returning to it with back button
+            gotoGameView(response);
             return;
         }
         switch (result) {
@@ -567,6 +540,36 @@ public class LobbyActivity extends AppCompatActivity {
                 break;
         }
         Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
+    }
+
+    private void gotoGameView(JSONObject response) {
+        Game game;
+        try{
+            JSONObject gameJSON = response.getJSONObject(Game.KEY_GAME);
+            game = new Game(gameJSON);
+        }catch(JSONException e){
+            e.printStackTrace();
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+            return;
+        }
+        Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra(UserAccount.KEY_USER_ACCOUNT, user);
+        intent.putExtra(Game.KEY_GAME, game);
+
+        // Cancel Location Updates for this activity
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        try {
+            locationManager.removeUpdates(locationListener);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+
+        // Cancel the looping GetPlayers calls
+        getPlayersHandler.removeCallbacks(getPlayersRunnable);
+
+        // Start the game activity
+        startActivity(intent);
+        finish(); // Closes the current activity, stops user from returning to it with back button
     }
 
     boolean doubleBackToExitPressedOnce = false;

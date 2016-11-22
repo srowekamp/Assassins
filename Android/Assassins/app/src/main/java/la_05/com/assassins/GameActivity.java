@@ -8,10 +8,16 @@ import android.widget.Toast;
 
 public class GameActivity extends AppCompatActivity{
 
+    private Game game;
+    private UserAccount user;
+    private UserAccount target;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        user = (UserAccount) getIntent().getSerializableExtra(UserAccount.KEY_USER_ACCOUNT);
+        game = (Game) getIntent().getSerializableExtra(Game.KEY_GAME);
     }
 
     public void assassinate(View view){
