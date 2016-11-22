@@ -95,9 +95,10 @@ public class LobbyActivity extends AppCompatActivity {
     // Game Start
     private String start_time;
 
-    // GetPlayers looping calls
+    // GetPlayers data
     Runnable getPlayersRunnable;
     Handler getPlayersHandler;
+    private ImageView imageViewUpdating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +128,9 @@ public class LobbyActivity extends AppCompatActivity {
         addDrawerItems();
 
         txtLatLong = (TextView) findViewById(R.id.textGPSTest);
+
+        imageViewUpdating = (ImageView) findViewById(R.id.lobbyImageViewUpdating);
+        imageViewUpdating.setVisibility(View.INVISIBLE);
 
         // Setup GPS Service
         // First Check if App has permission to access device location
@@ -359,14 +363,16 @@ public class LobbyActivity extends AppCompatActivity {
 
     private void getPlayers() {
         String requestURL = JSON_URL + GETPLAYERS;
-        final ProgressDialog loading = ProgressDialog.show(this, "Updating Lobby...", "Please wait...", false, false); // TODO only for demo
+        //final ProgressDialog loading = ProgressDialog.show(this, "Updating Lobby...", "Please wait...", false, false); // TODO only for demo
+        imageViewUpdating.setVisibility(View.VISIBLE);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, requestURL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response){
                         // Dismiss the progress dialog
-                        loading.dismiss();
+                        //loading.dismiss();
+                        imageViewUpdating.setVisibility(View.INVISIBLE);
                         try {
                             JSONObject responseJSON = new JSONObject(response);
                             authenticateGetPlayers(responseJSON); // Got a response from the server, check if valid
@@ -384,7 +390,8 @@ public class LobbyActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         //Dismiss the progress dialog
-                        loading.dismiss();
+                        //loading.dismiss();
+                        imageViewUpdating.setVisibility(View.INVISIBLE);
 
                         //show a toast and log the error
                         Toast.makeText(LobbyActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
@@ -420,9 +427,7 @@ public class LobbyActivity extends AppCompatActivity {
             Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
             return;
         }
-        if (result.equals(RESULT_NORMAL)){
-            // TODO update players list and check for start
-            Toast.makeText(this, "normal", Toast.LENGTH_LONG).show();
+        if (result.equals(RESULT_NORMAL)) {
             try {
                 game = new Game(response.getJSONObject(Game.KEY_GAME));
             } catch (JSONException e) {
@@ -437,7 +442,7 @@ public class LobbyActivity extends AppCompatActivity {
         }
         switch (result) {
             case RESULT_ERROR:
-                error = "An unknown server error occured";
+                error = "An unknown server error occurred";
                 break;
             default:
                 break;
