@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -25,7 +24,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -41,11 +39,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -69,10 +64,12 @@ public class LobbyActivity extends AppCompatActivity {
     public static final String RESULT_NORMAL = "normal";
     public static final String RESULT_ERROR = "error"; // Result when there is an error. Shouldn't occur
 
+    // Constants
     public static final int LOCATION_UPDATE_INTERVAL = 10000; // Minimum time between location updates in milliseconds
     public static final float LOCATION_UPDATE_DISTANCE = 5; // Minimum distance between location updates in meters
     public static final int MAP_ZOOM_SCALE_FACTOR = 350; // Constant used to determine map zoom
 
+    // Google Map
     private TextView txtLatLong;
     private MapView mapView;
     private Location lastLocation;
@@ -80,19 +77,26 @@ public class LobbyActivity extends AppCompatActivity {
     private GoogleMap googleMap;
     private float cameraZoomLevel = 0;
     private LatLng circleLatLng;
+    LocationListener locationListener;
 
+    // Slide-out options display
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ArrayAdapter<String> mAdapter;
+
+    // Player list
     private UserAccount[] players;
 
-    LocationListener locationListener;
-
+    // Variables to be passed to GameActivity
     private UserAccount user;
     private Game game;
 
+    // Game Start
     private String start_time;
-    boolean gameStart;
+
+    // GetPlayers looping calls
+    Runnable getPlayersRunnable;
+    Handler getPlayersHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,7 +186,13 @@ public class LobbyActivity extends AppCompatActivity {
         else ButtonStart.setVisibility(View.INVISIBLE);
 
         // Start GetPlayers
-        gameStart = false;
+        getPlayersHandler = new Handler();
+        getPlayersRunnable = new Runnable() {
+            @Override
+            public void run() {
+                getPlayers();
+            }
+        };
         getPlayers();
     }
 
@@ -363,13 +373,8 @@ public class LobbyActivity extends AppCompatActivity {
                             Toast.makeText(LobbyActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                             Log.d("ERROR", "error => " + e.getMessage()); // Print the error to the device log
                         }
-                        if (!gameStart) {
-                            new Handler().postDelayed(new Runnable() {
-                                public void run() {
-                                    getPlayers();
-                                }
-                            }, 10000);
-                        }
+                        // Call GetPlayers again in 10,000 ms (10s)
+                        getPlayersHandler.postDelayed(getPlayersRunnable, 10000);
                     }
                 },
                 new Response.ErrorListener() {
@@ -523,6 +528,7 @@ public class LobbyActivity extends AppCompatActivity {
             Intent intent = new Intent(this, GameActivity.class);
             intent.putExtra(UserAccount.KEY_USER_ACCOUNT, user);
             intent.putExtra(Game.KEY_GAME, game);
+
             // Cancel Location Updates for this activity
             LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
             try {
@@ -530,8 +536,11 @@ public class LobbyActivity extends AppCompatActivity {
             } catch (SecurityException e) {
                 e.printStackTrace();
             }
-            // Cancel the looping GetPlayers method
-            gameStart = false; // TODO does this work? iastate down
+
+            // Cancel the looping GetPlayers calls
+            getPlayersHandler.removeCallbacks(getPlayersRunnable);
+
+            // Start the game activity
             startActivity(intent);
             finish(); // Closes the current activity, stops user from returning to it with back button
             return;
@@ -572,7 +581,6 @@ public class LobbyActivity extends AppCompatActivity {
         Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show();
 
         new Handler().postDelayed(new Runnable() {
-
             @Override
             public void run() {
                 doubleBackToExitPressedOnce=false;
