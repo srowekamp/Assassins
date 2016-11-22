@@ -49,7 +49,7 @@ public class LobbyActivity extends AppCompatActivity {
     public static final String JSON_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/";
     public static final String GETPLAYERS = "GetPlayers";
     public static final String GAMESTART = "GameStart";
-    //public static final String LEAVEGAME = "LeaveGame";
+    public static final String LEAVEGAME = "LeaveGame";
 
     public static final String KEY_RESULT = "result";
     // Results for GameStart
@@ -433,7 +433,7 @@ public class LobbyActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            if (game.getEnd_time() != null && game.getPlayers_alive() != null) {
+            if (!game.getEnd_time().equals("null") && !game.getPlayers_alive().equals("null")) {
                 gotoGameView(response);
                 return;
             }
@@ -572,25 +572,72 @@ public class LobbyActivity extends AppCompatActivity {
         finish(); // Closes the current activity, stops user from returning to it with back button
     }
 
+    public void leaveGame() {
+        String requestURL = JSON_URL + LEAVEGAME;
+        final ProgressDialog loading = ProgressDialog.show(this, "Leaving Game...", "Please wait...", false, false);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, requestURL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response){
+                        // Dismiss the progress dialog
+                        loading.dismiss();
+                        try {
+                            JSONObject responseJSON = new JSONObject(response);
+                            if (responseJSON.getString(KEY_RESULT) != null) {
+                                // Left game in database, so close activity
+                                LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+                                try {
+                                    locationManager.removeUpdates(locationListener);
+                                } catch (SecurityException e) {
+                                    e.printStackTrace();
+                                }
+                                getPlayersHandler.removeCallbacks(getPlayersRunnable);
+                                finish();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            //show a toast and log the error
+                            Toast.makeText(LobbyActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            Log.d("ERROR", "error => " + e.getMessage()); // Print the error to the device log
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Dismiss the progress dialog
+                        loading.dismiss();
+                        //show a toast and log the error
+                        Toast.makeText(LobbyActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("ERROR", "error => " + error.toString()); // Print the error to the device log
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parameters = new Hashtable<String, String>();
+                parameters.put(Game.KEY_GAMEID, game.getGameID());
+                parameters.put(UserAccount.KEY_ID, String.format("%d", user.getID()));
+                return parameters;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
     boolean doubleBackToExitPressedOnce = false;
 
     /** Code to control back button usage */
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            try {
-                locationManager.removeUpdates(locationListener);
-            } catch (SecurityException e) {
-                e.printStackTrace();
-            }
-            getPlayersHandler.removeCallbacks(getPlayersRunnable);
+            leaveGame();
             return;
         }
 
         this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Press again to Leave Game", Toast.LENGTH_SHORT).show();
 
         new Handler().postDelayed(new Runnable() {
             @Override

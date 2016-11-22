@@ -59,6 +59,7 @@ public class JoinGame extends HttpServlet{
 						if (players[i] == playerID) alreadyJoined = true;
 					}
 					if (!alreadyJoined) {
+						// TODO check if game has been started
 						playerList += String.format("%d,", playerID);
 						tempGame = DB.updatePlayersList(tempGame, playerList);
 						if (tempGame != null) {

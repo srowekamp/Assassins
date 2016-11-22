@@ -27,7 +27,7 @@ public class GameActivity extends AppCompatActivity{
     boolean doubleBackToExitPressedOnce = false;
 
     /** Code to control back button usage */
-   /* @Override
+    @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
@@ -35,7 +35,7 @@ public class GameActivity extends AppCompatActivity{
         }
 
         this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Press again to Leave Game", Toast.LENGTH_SHORT).show();
 
         new Handler().postDelayed(new Runnable() {
 
@@ -44,5 +44,5 @@ public class GameActivity extends AppCompatActivity{
                 doubleBackToExitPressedOnce=false;
             }
         }, 2000);
-    }*/
+    }
 }
