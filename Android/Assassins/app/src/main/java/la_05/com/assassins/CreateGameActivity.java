@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -21,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.MapView;
 
 
 import org.json.JSONException;
@@ -54,13 +57,74 @@ public class CreateGameActivity extends AppCompatActivity {
     private String xcenter;
     private String ycenter;
 
+    public static final int DURATION_MIN_VALUE = 10; // Minimum duration of the game in minutes
+    public static final int DURATION_MAX_VALUE = 60; // Maximum duration of the game in minutes
+    public static final int RADIUS_MIN_VALUE = 100; // Minimum size of the game radius in m = 100m
+    public static final int RADIUS_MAX_VALUE = 1000; // Maximum size of the game radius in m = 1000m
+
+    private TextView textViewDuration;
+    private SeekBar seekBarDuration;
+    private TextView textViewRadius;
+    private SeekBar seekBarRadius;
+
+    private MapView mapView;
+
     private UserAccount user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_game);
+        setContentView(R.layout.activity_create_game_new);
         user = (UserAccount) getIntent().getSerializableExtra(UserAccount.KEY_USER_ACCOUNT);
+
+        duration = String.format("%d", DURATION_MIN_VALUE * 60); // initialize in case user doesn't touch seekbar
+        radius = String.format("%d", RADIUS_MIN_VALUE);
+
+        seekBarDuration = (SeekBar) findViewById(R.id.createGameSeekBarDuration);
+        textViewDuration = (TextView) findViewById(R.id.createGameTextViewDuration);
+        mapView = (MapView) findViewById(R.id.createGameMapView);
+        textViewRadius = (TextView) findViewById(R.id.createGameTextViewRadius);
+        seekBarRadius = (SeekBar) findViewById(R.id.createGameSeekBarRadius);
+
+        seekBarDuration.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                int durationMinutes = ((DURATION_MAX_VALUE - DURATION_MIN_VALUE) * progress / 100) + DURATION_MIN_VALUE;
+                textViewDuration.setText(String.format("Length of game: %d minutes", durationMinutes));
+                duration = String.format("%d", durationMinutes * 60);
+            }
+        });
+
+        seekBarRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                int radiusMeters = ((RADIUS_MAX_VALUE - RADIUS_MIN_VALUE) * progress / 100) + RADIUS_MIN_VALUE;
+                textViewRadius.setText(String.format("Radius: %d meters", radiusMeters));
+                duration = String.format("%d", radiusMeters);
+            }
+        });
 
         //Fix editTextPassword Font
         EditText password = (EditText) findViewById(R.id.createGameEditTextPassword);
@@ -68,9 +132,28 @@ public class CreateGameActivity extends AppCompatActivity {
         password.setTransformationMethod(new PasswordTransformationMethod());
     }
 
+    public void openMap(View view) {
+        mapView.setVisibility(View.VISIBLE);
+        textViewRadius.setVisibility(View.VISIBLE);
+        seekBarRadius.setVisibility(View.VISIBLE);
+    }
+
+    public void createGame(View view) {
+        EditText GameName = (EditText) findViewById(R.id.createGameEditTextGameName);
+        EditText Password = (EditText) findViewById(R.id.createGameEditTextPassword);
+
+        // Set local variables to hold user-entered values
+        this.gameName = GameName.getText().toString();
+        this.password = Password.getText().toString();
+        // Duration is set with seekbar
+        // Get center and radius from map
+
+        // Attempt to create game with server
+        createGame();
+    }
 
     //called when create game button is pressed
-    public void createGame(View view) {
+    public void createGameOld(View view) {
         //creates all the values on the activity create game xml
 
         EditText GameName = (EditText) findViewById(R.id.createGameEditTextGameName);
