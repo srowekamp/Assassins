@@ -44,7 +44,6 @@ public class MainMenuActivity extends AppCompatActivity{
         Intent intent = new Intent(this, UserAccountActivity.class);
         intent.putExtra(UserAccount.KEY_USER_ACCOUNT, user);
         startActivity(intent);
-        // TODO
     }
 
     public void gotoGameEditor(View view){

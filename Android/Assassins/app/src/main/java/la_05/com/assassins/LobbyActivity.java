@@ -119,13 +119,12 @@ public class LobbyActivity extends AppCompatActivity {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 setUpMap(googleMap);
-                updateMap();
             }
         });
 
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         mDrawerList = (ListView)findViewById(R.id.navList);
-        addDrawerItems();
+        //addDrawerItems(); // now it's called when the players array is initialized
 
         txtLatLong = (TextView) findViewById(R.id.textGPSTest);
 
@@ -205,8 +204,8 @@ public class LobbyActivity extends AppCompatActivity {
     private void addDrawerItems() {
         String[] osArray = { "Radius", "Start Time", "Lobby Host", "Game Option", "Another Game Option" };
         osArray[0] = String.format("Radius = %dm", game.getRadius());
-        osArray[1] = String.format("Lobby Host = %d", game.getHostID());
-        osArray[2] = String.format("Duration = %d", game.getDuration());
+        osArray[1] = String.format("Lobby Host = %s", players[0].getUserName());
+        osArray[2] = String.format("Duration = %d minutes", game.getDuration() / 60);
         osArray[4] = String.format("Longitude = %f", game.getXCenter());
         osArray[3] = String.format("Latitude = %f", game.getYCenter());
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, osArray);
@@ -249,15 +248,17 @@ public class LobbyActivity extends AppCompatActivity {
         // For zooming automatically to the location of the circle
         CameraPosition cameraPosition = new CameraPosition.Builder().target(circleLatLng).zoom(cameraZoomLevel).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-    }
 
-    /** Update the user's location within the map (not sure if this is needed)*/
-    private void updateMap() {
         try {
             googleMap.setMyLocationEnabled(true);
         } catch (SecurityException e) {
             // Shouldn't happen
-        } // TODO check if user's location on map is updated automatically
+        }
+    }
+
+    /** Will be used to update the locations of other players in the game if we want it to */
+    private void updateMap() {
+         // TODO add other player locations to the map?
     }
 
     /** Center the map to the user's current location*/
@@ -292,7 +293,6 @@ public class LobbyActivity extends AppCompatActivity {
             // called when the listener is notified with a location update from the GPS
             lastLocation = locFromGps;
             LobbyActivity.this.updateTxt();
-            LobbyActivity.this.updateMap();
         }
 
         @Override
@@ -354,7 +354,9 @@ public class LobbyActivity extends AppCompatActivity {
                 newPlayers[i] = new UserAccount(tempJSON);
             }
             players = newPlayers;
+            if (!isPlayerListReady) addDrawerItems();
             isPlayerListReady = true;
+            updateMap();
         } catch (JSONException e) {
             e.printStackTrace();
 
@@ -363,15 +365,14 @@ public class LobbyActivity extends AppCompatActivity {
 
     private void getPlayers() {
         String requestURL = JSON_URL + GETPLAYERS;
-        //final ProgressDialog loading = ProgressDialog.show(this, "Updating Lobby...", "Please wait...", false, false); // TODO only for demo
+        // Make the loading indicator visible
         imageViewUpdating.setVisibility(View.VISIBLE);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, requestURL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response){
-                        // Dismiss the progress dialog
-                        //loading.dismiss();
+                        // Remove the loading indicator
                         imageViewUpdating.setVisibility(View.INVISIBLE);
                         try {
                             JSONObject responseJSON = new JSONObject(response);
@@ -389,8 +390,7 @@ public class LobbyActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        //Dismiss the progress dialog
-                        //loading.dismiss();
+                        // Remove the loading indicator
                         imageViewUpdating.setVisibility(View.INVISIBLE);
 
                         //show a toast and log the error
@@ -459,7 +459,6 @@ public class LobbyActivity extends AppCompatActivity {
         m = (currentTimeSeconds % 3600) / 60;
         s = currentTimeSeconds % 60;
         start_time = String.format("%02d%02d%02d", h, m, s);
-        //Toast.makeText(this, start_time, Toast.LENGTH_LONG).show();
         startGame();
     }
 
@@ -572,6 +571,7 @@ public class LobbyActivity extends AppCompatActivity {
         finish(); // Closes the current activity, stops user from returning to it with back button
     }
 
+    /** Leave the game with the server. Called when user double presses back button. */
     public void leaveGame() {
         String requestURL = JSON_URL + LEAVEGAME;
         final ProgressDialog loading = ProgressDialog.show(this, "Leaving Game...", "Please wait...", false, false);
