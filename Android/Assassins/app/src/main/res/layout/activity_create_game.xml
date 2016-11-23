@@ -1,96 +1,151 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_create_game"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="la_05.com.assassins.CreateGameActivity">
 
-    <EditText
-        android:hint="Game Name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:id="@+id/createGameRelativeLayoutFields">
+
+        <EditText
+            android:hint="Game Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerHorizontal="true"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/createGameEditTextGameName" />
+
+        <EditText
+            android:hint="Password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/createGameEditTextGameName"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/createGameEditTextPassword" />
+
+        <TextView
+            android:text="Length of game: 10 minutes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/createGameEditTextPassword"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:id="@+id/createGameTextViewDuration" />
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/createGameTextViewDuration"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="10dp"
+            android:id="@+id/createGameSeekBarDuration" />
+
+        <Button
+            android:text="Choose Location on Map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/createGameSeekBarDuration"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/createGameButtonContinue"
+            android:onClick="openMap" />
+
+        <Button
+            android:text="Create Game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/createGameButtonContinue"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerHorizontal="true"
+            android:enabled="false"
+            android:id="@+id/createGameButtonCreateGame"
+            android:onClick="createGame" />
+
+    </RelativeLayout>
+
+    <com.google.android.gms.maps.MapView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/createGameEditTextGameName" />
+        android:visibility="invisible"
+        android:id="@+id/createGameMapView" />
 
-    <EditText
-        android:hint="Password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/createGameEditTextGameName"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/createGameEditTextPassword" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:id="@+id/createGameRelativeLayoutRadius" >
 
-    <EditText
-        android:hint="Length of game in seconds"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/createGameEditTextPassword"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/createGameEditTextDuration" />
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible"
+            android:id="@+id/createGameSeekBarRadius"
+            android:progress="100" />
 
-    <EditText
-        android:hint="Radius of game area in meters"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/createGameEditTextDuration"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/createGameEditTextRadius" />
+        <TextView
+            android:text="Radius: 1000 meters"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/createGameSeekBarRadius"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:visibility="invisible"
+            android:textColor="@android:color/white"
+            android:id="@+id/createGameTextViewRadius" />
 
-    <EditText
-        android:hint="X coordinate of game center (longitude)"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/createGameEditTextRadius"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:inputType="numberSigned|numberDecimal"
-        android:ems="10"
-        android:id="@+id/createGameEditTextXCenter" />
+        <Button
+            android:text="Done"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_alignParentStart="true"
+            android:visibility="invisible"
+            android:id="@+id/createGameButtonCloseMap"
+            android:onClick="closeMap" />
 
-    <EditText
-        android:hint="Y coordinate of game center (latitude)"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/createGameEditTextXCenter"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:inputType="numberSigned|numberDecimal"
-        android:ems="10"
-        android:id="@+id/createGameEditTextYCenter" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@android:drawable/ic_menu_mylocation"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible"
+            android:id="@+id/createGameImageViewCenter" />
 
-    <Button
-        android:text="Create Game"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/createGameEditTextYCenter"
-        android:layout_marginTop="10dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/createGameButtonCreateGame"
-        android:onClick="createGame" />
+    </RelativeLayout>
 
 </RelativeLayout>

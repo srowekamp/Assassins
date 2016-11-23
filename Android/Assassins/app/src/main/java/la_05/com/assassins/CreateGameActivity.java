@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -80,25 +81,27 @@ public class CreateGameActivity extends AppCompatActivity {
     private TextView textViewRadius;
     private SeekBar seekBarRadius;
     private Button buttonCloseMap;
+    private Button buttonCreateGame;
+    private ImageView imageViewCenter;
 
     private int radiusMeters;
 
     private MapView mapView;
     private GoogleMap googleMap;
-    CircleOptions gameRadiusCircle;
-    LatLng lastLatLng;
+    private LatLng lastLatLng;
+    private LatLng centerLatLng;
 
     private UserAccount user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_game_new);
+        setContentView(R.layout.activity_create_game);
         user = (UserAccount) getIntent().getSerializableExtra(UserAccount.KEY_USER_ACCOUNT);
 
-        duration = String.format("%d", DURATION_MIN_VALUE * 60); // initialize in case user doesn't touch seekbar
-        radius = String.format("%d", RADIUS_MIN_VALUE);
-        radiusMeters = RADIUS_MIN_VALUE;
+        duration = String.format("%d", DURATION_MIN_VALUE * 60); // initialize in case user doesn't touch SeekBar
+        radiusMeters = RADIUS_MAX_VALUE;
+        radius = String.format("%d", radiusMeters);
 
         seekBarDuration = (SeekBar) findViewById(R.id.createGameSeekBarDuration);
         textViewDuration = (TextView) findViewById(R.id.createGameTextViewDuration);
@@ -106,17 +109,18 @@ public class CreateGameActivity extends AppCompatActivity {
         textViewRadius = (TextView) findViewById(R.id.createGameTextViewRadius);
         seekBarRadius = (SeekBar) findViewById(R.id.createGameSeekBarRadius);
         buttonCloseMap = (Button) findViewById(R.id.createGameButtonCloseMap);
+        buttonCreateGame = (Button) findViewById(R.id.createGameButtonCreateGame);
+        imageViewCenter = (ImageView) findViewById(R.id.createGameImageViewCenter);
 
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 setUpMap(googleMap);
-                updateMap();
             }
         });
 
-        // Get the most recent location
+        // Get the most recent location to center the map on the user
         // First Check if App has permission to access device location
         Context context = getApplicationContext();
         PackageManager pm = context.getPackageManager();
@@ -127,13 +131,14 @@ public class CreateGameActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.location_permission_error, Toast.LENGTH_SHORT).show();
         }
         else {
-            // If app has permission, setup Location service
+            // If app has permission, get the most recent location
             LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
             Location lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             lastLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
         }
 
+        // Set up listener for the duration SeekBar to track position updates
         seekBarDuration.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
@@ -154,6 +159,7 @@ public class CreateGameActivity extends AppCompatActivity {
             }
         });
 
+        // Set up listener for the radius SeekBar to track position updates
         seekBarRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
@@ -171,6 +177,7 @@ public class CreateGameActivity extends AppCompatActivity {
                 radiusMeters = ((RADIUS_MAX_VALUE - RADIUS_MIN_VALUE) * progress / 100) + RADIUS_MIN_VALUE;
                 textViewRadius.setText(String.format("Radius: %d meters", radiusMeters));
                 duration = String.format("%d", radiusMeters);
+                centerLatLng = googleMap.getCameraPosition().target;
                 updateMap();
             }
         });
@@ -213,10 +220,12 @@ public class CreateGameActivity extends AppCompatActivity {
         googleMap = map;
         googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         // For zooming automatically to the location of the circle
-        float cameraZoomLevel = getZoomLevel((double)RADIUS_MAX_VALUE);
+        float cameraZoomLevel = getZoomLevel((double) RADIUS_MAX_VALUE);
+        // Draw a circle at user's location to represent default values for radius, x_center, and y_center
         CameraPosition cameraPosition = new CameraPosition.Builder().target(lastLatLng).zoom(cameraZoomLevel).build();
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
+        googleMap.addCircle(new CircleOptions().center(lastLatLng).radius(radiusMeters).strokeColor(Color.CYAN));
+        centerLatLng = lastLatLng;
         try {
             googleMap.setMyLocationEnabled(true);
         } catch (SecurityException e) {
@@ -234,14 +243,14 @@ public class CreateGameActivity extends AppCompatActivity {
         return zoomLevel;
     }
 
-    /** Update the user's location within the map (not sure if this is needed)*/
+    /** Update the circle to the new center and/or radius. Called when radius SeekBar is changed */
     private void updateMap() {
         googleMap.clear();
-        gameRadiusCircle = new CircleOptions().center(lastLatLng).radius(radiusMeters).strokeColor(Color.CYAN);
-        googleMap.addCircle(gameRadiusCircle); // Add game radius circle to map
-        googleMap.addCircle(new CircleOptions().center(lastLatLng).radius(radiusMeters).strokeColor(Color.CYAN));
+        CircleOptions gameRadiusCircle = new CircleOptions().center(centerLatLng).radius(radiusMeters).strokeColor(Color.CYAN);
+        googleMap.addCircle(gameRadiusCircle);
     }
 
+    /** Open the map and relevant views so the user can choose center/radius of game */
     public void openMap(View view) {
         mapView.setVisibility(View.VISIBLE);
         textViewRadius.setVisibility(View.VISIBLE);
@@ -250,21 +259,24 @@ public class CreateGameActivity extends AppCompatActivity {
         seekBarRadius.bringToFront();
         buttonCloseMap.setVisibility(View.VISIBLE);
         buttonCloseMap.bringToFront();
+        imageViewCenter.setVisibility(View.VISIBLE);
+        imageViewCenter.bringToFront();
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.createGameRelativeLayoutRadius);
         relativeLayout.bringToFront();
         relativeLayout.invalidate();
     }
 
+    /** After the user has chosen the center and radius of the game from the map, close the map and other relevant views */
     public void closeMap(View view) {
         mapView.setVisibility(View.INVISIBLE);
         textViewRadius.setVisibility(View.INVISIBLE);
-        textViewRadius.bringToFront();
         seekBarRadius.setVisibility(View.INVISIBLE);
         buttonCloseMap.setVisibility(View.INVISIBLE);
-        //RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.createGameRelativeLayoutRadius);
-        //relativeLayout.invalidate();
+        imageViewCenter.setVisibility(View.INVISIBLE);
+        buttonCreateGame.setEnabled(true);
     }
 
+    /** Called when the create game button is pressed */
     public void createGame(View view) {
         EditText GameName = (EditText) findViewById(R.id.createGameEditTextGameName);
         EditText Password = (EditText) findViewById(R.id.createGameEditTextPassword);
@@ -272,39 +284,17 @@ public class CreateGameActivity extends AppCompatActivity {
         // Set local variables to hold user-entered values
         this.gameName = GameName.getText().toString();
         this.password = Password.getText().toString();
-        // Duration is set with seekbar
+        // Duration is set with SeekBar
         // Get center and radius from map
+        this.xcenter = String.format("%f", centerLatLng.longitude);
+        this.ycenter = String.format("%f", centerLatLng.latitude);
 
+        if (gameName.length() > 0 && password.length() > 0)
         // Attempt to create game with server
         createGame();
     }
 
-    //called when create game button is pressed
-    public void createGameOld(View view) {
-        //creates all the values on the activity create game xml
-
-        EditText GameName = (EditText) findViewById(R.id.createGameEditTextGameName);
-        EditText Password = (EditText) findViewById(R.id.createGameEditTextPassword);
-        EditText Duration = (EditText) findViewById(R.id.createGameEditTextDuration);
-        EditText Radius = (EditText) findViewById(R.id.createGameEditTextRadius);
-        EditText XCenter = (EditText) findViewById(R.id.createGameEditTextXCenter);
-        EditText YCenter = (EditText) findViewById(R.id.createGameEditTextYCenter);
-
-        // Set local variables to hold user-entered values
-        this.gameName = GameName.getText().toString();
-        this.password = Password.getText().toString();
-        this.duration = Duration.getText().toString();
-        this.radius   = Radius.getText().toString();
-        this.xcenter  = XCenter.getText().toString();
-        this.ycenter  = YCenter.getText().toString();
-
-        // Attempt to create game with server
-        createGame();
-    }
-
-    /**
-    Upon getting required info from UI, creates the game and updates the server.
-     */
+    /** Upon getting required info from UI, creates the game and updates the server. */
     private void createGame() {
         String requestURL = JSON_URL + BASIC_CG;
         final ProgressDialog loading = ProgressDialog.show(this, "Creating Game...", "Please wait...", false, false);
@@ -355,7 +345,7 @@ public class CreateGameActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-
+    /** Upon receiving a response from the server, authenticate it and decide what to do next */
     private void authenticate(JSONObject response) {
         String result = null;
         String error = "Unknown Error Occurred (1)";
@@ -386,6 +376,7 @@ public class CreateGameActivity extends AppCompatActivity {
             finish(); // Closes the current activity, stops user from returning to it with back button
             return;
         }
+        // Most of these shouldn't happen using the app's interface
         switch (result) {
             case RESULT_OTHER_ERROR:
                 error = "Unknown Error Occurred (2)";
@@ -417,6 +408,7 @@ public class CreateGameActivity extends AppCompatActivity {
         Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
     }
 
+    // Prevents the main menu from being reloaded when the top left back button is pressed
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
