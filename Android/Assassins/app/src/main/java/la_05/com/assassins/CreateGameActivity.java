@@ -176,7 +176,7 @@ public class CreateGameActivity extends AppCompatActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 radiusMeters = ((RADIUS_MAX_VALUE - RADIUS_MIN_VALUE) * progress / 100) + RADIUS_MIN_VALUE;
                 textViewRadius.setText(String.format("Radius: %d meters", radiusMeters));
-                duration = String.format("%d", radiusMeters);
+                radius = String.format("%d", radiusMeters);
                 centerLatLng = googleMap.getCameraPosition().target;
                 updateMap();
             }

@@ -459,7 +459,7 @@ public class LobbyActivity extends AppCompatActivity {
         m = (currentTimeSeconds % 3600) / 60;
         s = currentTimeSeconds % 60;
         start_time = String.format("%02d%02d%02d", h, m, s);
-        Toast.makeText(this, start_time, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, start_time, Toast.LENGTH_LONG).show();
         startGame();
     }
 
