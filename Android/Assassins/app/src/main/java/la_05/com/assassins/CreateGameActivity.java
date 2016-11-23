@@ -2,15 +2,22 @@ package la_05.com.assassins;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.location.Location;
+import android.location.LocationManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +30,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.LatLng;
 
 
 import org.json.JSONException;
@@ -66,8 +79,14 @@ public class CreateGameActivity extends AppCompatActivity {
     private SeekBar seekBarDuration;
     private TextView textViewRadius;
     private SeekBar seekBarRadius;
+    private Button buttonCloseMap;
+
+    private int radiusMeters;
 
     private MapView mapView;
+    private GoogleMap googleMap;
+    CircleOptions gameRadiusCircle;
+    LatLng lastLatLng;
 
     private UserAccount user;
 
@@ -79,12 +98,41 @@ public class CreateGameActivity extends AppCompatActivity {
 
         duration = String.format("%d", DURATION_MIN_VALUE * 60); // initialize in case user doesn't touch seekbar
         radius = String.format("%d", RADIUS_MIN_VALUE);
+        radiusMeters = RADIUS_MIN_VALUE;
 
         seekBarDuration = (SeekBar) findViewById(R.id.createGameSeekBarDuration);
         textViewDuration = (TextView) findViewById(R.id.createGameTextViewDuration);
         mapView = (MapView) findViewById(R.id.createGameMapView);
         textViewRadius = (TextView) findViewById(R.id.createGameTextViewRadius);
         seekBarRadius = (SeekBar) findViewById(R.id.createGameSeekBarRadius);
+        buttonCloseMap = (Button) findViewById(R.id.createGameButtonCloseMap);
+
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                setUpMap(googleMap);
+                updateMap();
+            }
+        });
+
+        // Get the most recent location
+        // First Check if App has permission to access device location
+        Context context = getApplicationContext();
+        PackageManager pm = context.getPackageManager();
+        int hasPerm = pm.checkPermission(
+                android.Manifest.permission.ACCESS_FINE_LOCATION,
+                context.getPackageName());
+        if (hasPerm != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, R.string.location_permission_error, Toast.LENGTH_SHORT).show();
+        }
+        else {
+            // If app has permission, setup Location service
+            LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+            Location lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            lastLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+        }
 
         seekBarDuration.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
@@ -120,9 +168,10 @@ public class CreateGameActivity extends AppCompatActivity {
 
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                int radiusMeters = ((RADIUS_MAX_VALUE - RADIUS_MIN_VALUE) * progress / 100) + RADIUS_MIN_VALUE;
+                radiusMeters = ((RADIUS_MAX_VALUE - RADIUS_MIN_VALUE) * progress / 100) + RADIUS_MIN_VALUE;
                 textViewRadius.setText(String.format("Radius: %d meters", radiusMeters));
                 duration = String.format("%d", radiusMeters);
+                updateMap();
             }
         });
 
@@ -132,10 +181,88 @@ public class CreateGameActivity extends AppCompatActivity {
         password.setTransformationMethod(new PasswordTransformationMethod());
     }
 
+    /** Automatically added methods for the MapView */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView.onLowMemory();
+    }
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    /** Set up the map once it is ready*/
+    private void setUpMap(GoogleMap map) {
+        googleMap = map;
+        googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        // For zooming automatically to the location of the circle
+        float cameraZoomLevel = getZoomLevel((double)RADIUS_MAX_VALUE);
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(lastLatLng).zoom(cameraZoomLevel).build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        try {
+            googleMap.setMyLocationEnabled(true);
+        } catch (SecurityException e) {
+            // Shouldn't happen
+        }
+    }
+
+    /** Calculate the GoogleMap zoom level based on given radius */
+    private float getZoomLevel(Double circleRadius) {
+        float zoomLevel = 0;
+        if (circleRadius != null){
+            double scale = circleRadius / LobbyActivity.MAP_ZOOM_SCALE_FACTOR; // TODO Does this work on other devices and screens?
+            zoomLevel = (float) (16 - Math.log(scale) / Math.log(2));
+        }
+        return zoomLevel;
+    }
+
+    /** Update the user's location within the map (not sure if this is needed)*/
+    private void updateMap() {
+        googleMap.clear();
+        gameRadiusCircle = new CircleOptions().center(lastLatLng).radius(radiusMeters).strokeColor(Color.CYAN);
+        googleMap.addCircle(gameRadiusCircle); // Add game radius circle to map
+        googleMap.addCircle(new CircleOptions().center(lastLatLng).radius(radiusMeters).strokeColor(Color.CYAN));
+    }
+
     public void openMap(View view) {
         mapView.setVisibility(View.VISIBLE);
         textViewRadius.setVisibility(View.VISIBLE);
+        textViewRadius.bringToFront();
         seekBarRadius.setVisibility(View.VISIBLE);
+        seekBarRadius.bringToFront();
+        buttonCloseMap.setVisibility(View.VISIBLE);
+        buttonCloseMap.bringToFront();
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.createGameRelativeLayoutRadius);
+        relativeLayout.bringToFront();
+        relativeLayout.invalidate();
+    }
+
+    public void closeMap(View view) {
+        mapView.setVisibility(View.INVISIBLE);
+        textViewRadius.setVisibility(View.INVISIBLE);
+        textViewRadius.bringToFront();
+        seekBarRadius.setVisibility(View.INVISIBLE);
+        buttonCloseMap.setVisibility(View.INVISIBLE);
+        //RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.createGameRelativeLayoutRadius);
+        //relativeLayout.invalidate();
     }
 
     public void createGame(View view) {
