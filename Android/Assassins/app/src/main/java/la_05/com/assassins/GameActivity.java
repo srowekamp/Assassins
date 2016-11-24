@@ -5,8 +5,22 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
+import android.app.Activity;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class GameActivity extends AppCompatActivity{
+
+    private ImageView image;
+    private float degree = 0f;
+    private SensorManager mSensorManager;
+    TextView tvheading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -14,9 +28,27 @@ public class GameActivity extends AppCompatActivity{
         setContentView(R.layout.activity_game);
     }
 
+    protected void onResume(){
+
+    }
+
+    protected void onPause(){
+
+    }
+
+    public void onSensorChanged(SensorEvent e){
+
+    }
+
+    public void onAccuracyChanged(Sensor s, int accuracy){
+        
+    }
+
     public void assassinate(View view){
         // TODO
     }
+
+
 
     boolean doubleBackToExitPressedOnce = false;
 
