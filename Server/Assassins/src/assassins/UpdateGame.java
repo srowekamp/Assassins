@@ -83,6 +83,7 @@ public class UpdateGame extends HttpServlet {
 	        		}
 	        		else if (game.getEndTime().equals(Game.GAME_OVER)) {
 	        			result = RESULT_GAME_OVER;
+	        			// TODO This won't work currently
 	        		}
 	        		else {
 	        			// The game is proceeding as normal, first update the player's location in the database
