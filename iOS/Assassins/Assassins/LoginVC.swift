@@ -54,6 +54,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         
         // make a request to the server and proccess the data
         Alamofire.request(loginURL, parameters: paramaters).responseJSON { response in
+            print("Raw Respons:\n\(response.data!)\n")
             if let data = response.result.value as? [String:String] {
                 if let jsonString = data["account"]?.data(using: .utf8, allowLossyConversion: false) {
                     let json = JSON(data: jsonString)
@@ -93,6 +94,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         // used for debuging purposed to make logging in faster
         if(ignoreLogin){
             login(username: "admin", password: "password")
+            //performSegue(withIdentifier: "loginToMain", sender: self)
             return
         }
         
