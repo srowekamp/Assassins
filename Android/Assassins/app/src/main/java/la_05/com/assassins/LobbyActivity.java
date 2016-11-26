@@ -68,6 +68,7 @@ public class LobbyActivity extends AppCompatActivity {
     public static final int LOCATION_UPDATE_INTERVAL = 10000; // Minimum time between location updates in milliseconds
     public static final float LOCATION_UPDATE_DISTANCE = 5; // Minimum distance between location updates in meters
     public static final int MAP_ZOOM_SCALE_FACTOR = 350; // Constant used to determine map zoom
+    public static final int SERVER_UPDATE_INTERVAL = 10000; // Time between server updates in milliseconds
 
     // Google Map
     private TextView txtLatLong;
@@ -96,8 +97,8 @@ public class LobbyActivity extends AppCompatActivity {
     private String start_time;
 
     // GetPlayers data
-    Runnable getPlayersRunnable;
-    Handler getPlayersHandler;
+    private Runnable getPlayersRunnable;
+    private Handler getPlayersHandler;
     private ImageView imageViewUpdating;
 
     @Override
@@ -141,6 +142,7 @@ public class LobbyActivity extends AppCompatActivity {
         if (hasPerm != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this, R.string.location_permission_error, Toast.LENGTH_SHORT).show();
             txtLatLong.setText(R.string.location_permission_error);
+            // TODO There should be a way to pop up the permission for location right now
         }
         else {
             // If app has permission, setup Location service
@@ -376,6 +378,8 @@ public class LobbyActivity extends AppCompatActivity {
                         imageViewUpdating.setVisibility(View.INVISIBLE);
                         try {
                             JSONObject responseJSON = new JSONObject(response);
+                            // Call GetPlayers again in 10,000 ms (10s)
+                            getPlayersHandler.postDelayed(getPlayersRunnable, SERVER_UPDATE_INTERVAL);
                             authenticateGetPlayers(responseJSON); // Got a response from the server, check if valid
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -383,8 +387,6 @@ public class LobbyActivity extends AppCompatActivity {
                             Toast.makeText(LobbyActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                             Log.d("ERROR", "error => " + e.getMessage()); // Print the error to the device log
                         }
-                        // Call GetPlayers again in 10,000 ms (10s)
-                        getPlayersHandler.postDelayed(getPlayersRunnable, 10000);
                     }
                 },
                 new Response.ErrorListener() {
@@ -555,20 +557,9 @@ public class LobbyActivity extends AppCompatActivity {
         intent.putExtra(UserAccount.KEY_USER_ACCOUNT, user);
         intent.putExtra(Game.KEY_GAME, game);
 
-        // Cancel Location Updates for this activity
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        try {
-            locationManager.removeUpdates(locationListener);
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
-
-        // Cancel the looping GetPlayers calls
-        getPlayersHandler.removeCallbacks(getPlayersRunnable);
-
         // Start the game activity
         startActivity(intent);
-        finish(); // Closes the current activity, stops user from returning to it with back button
+        leaveActivity();
     }
 
     /** Leave the game with the server. Called when user double presses back button. */
@@ -586,14 +577,7 @@ public class LobbyActivity extends AppCompatActivity {
                             JSONObject responseJSON = new JSONObject(response);
                             if (responseJSON.getString(KEY_RESULT) != null) {
                                 // Left game in database, so close activity
-                                LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-                                try {
-                                    locationManager.removeUpdates(locationListener);
-                                } catch (SecurityException e) {
-                                    e.printStackTrace();
-                                }
-                                getPlayersHandler.removeCallbacks(getPlayersRunnable);
-                                finish();
+                                leaveActivity();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -626,6 +610,18 @@ public class LobbyActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    /** Called whenever we plan to leave this activity (back button leave and going to game view) */
+    private void leaveActivity() {
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        try {
+            locationManager.removeUpdates(locationListener); // Stop the location service
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+        getPlayersHandler.removeCallbacks(getPlayersRunnable); // Stop the looping call
+        finish();
+    }
+
     boolean doubleBackToExitPressedOnce = false;
 
     /** Code to control back button usage */
@@ -646,5 +642,4 @@ public class LobbyActivity extends AppCompatActivity {
             }
         }, 2000);
     }
-
 }
