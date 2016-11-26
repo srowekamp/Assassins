@@ -31,45 +31,38 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var usernameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     
-    func switchView(userJSON:JSON) {
-        // set up the current user object for use across the app
-        currentUser = Player(
-             id: userJSON["id"].int!,
-             username: userJSON["username"].string!,
-             password: userJSON["password"].string!,
-             real_Name: userJSON["real_name"].string!,
-             image_filename: userJSON["image_filename"].string!,
-             games_played: userJSON["games_played"].int!,
-             total_kills: userJSON["total_kills"].int!,
-             x_location: userJSON["x_location"].int!,
-             y_location: userJSON["y_location"].int!
-        )
+    func switchView() {
         performSegue(withIdentifier: "loginToMain", sender: self)
     }
     
     func login(username:String, password:String) {
+        
+        var user:Player?
+        
         // the url to login in to the server
         let loginURL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/Login"
         let paramaters = ["username":username,"password":password]
-        
         // make a request to the server and proccess the data
         Alamofire.request(loginURL, parameters: paramaters).responseJSON { response in
-            print("Raw Respons:\n\(response.data!)\n")
-            if let data = response.result.value as? [String:String] {
-                if let jsonString = data["account"]?.data(using: .utf8, allowLossyConversion: false) {
-                    let json = JSON(data: jsonString)
-                    print(json)
-                    
-                    // check that username and password are correct
-                    if (json["username"].string! == username && json["password"].string! == password) {
-                        self.switchView(userJSON: json)
-                        return
-                    } else {
-                        self.popUpAlert(title: "Login Faled:", message: "The username or password is incorrect, please try again.", handler:nil)
+            if response.result.isSuccess {
+                let returned_data = JSON(response.result.value!)
+                print("Response JSON:\n\(returned_data)\n")
+                
+                if returned_data["result"].string! == "success" {
+                    let user_data = returned_data["account"]
+                    if user_data != JSON.null {
+                        user = Player(data: user_data)
+                        if user!.username == username && user!.password == password {
+                            currentUser = user
+                            self.switchView()
+                            return
+                        }
                     }
                 }
+                self.popUpAlert(title: "Login Faled:", message: "The username or password is incorrect, please try again.", handler: nil)
+            } else {
+                self.popUpAlert(title: "Server Call Failed", message: "Please check your network connection and verify you are using the IOWA STATE VPN", handler: nil)
             }
-            self.popUpAlert(title: "Login Faled:", message: "The username or password is incorrect, please try again.", handler: nil)
         }
     }
     

@@ -74,6 +74,7 @@
 				386734FC1D8B879300844D90 /* Assassins */,
 				CE300855160EF9682D22E389 /* Pods */,
 				BE3E6353340E1A7A4DBDB1A0 /* Frameworks */,
+				A50360888E3101DE94993118 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
@@ -146,6 +147,13 @@
 			name = Other;
 			sourceTree = "<group>";
 		};
+		A50360888E3101DE94993118 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		BE3E6353340E1A7A4DBDB1A0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -212,7 +220,7 @@
 				Base,
 			);
 			mainGroup = 386734F11D8B879300844D90;
-			productRefGroup = 386734FB1D8B879300844D90 /* Products */;
+			productRefGroup = A50360888E3101DE94993118 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
