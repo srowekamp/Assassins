@@ -85,6 +85,11 @@ public class UserAccount {
 		return totalKills;
 	}
 	
+	/** Return the games played of this player */
+	public int getGamesPlayed() {
+		return gamesPlayed;
+	}
+	
     /** Checks the provided username for validity */
     public static boolean isValidUsername(String username) {
     	if (username == null) return false;

@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
     /** Send the provided account information to the server for authentication */
     private void login() {
         String requestURL = JSON_URL + BASIC_LOGIN;
-        final ProgressDialog loading = ProgressDialog.show(this, "Uploading...", "Please wait...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(this, "Logging In...", "Please wait...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, requestURL,
                 new Response.Listener<String>() {
                     @Override

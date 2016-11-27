@@ -44,7 +44,6 @@ public class Kill extends HttpServlet {
         	parameterMissing = true;
         }
         if (!parameterMissing) { // TODO ensure values grabbed from request are valid
-        	// TODO check if game has been started
         	Game game = DB.getGame(gameID);
         	if (game == null) {
         		result = RESULT_ERROR;

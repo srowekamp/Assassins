@@ -3,6 +3,8 @@ package la_05.com.assassins;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created by Paul Martinson on 11/7/2016.
@@ -78,8 +80,48 @@ public class Game implements Serializable{
         return gameID;
     }
 
+    /** Returns an ArrayList of Integer objects representing the players_list String  */
+    private ArrayList<Integer> parsePlayers() {
+        if (players_list == null) return null;
+        int n = 0;
+        ArrayList<Integer> al = new ArrayList<Integer>();
+        for (int i = 0; i < players_list.length(); i++) {
+            char c = players_list.charAt(i);
+            if (Character.isDigit(c)) n = n * 10 + Character.getNumericValue(c);
+            if (c == ',') {
+                al.add(new Integer(n));
+                n = 0;
+            }
+        }
+        if (n != 0) al.add(new Integer(n));
+        return al;
+    }
+
+    /** Returns an int array representing the players_list String */
+    public int[] getPlayers() {
+        ArrayList<Integer> integers = parsePlayers();
+        if (integers == null) return null;
+        int[] ret = new int[integers.size()];
+        Iterator<Integer> iterator = integers.iterator();
+        for (int i = 0; i < ret.length; i++)
+        {
+            ret[i] = iterator.next().intValue();
+        }
+        return ret;
+    }
+
+    public int getNumPlayers() {
+        int[] players = getPlayers();
+        if (players == null) return -1;
+        return getPlayers().length;
+    }
+
     public int getHostID(){
         return hostID;
+    }
+
+    public int getDuration() {
+        return duration;
     }
 
     public String getEnd_time() {

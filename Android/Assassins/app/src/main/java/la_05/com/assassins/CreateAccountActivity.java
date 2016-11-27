@@ -114,7 +114,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     /** Send the provided account information to the server to create a new account */
     private void createAccount() {
         String requestURL = JSON_URL + BASIC_CA;
-        final ProgressDialog loading = ProgressDialog.show(this, "Uploading...", "Please wait...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(this, "Creating Account...", "Please wait...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, requestURL,
                 new Response.Listener<String>() {
                     @Override

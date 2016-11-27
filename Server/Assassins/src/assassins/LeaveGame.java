@@ -15,9 +15,11 @@ public class LeaveGame extends HttpServlet{
 	
 	public static final String KEY_RESULT = "result";
 	public static final String RESULT_PARAMETER_MISSING = "parameter_error";
-	public static final String RESULT_LEAVE_GAME_SUCCESS = "success";
-	public static final String RESULT_NOT_IN_GAME = "not_in_game";
-	public static final String RESULT_GAME_NOT_FOUND = "game_not_found";
+	public static final String RESULT_LEAVE_GAME_SUCCESS = "success"; // The player was successfully removed from the list of players in game
+	public static final String RESULT_NOT_IN_GAME = "not_in_game"; // The player was not in the game
+	public static final String RESULT_GAME_NOT_FOUND = "game_not_found"; // no game was found with provided name
+	public static final String RESULT_PLAYER_DEAD = "success"; // Player can safely leave game when dead. That way they still get gamesPlayed++ when game ends
+	public static final String RESULT_PLAYER_WON = "success"; // Player was the last one alive, don't let them leave. Wait for their device to call EndGame.
 	public static final String RESULT_ERROR = "error"; // Result when there is an error. Shouldn't occur
 	
 	/**
@@ -38,6 +40,7 @@ public class LeaveGame extends HttpServlet{
 		String password = null;
 		Game game = null;
 		boolean inGame = false;
+		boolean t = true; // Variable to store whether or not to remove the player from the players_list in database
 		
 		try {
         	gameID = request.getParameter(Game.KEY_GAMEID);
@@ -47,21 +50,55 @@ public class LeaveGame extends HttpServlet{
         	parameterMissing = true;
         }
 		if(!parameterMissing) {
+			// check if the game name is valid
 			if (DB.doesGameExist(gameID)) {
 				game = DB.getGame(gameID);
+				// check for error
 				if(game != null) {
-					int[] players = game.getPlayers();
-					String playerList = "";
-					for (int i = 0; i < players.length; i++) {
-						if (players[i] == playerID) inGame = true;
-						else playerList += String.format("%d,", players[i]);
+					// check if game is started (if game is started and player is dead, they can leave without removing their id from players_list
+					if (game.isStarted()) {
+						// check if the player is alive
+						if (game.isPlayerAlive(playerID)) {
+							// if there are there other players alive, remove the player from players_alive
+							if (game.getPlayersAlive().length > 1) {
+								game = game.killPlayer(playerID);
+							}
+							// if the player is the last one alive, they won.
+							else {
+								result = RESULT_PLAYER_WON;
+								t = false;
+							}
+						}
+						else {
+							result = RESULT_PLAYER_DEAD;
+							t = false;
+						}
 					}
-					if (inGame) {
-						//update player list
-						//update players_alive if game started
-						//remove game from active_games if last player
+					// The game isn't started or player left while in progress, so remove player from players_list
+					if (t) {
+						// Build a new players_list
+						int[] players = game.getPlayers();
+						String playersList = "";
+						for (int i = 0; i < players.length; i++) {
+							if (players[i] == playerID) inGame = true;
+							else playersList += String.format("%d,", players[i]);
+						}
+						// Check if player is in the game
+						if (inGame) {
+							//update players list in database
+							game = DB.updatePlayersList(game, playersList);
+							// check for error
+							if (game != null) {
+								//remove game from active_games if last player
+								if (game.getPlayers() == null || game.getPlayers().length == 0) {
+									DB.removeGame(game.getID(), game.getGameID());
+								}
+								result = RESULT_LEAVE_GAME_SUCCESS;
+							}
+							else result = RESULT_ERROR;
+						}
+						else result = RESULT_NOT_IN_GAME;
 					}
-					else result = RESULT_NOT_IN_GAME;
 				}
 				else result = RESULT_ERROR;
 			}
