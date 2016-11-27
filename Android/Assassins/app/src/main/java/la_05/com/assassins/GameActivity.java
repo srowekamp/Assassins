@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -31,7 +32,7 @@ public class GameActivity extends AppCompatActivity{
 
     public static final String JSON_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/";
     public static final String UPDATEGAME = "UpdateGame";
-    //public static final String KILL = "Kill";
+    public static final String KILL = "Kill";
     //public static fianl String LEAVEGAME = "LeaveGame";
     //public static final String ENDGAME = "EndGame";
 
@@ -46,6 +47,10 @@ public class GameActivity extends AppCompatActivity{
     public static final String KEY_TARGET = "target"; // Key in the JSONObject response corresponding to the player's target represented by a JSONObject in String form
     public static final String KEY_IS_TOP = "istop"; // Key in the JSONObject response representing whether or not the player is at the top of the AlivePlayers list
 
+    // Values for Kill
+    public static final String RESULT_KILL_ERROR = "error"; // Result when there is an error. Shouldn't occur
+    public static final String RESULT_KILL_SUCCESS = "success"; // Result when the kill is processed successfully
+
 
     private LocationListener locationListener;
     private Location lastLocation;
@@ -59,12 +64,18 @@ public class GameActivity extends AppCompatActivity{
     private Runnable updateGameRunnable;
     private Handler updateGameHandler;
 
+    private boolean waitingForUpdate = true;
+    private Button buttonAssassinate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         user = (UserAccount) getIntent().getSerializableExtra(UserAccount.KEY_USER_ACCOUNT);
         game = (Game) getIntent().getSerializableExtra(Game.KEY_GAME);
+
+        buttonAssassinate = (Button) findViewById(R.id.AssassinateButton);
+        buttonAssassinate.setEnabled(false); // initialize button as disabled
 
         // Setup GPS Service
         // First Check if App has permission to access device location
@@ -101,11 +112,20 @@ public class GameActivity extends AppCompatActivity{
             }
         };
         updateGame();
-
     }
 
-    public void assassinate(View view){
-        // TODO
+    /** Called when the user presses the assassinate button */
+    public void assassinate(View view) {
+        buttonAssassinate.setEnabled(false); // Disable the button so they can't spam
+        // TODO Determine if the target is able to be killed
+        boolean killable = true; // Set this with methods
+        if (killable && !waitingForUpdate) {
+            kill();
+            waitingForUpdate = true;
+        }
+        else {
+            buttonAssassinate.setEnabled(true);
+        }
     }
 
     /** Setup a LocationListener whose methods will be called on Location updates*/
@@ -132,6 +152,79 @@ public class GameActivity extends AppCompatActivity{
         public void onStatusChanged(String provider, int status, Bundle extras) {
             // called when the status of the GPS provider changes
         }
+    }
+
+    /** The Kill has been validated with GPS/Perks/Weapons, so process the kill with the server */
+    private void kill() {
+        String requestURL = JSON_URL + KILL;
+        // TODO Indicate to user that we are waiting for new Target and processing kill with server
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, requestURL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response){
+                        // TODO no longer processing kill ^
+                        try {
+                            JSONObject responseJSON = new JSONObject(response);
+                            authenticateKill(responseJSON); // Got a response from the server, check if valid
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            //show a toast and log the error
+                            Toast.makeText(GameActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            Log.d("ERROR", "error => " + e.getMessage()); // Print the error to the device log
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO no longer processing kill ^
+
+                        //show a toast and log the error
+                        Toast.makeText(GameActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("ERROR", "error => " + error.toString()); // Print the error to the device log
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parameters = new Hashtable<String, String>();
+                parameters.put(Game.KEY_GAMEID, game.getGameID());
+                parameters.put(UserAccount.KEY_ID, String.format("%d", user.getID()));
+
+                return parameters;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
+    /** Process JSON response from server */
+    private void authenticateKill(JSONObject response) {
+        String result = null;
+        String error = "Unknown Error Occurred (1)";
+        try {
+            result = (String) response.get(KEY_RESULT);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (result == null) {
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
+            return;
+        }
+        if (result.equals(RESULT_KILL_SUCCESS)) {
+            // Kill was successfully processed with server, wait for update
+            // TODO indicate that kill was successful and that we are waiting for new target
+            return;
+        }
+        switch (result) {
+            case RESULT_KILL_ERROR:
+                error = "An unknown server error occurred";
+                break;
+            default:
+                break;
+        }
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
     }
 
     /** Called every 10 seconds by every player in the game.
@@ -206,6 +299,8 @@ public class GameActivity extends AppCompatActivity{
                 game = new Game(response.getJSONObject(Game.KEY_GAME));
                 target = new UserAccount(response.getJSONObject(KEY_TARGET));
                 isTop = response.getBoolean(KEY_IS_TOP);
+                waitingForUpdate = false;
+                buttonAssassinate.setEnabled(true); // Reenable the assassinate button
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -213,14 +308,17 @@ public class GameActivity extends AppCompatActivity{
         }
         if (result.equals(RESULT_PLAYER_DEAD)) {
             // TODO Alert player that they are dead and give game over screen or something
+            Toast.makeText(this, "You have been assassinated", Toast.LENGTH_LONG).show();
             return;
         }
         if (result.equals(RESULT_GAME_WIN)) {
             // TODO Alert player that they have won the game, call EndGame after ~15 seconds so player's target gets alert that they were killed
+            Toast.makeText(this, "You win!", Toast.LENGTH_LONG).show();
             return;
         }
         if (result.equals(RESULT_GAME_NOT_EXIST_OR_END)) {
             // TODO Alert player that the game is over (Time ran out, and player with isTop called EndGame)
+            Toast.makeText(this, "Game Over", Toast.LENGTH_LONG).show();
             return;
         }
         switch (result) {
