@@ -33,7 +33,6 @@ class Game {
         self.radius = data["radius"].int!
         self.hostID = data["hostid"].int!
         self.duration = data["duration"].int!
-        
         self.end_time = data["end_time"].int
         self.players_list = data["players_list"].arrayObject as? [Int]
         self.players_alive = data["players_alive"].arrayObject as? [Int]

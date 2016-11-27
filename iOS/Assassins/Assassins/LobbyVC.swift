@@ -86,7 +86,7 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
                 let json = JSON(response.result.value!)
                 let gameData = json["game"]
                 
-                self.gameObject = Game(gameID: gameData["gameid"].string!, password: gameData["password"].string!, xcenter: gameData["xcenter"].double!, ycenter: gameData["ycenter"].double!, radius: gameData["radius"].int!, hostID: gameData["hostid"].int!, duration: gameData["duration"].int!, serverID: gameData["id"].int!)
+                self.gameObject = Game(data: gameData)
                 
                 
                 /* for num in 0...json["num_players"].int! - 1 {

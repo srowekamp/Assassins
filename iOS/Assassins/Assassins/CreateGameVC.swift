@@ -66,7 +66,7 @@ class CreateGameVC: UIViewController, UITextFieldDelegate {
                     let json = JSON(data: jsonString)
                     print("Server Request Success, Return JSON: \(json)")
                     
-                    self.gameObject = Game(gameID: json["gameid"].string!, password: json["password"].string!, xcenter: json["xcenter"].double!, ycenter: json["ycenter"].double!, radius: json["radius"].int!, hostID: json["hostid"].int!, duration: json["duration"].int!, serverID: json["id"].int!)
+                    self.gameObject = Game(data: json)
                     self.loadGameView()
                     return
                 }
