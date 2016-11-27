@@ -38,7 +38,7 @@ import org.json.JSONObject;
 import java.util.Hashtable;
 import java.util.Map;
 
-public class GameActivity extends AppCompatActivity{
+public class GameActivity extends AppCompatActivity implements SensorEventListener{
 
     public static final String JSON_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/";
     public static final String UPDATEGAME = "UpdateGame";
@@ -81,12 +81,20 @@ public class GameActivity extends AppCompatActivity{
     private boolean waitingForUpdate = true;
     private Button buttonAssassinate;
 
+    private ImageView image;
+    private float currDegree = 0f;
+    private SensorManager mSensorManager;
+    TextView tvHeading;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         user = (UserAccount) getIntent().getSerializableExtra(UserAccount.KEY_USER_ACCOUNT);
         game = (Game) getIntent().getSerializableExtra(Game.KEY_GAME);
+        //image = (ImageView) findViewByID(R.id.TargetCompass);
+        //tvHeading = (TextView) findViewByID(R.id.tvHeading);
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         buttonAssassinate = (Button) findViewById(R.id.AssassinateButton);
         buttonAssassinate.setEnabled(false); // initialize button as disabled
@@ -126,6 +134,37 @@ public class GameActivity extends AppCompatActivity{
             }
         };
         updateGame();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_GAME);
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+
+        mSensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent se){
+        float degree = Math.round(se.values[0]);
+        tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
+        RotateAnimation ra = new RotateAnimation(currDegree, -degree, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+
+        ra.setDuration(210);
+        ra.setFillAfter(true);
+        image.startAnimation(ra);
+        currDegree = -degree;
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor s, int accuracy){
+        // Not in use
     }
 
     /** Called when the user presses the assassinate button */
