@@ -18,61 +18,61 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="35dp"
         android:layout_centerHorizontal="true"
-        android:id="@+id/imageView" />
+        android:id="@+id/createAccountImageView" />
 
     <EditText
         android:hint="Username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView"
+        android:layout_below="@+id/createAccountImageView"
         android:layout_marginTop="35dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:inputType="textPersonName"
         android:ems="10"
-        android:id="@+id/editTextCreateUserName" />
+        android:id="@+id/loginEditTextUserName" />
 
     <EditText
         android:hint="Password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editTextCreateUserName"
+        android:layout_below="@+id/loginEditTextUserName"
         android:layout_marginTop="10dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/editTextCreatePassword" />
+        android:id="@+id/loginEditTextPassword" />
 
     <Button
         android:text="Log In"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editTextCreatePassword"
+        android:layout_below="@+id/loginEditTextPassword"
         android:layout_marginTop="10dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:id="@+id/buttonLogin"
+        android:id="@+id/loginButtonLogin"
         android:onClick="login"/>
 
     <TextView
         android:text="Need an Account?"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/buttonLogin"
+        android:layout_below="@+id/loginButtonLogin"
         android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
-        android:id="@+id/textViewNeedAccount"
+        android:id="@+id/loginTextViewCreateAccount"
         android:onClick="switchToCreateAccount" />
 
     <Button
         android:text="Admin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textViewNeedAccount"
+        android:layout_below="@+id/loginTextViewCreateAccount"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:id="@+id/buttonAdmin"
+        android:id="@+id/loginButtonAdmin"
         android:onClick="enterAdminCred"/>
 
 </RelativeLayout>

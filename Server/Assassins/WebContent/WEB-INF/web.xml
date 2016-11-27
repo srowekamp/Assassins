@@ -41,13 +41,13 @@
     </servlet-mapping>
     
     <servlet>
-        <servlet-name>GameStart</servlet-name>
-        <servlet-class>assassins.GameStart</servlet-class>
+        <servlet-name>JoinGame</servlet-name>
+        <servlet-class>assassins.JoinGame</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>GameStart</servlet-name>
-        <url-pattern>/GameStart</url-pattern>
+        <servlet-name>JoinGame</servlet-name>
+        <url-pattern>/JoinGame</url-pattern>
     </servlet-mapping>
     
     <servlet>
@@ -58,6 +58,16 @@
     <servlet-mapping>
         <servlet-name>GetPlayers</servlet-name>
         <url-pattern>/GetPlayers</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>GameStart</servlet-name>
+        <servlet-class>assassins.GameStart</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>GameStart</servlet-name>
+        <url-pattern>/GameStart</url-pattern>
     </servlet-mapping>
     
     <servlet>
@@ -81,16 +91,6 @@
     </servlet-mapping>
     
     <servlet>
-        <servlet-name>JoinGame</servlet-name>
-        <servlet-class>assassins.JoinGame</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>JoinGame</servlet-name>
-        <url-pattern>/JoinGame</url-pattern>
-    </servlet-mapping>
-    
-    <servlet>
         <servlet-name>EndGame</servlet-name>
         <servlet-class>assassins.EndGame</servlet-class>
     </servlet>
@@ -98,6 +98,16 @@
     <servlet-mapping>
         <servlet-name>EndGame</servlet-name>
         <url-pattern>/EndGame</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+        <servlet-name>LeaveGame</servlet-name>
+        <servlet-class>assassins.LeaveGame</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>LeaveGame</servlet-name>
+        <url-pattern>/LeaveGame</url-pattern>
     </servlet-mapping>
 
 </web-app>

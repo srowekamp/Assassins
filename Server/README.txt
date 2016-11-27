@@ -31,15 +31,7 @@ How to work on server files :
 
 Current functions of the server (needs VPN): 
 
-1) Login: http://proj-309-la-05.cs.iastate.edu:8080/Assassins/Login?username=admin&password=password
-	parameters:
-		username: user-entered username
-		password: user-entered password
-	Returns a JSON object with key "result" with one value indicating what happened
-		Result values can be found in Login.java and CreateAccount.java in the Assassins servlet src
-	Also within the response is a JSON object with key "account" holding all user account info in database (look at UserAccount.java)
-		
-2) Create Account: http://proj-309-la-05.cs.iastate.edu:8080/Assassins/CreateAccount?username=admin&password=password&real_name=Name&b64_jpg=(Base64 encoded JPEG)
+1) Create Account: http://proj-309-la-05.cs.iastate.edu:8080/Assassins/CreateAccount?username=admin&password=password&real_name=Name&b64_jpg=(Base64 encoded JPEG)
 	parameters:
 		username: user-entered username
 		password: user-entered password
@@ -47,6 +39,14 @@ Current functions of the server (needs VPN):
 		b64_jpg: user-selected jpg encoded as a Base64 String. No size restrictions, but try to make them square up to 500x500 px
 	Returns a JSON object with key "result" with one value indicating what happened
 		Result values can be found in CreateAccount.java in the Assassins src
+	Also within the response is a JSON object with key "account" holding all user account info in database (look at UserAccount.java)
+
+2) Login: http://proj-309-la-05.cs.iastate.edu:8080/Assassins/Login?username=admin&password=password
+	parameters:
+		username: user-entered username
+		password: user-entered password
+	Returns a JSON object with key "result" with one value indicating what happened
+		Result values can be found in Login.java and CreateAccount.java in the Assassins servlet src
 	Also within the response is a JSON object with key "account" holding all user account info in database (look at UserAccount.java)
 	
 3) Create Game: http://proj-309-la-05.cs.iastate.edu:8080/Assassins/CreateGame?gameid=test1&password=password&xcenter=0.0&ycenter=0.0&radius=1000&hostid=4&duration=1200
@@ -62,18 +62,18 @@ Current functions of the server (needs VPN):
 		Result values can be found in CreateGame.java in the Assassins src
 	Also within the response is a JSON object with key "game" holding all database info for this game (look in Game.java)
 	
-4) Join Game: I'm not really sure to put as the url here?
+4) Join Game: http://proj-309-la-05.cs.iastate.edu:8080/Assassins/JoinGame?gameid=test1&id=1&password=password
     parameters:
-        playerList: List of players in the game. (String)
-        playerID: ID of the player trying to join the game. (int)
-        gameID: ID of the game that you are trying to join. (String)
-        Password: password of the game you are trying to join. (String)
-            (everything below here is a potentially complete bullshit)
+        id: ID of the player trying to join the game. (int)
+        gameid: ID of the game that you are trying to join. (String)
+        password: password of the game you are trying to join. (String)
     Returns a JSON object with key "result" with one value indicating what happened
 		Result values can be found in JoinGame.java in the Assassins servlet src
 	Also within the response is a JSON object with key "game" holding all database info in this game (look at Game.java)
 
 5) GetPlayers: http://proj-309-la-05.cs.iastate.edu:8080/Assassins/GetPlayers?gameid=test1&id=4&x_location=-93.647220&y_location=42.02588
+	Called by all players in the lobby while waiting for game to start. Game is started for non-host players when end_time and players_alive
+		are no longer null in the response (only when host has called GameStart).
 	parameters:
 		gameid: The gameID of this game (String)
 		id: The id of the player making the request (int)
@@ -120,12 +120,28 @@ Current functions of the server (needs VPN):
 		keys:
 			result: A value indictating what happened. Result values can be found in Kill.java in the Assassins src
 
-9) GameFinish: I'm not done yet
+9) EndGame: http://proj-309-la-05.cs.iastate.edu:8080/Assassins/EndGame?gameid=test1
 	Called by the player at the top of the alive_players list (istop flag in update game) when game is over. 
+	parameters:
+		gameid: The gameID of this game (String)
+	Returns: JSONObject
+		keys:
+			result: A value indictating what happened. Result values can be found in UpdateGame.java in the Assassins src
+			game: A JSONObject representing the current game.
+			
+10) LeaveGame: http://proj-309-la-05.cs.iastate.edu:8080/Assassins/LeaveGame?gameid=test1&id=1
+	Called by a player who wants to leave a game
+	parameters:
+        id: ID of the player trying to leave the game. (int)
+        gameid: ID of the game that you are trying to leave. (String)
+    Returns a JSON object with key "result" with one value indicating what happened
+		Result values can be found in LeaveGame.java in the Assassins servlet src
 
-10) Output Users table: http://proj-309-la-05.cs.iastate.edu/connect.php
+11) Output users table: http://proj-309-la-05.cs.iastate.edu/users.php
 	Outputs all data in the users table from the database
-	Just for testing. Don't use this in code. 
 	
-11) User Photos: http://proj-309-la-05.cs.iastate.edu:8080/userImages/x.jpg
+12) Output active_games table: http://proj-309-la-05.cs.iastate.edu/active_games.php
+	Outputs all data in the active_games table from the database
+	
+13) User Photos: http://proj-309-la-05.cs.iastate.edu:8080/userImages/x.jpg
 	int x = id of user in database

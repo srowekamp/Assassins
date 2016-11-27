@@ -30,25 +30,10 @@ class MapSelectVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegat
         }
     }
     
-    /* Used for Center Pin
-    
-    var _centerPin:MKAnnotation!
-    var centerPin:MKAnnotation {
-        get {
-            return _centerPin
-        }
-        set {
-            mapView.removeAnnotation(_centerPin)
-            _centerPin = newValue
-            mapView.addAnnotation(_centerPin)
-        }
-    }
-    
-    */
-
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var Slider: UISlider!
     
+    // called when the slider value changes so that the view may be updated dynamicaly
     @IBAction func sliderValueChanged(_ sender: Any) {
         playArea = MKCircle(center: _center!, radius: Double(Slider.value) as CLLocationDistance)
     }
@@ -70,19 +55,20 @@ class MapSelectVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegat
         mapView.userTrackingMode = MKUserTrackingMode(rawValue: 1)!
         mapView.showsUserLocation = true
         mapView.mapType = MKMapType.hybrid
-        
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
         locationManager.startUpdatingLocation()
     }
     
+    // send configured settings back to creation page
     override func viewWillDisappear(_ animated: Bool) {
         mainSettingsVC.gameRadius = Double(Slider.value)
         mainSettingsVC.xcord = Double((_center?.longitude)!)
         mainSettingsVC.ycord = Double((_center?.latitude)!)
     }
+    
+    // MARK: Location Manager Delegate Methods
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let location = locations.last
@@ -91,15 +77,9 @@ class MapSelectVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegat
         let region = MKCoordinateRegion(center: center, span: MKCoordinateSpanMake(0.005, 0.005))
         mapView.setRegion(region, animated: false)
         locationManager.stopUpdatingLocation()
-        
-        /*  Used for Center Pin
-        
-        let pin = MapPin(title: "Center", cord: center)
-        _centerPin = pin
-        mapView.addAnnotation(pin)
- 
-        */
     }
+    
+    // MARK: MapView Delegete Methods
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         if overlay is MKCircle {
@@ -112,23 +92,4 @@ class MapSelectVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegat
             return MKOverlayRenderer(overlay: overlay)
         }
     }
-    
-    /*
-     
-    // Code used to creat pin that will eventually become the center of the map. For now I am just going to use the users location as the center of the map.
-     
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        if annotation is MKPointAnnotation {
-            let pinAnnotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "myPin")
-            
-            pinAnnotationView.isDraggable = true
-            pinAnnotationView.canShowCallout = true
-            pinAnnotationView.animatesDrop = true
-            
-            return pinAnnotationView
-        }
-        
-        return nil
-    }
-    */
 }

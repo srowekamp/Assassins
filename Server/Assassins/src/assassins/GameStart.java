@@ -18,6 +18,7 @@ public class GameStart extends HttpServlet {
 	public static final String KEY_RESULT = "result";
 	public static final String RESULT_PARAMETER_MISSING = "parameter_error";
 	public static final String RESULT_GAME_STARTED = "success";
+	public static final String RESULT_NOT_ENOUGH_PLAYERS = "not_enough_players";
 	
 	public static final String KEY_TARGET = "target";
 
@@ -40,12 +41,15 @@ public class GameStart extends HttpServlet {
         else if (!Game.isValidStartTime(startTime)) result = Game.RESULT_START_TIME_INVALID;
         else {
         	Game game = DB.getGame(gameID);
-        	game = DB.setEndTime(game, startTime);
-        	game = DB.setTargetList(game);
-        	UserAccount target = game.getTarget(game.getHostID());
-        	jsonResponse.put(KEY_TARGET, target.toJSONString());
-        	jsonResponse.put(Game.KEY_GAME, game);
-        	result = RESULT_GAME_STARTED;
+        	if (game.getPlayers().length > 1) {
+	        	game = DB.setEndTime(game, startTime);
+	        	game = DB.setTargetList(game);
+	        	UserAccount target = game.getTarget(game.getHostID());
+	        	jsonResponse.put(KEY_TARGET, target);
+	        	jsonResponse.put(Game.KEY_GAME, game);
+	        	result = RESULT_GAME_STARTED;
+        	}
+        	else result = RESULT_NOT_ENOUGH_PLAYERS;
         }
         jsonResponse.put(KEY_RESULT, result);
         //Write the JSON object to the response

@@ -23,10 +23,6 @@ class MainMenuVC: UIViewController {
         performSegue(withIdentifier: "createGame", sender: nil)
     }
     
-    @IBAction func gameEditor(_ sender: AnyObject) {
-        performSegue(withIdentifier: "gameEditor", sender: nil)
-    }
-    
     @IBAction func tapSettings(_ sender: AnyObject) {
         performSegue(withIdentifier: "settings", sender: nil)
     }

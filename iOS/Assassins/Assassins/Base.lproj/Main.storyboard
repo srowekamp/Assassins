@@ -114,7 +114,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="P4q-PX-0tm">
-                                <rect key="frame" x="142.5" y="247.5" width="90" height="172.5"/>
+                                <rect key="frame" x="142.5" y="266.5" width="90" height="134.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZgE-fI-MMX">
                                         <rect key="frame" x="0.0" y="0.0" width="90" height="20.5"/>
@@ -136,15 +136,8 @@
                                             <action selector="createGame:" destination="dHc-Ti-esL" eventType="touchUpInside" id="iAh-Do-QlB"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uSP-tc-K1K">
-                                        <rect key="frame" x="0.0" y="104.5" width="90" height="30"/>
-                                        <state key="normal" title="Game Editor"/>
-                                        <connections>
-                                            <action selector="gameEditor:" destination="dHc-Ti-esL" eventType="touchUpInside" id="LVy-4J-70Q"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wrn-cn-lQC">
-                                        <rect key="frame" x="0.0" y="142.5" width="90" height="30"/>
+                                        <rect key="frame" x="0.0" y="104.5" width="90" height="30"/>
                                         <state key="normal" title="Settings"/>
                                         <connections>
                                             <action selector="tapSettings:" destination="dHc-Ti-esL" eventType="touchUpInside" id="v4s-Am-D5B"/>
@@ -163,7 +156,6 @@
                     <connections>
                         <segue destination="Wcf-Zx-ltU" kind="show" identifier="joinGame" id="cAD-dg-4h0"/>
                         <segue destination="RcS-F5-1lq" kind="show" identifier="createGame" id="bku-r7-TcB"/>
-                        <segue destination="zPL-It-GOb" kind="show" identifier="gameEditor" id="MXr-Xk-rXz"/>
                         <segue destination="pqV-TB-pvp" kind="show" identifier="settings" id="6No-9S-2uV"/>
                     </connections>
                 </viewController>
@@ -362,25 +354,6 @@
             </objects>
             <point key="canvasLocation" x="5328.8000000000002" y="-1746.4767616191905"/>
         </scene>
-        <!--Game Editor-->
-        <scene sceneID="fmD-n1-HYA">
-            <objects>
-                <viewController id="zPL-It-GOb" customClass="GameEditorVC" customModule="Assassins" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Tdi-qC-Axx"/>
-                        <viewControllerLayoutGuide type="bottom" id="mdM-bl-Fbh"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="X2D-Vg-kFc">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" title="Game Editor" id="p3U-mm-FYM"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="c8W-y7-H3h" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2342" y="168"/>
-        </scene>
         <!--Create Game-->
         <scene sceneID="oJc-jX-7jX">
             <objects>
@@ -508,13 +481,13 @@
                                 <rect key="frame" x="8" y="629" width="359" height="30"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Radius:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j9J-9p-ptJ">
-                                        <rect key="frame" x="0.0" y="5" width="41" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="5" width="37" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="d2n-WA-5Wn">
-                                        <rect key="frame" x="47" y="0.0" width="314" height="31"/>
+                                        <rect key="frame" x="43" y="0.0" width="318" height="31"/>
                                         <connections>
                                             <action selector="sliderValueChanged:" destination="Ppm-Yh-lZm" eventType="valueChanged" id="EpU-rw-UYD"/>
                                         </connections>

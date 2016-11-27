@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         //Fix editTextPassword Font
-        EditText password = (EditText) findViewById(R.id.editTextCreatePassword);
+        EditText password = (EditText) findViewById(R.id.loginEditTextPassword);
         password.setTypeface(Typeface.DEFAULT);
         password.setTransformationMethod(new PasswordTransformationMethod());
     }
@@ -55,8 +55,8 @@ public class LoginActivity extends AppCompatActivity {
     /** Called when user clicks the Login button */
     public void login(View view) {
         // Interact with server to log in and open the Home Page
-        EditText editTextUsername = (EditText) findViewById(R.id.editTextCreateUserName);
-        EditText editTextPassword = (EditText) findViewById(R.id.editTextCreatePassword);
+        EditText editTextUsername = (EditText) findViewById(R.id.loginEditTextUserName);
+        EditText editTextPassword = (EditText) findViewById(R.id.loginEditTextPassword);
 
         username = editTextUsername.getText().toString();
         password = editTextPassword.getText().toString();
@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
     /** Send the provided account information to the server for authentication */
     private void login() {
         String requestURL = JSON_URL + BASIC_LOGIN;
-        final ProgressDialog loading = ProgressDialog.show(this, "Uploading...", "Please wait...", false, false);
+        final ProgressDialog loading = ProgressDialog.show(this, "Logging In...", "Please wait...", false, false);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, requestURL,
                 new Response.Listener<String>() {
                     @Override
@@ -126,14 +126,21 @@ public class LoginActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (result != null && result.equals(RESULT_LOGIN_SUCCESS)){
+        if (result == null) {
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
+            return;
+        }
+        if (result.equals(RESULT_LOGIN_SUCCESS)){
             UserAccount user = null;
             try {
-                JSONObject account = new JSONObject (response.getString(UserAccount.KEY_USER_ACCOUNT));
+                //JSONObject account = new JSONObject (response.getString(UserAccount.KEY_USER_ACCOUNT));
+                JSONObject account = response.getJSONObject(UserAccount.KEY_USER_ACCOUNT);
                 user = new UserAccount(account);
                 Toast.makeText(this, "Welcome, " + account.getString(UserAccount.KEY_REAL_NAME), Toast.LENGTH_LONG).show();
             }catch (JSONException e) {
                 e.printStackTrace();
+                Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+                return;
             }
             // Switch to the Main Menu Activity
             Intent intent = new Intent(this, MainMenuActivity.class);
@@ -142,24 +149,28 @@ public class LoginActivity extends AppCompatActivity {
             finish(); // Closes the current activity, stops user from returning to it with back button
             return;
         }
-        if (result != null && result.equals(RESULT_OTHER_ERROR)) {
-            error = "Unknown Error Occurred (2)";
-        }
-        else if (result != null && result.equals(RESULT_LOGIN_FAIL)) {
-            error = "Unknown Username or Password";
-        }
-        else if (result != null && result.equals(RESULT_USERNAME_INVALID)) {
-            error = "Invalid Username";
-        }
-        else if (result != null && result.equals(RESULT_PASSWORD_INVALID)) {
-            error = "Invalid Password";
+        switch (result) {
+            case RESULT_OTHER_ERROR:
+                error = "Unknown Error Occurred (2)";
+                break;
+            case RESULT_LOGIN_FAIL:
+                error = "Unknown Username or Password";
+                break;
+            case RESULT_USERNAME_INVALID:
+                error = "Invalid Username";
+                break;
+            case RESULT_PASSWORD_INVALID:
+                error = "Invalid Password";
+                break;
+            default:
+                break;
         }
         Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
     }
 
     public void enterAdminCred(View view) {
-        EditText editTextUsername = (EditText) findViewById(R.id.editTextCreateUserName);
-        EditText editTextPassword = (EditText) findViewById(R.id.editTextCreatePassword);
+        EditText editTextUsername = (EditText) findViewById(R.id.loginEditTextUserName);
+        EditText editTextPassword = (EditText) findViewById(R.id.loginEditTextPassword);
         editTextUsername.setText("admin");
         editTextPassword.setText("password");
     }
