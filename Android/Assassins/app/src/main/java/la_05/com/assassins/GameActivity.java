@@ -1,5 +1,6 @@
 package la_05.com.assassins;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -33,7 +34,7 @@ public class GameActivity extends AppCompatActivity{
     public static final String JSON_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/";
     public static final String UPDATEGAME = "UpdateGame";
     public static final String KILL = "Kill";
-    //public static fianl String LEAVEGAME = "LeaveGame";
+    public static final String LEAVEGAME = "LeaveGame";
     //public static final String ENDGAME = "EndGame";
 
     public static final String KEY_RESULT = "result";
@@ -51,6 +52,10 @@ public class GameActivity extends AppCompatActivity{
     public static final String RESULT_KILL_ERROR = "error"; // Result when there is an error. Shouldn't occur
     public static final String RESULT_KILL_SUCCESS = "success"; // Result when the kill is processed successfully
 
+    // Values for LeaveGame
+    public static final String RESULT_LEAVE_GAME_SUCCESS = "success"; // The player was successfully removed from the list of players in game
+    public static final String RESULT_LEAVE_PLAYER_DEAD = "dead-success"; // Player can safely leave game when dead. That way they still get gamesPlayed++ when game ends
+    public static final String RESULT_PLAYER_WON = "win"; // Player was the last one alive, don't let them leave. Wait for their device to call EndGame.
 
     private LocationListener locationListener;
     private Location lastLocation;
@@ -331,13 +336,121 @@ public class GameActivity extends AppCompatActivity{
         Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
     }
 
+    /** Leave the game with the server. Called when user double presses back button. */
+    public void leaveGame() {
+        String requestURL = JSON_URL + LEAVEGAME;
+        final ProgressDialog loading = ProgressDialog.show(this, "Leaving Game...", "Please wait...", false, false);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, requestURL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response){
+                        // Dismiss the progress dialog
+                        loading.dismiss();
+                        try {
+                            JSONObject responseJSON = new JSONObject(response);
+                            /*if (responseJSON.getString(KEY_RESULT) != null) {
+                                // Left game in database, so close activity
+                                leaveActivity();
+                            }*/
+                            authenticateLeaveGame(responseJSON);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            //show a toast and log the error
+                            Toast.makeText(GameActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            Log.d("ERROR", "error => " + e.getMessage()); // Print the error to the device log
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Dismiss the progress dialog
+                        loading.dismiss();
+                        //show a toast and log the error
+                        Toast.makeText(GameActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("ERROR", "error => " + error.toString()); // Print the error to the device log
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parameters = new Hashtable<String, String>();
+                parameters.put(Game.KEY_GAMEID, game.getGameID());
+                parameters.put(UserAccount.KEY_ID, String.format("%d", user.getID()));
+                return parameters;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
+    /** Process JSON response from server */
+    private void authenticateLeaveGame(JSONObject response) {
+        String result = null;
+        String error = "Unknown Error Occurred (1)";
+        try {
+            result = (String) response.get(KEY_RESULT);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (result == null) {
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
+            return;
+        }
+        if (result.equals(RESULT_LEAVE_GAME_SUCCESS)) {
+            // Successfully left game with server, leave the game view
+            leaveActivity();
+            return;
+        }
+        if (result.equals(RESULT_LEAVE_PLAYER_DEAD)) {
+            // TODO Alert player that they are dead and give game over screen or something
+            Toast.makeText(this, "You have been assassinated", Toast.LENGTH_LONG).show();
+            leaveActivity();
+            return;
+        }
+        if (result.equals(RESULT_PLAYER_WON)) {
+            // TODO Alert player that they have won the game, call EndGame after ~15 seconds so player's target gets alert that they were killed
+            Toast.makeText(this, "You win!", Toast.LENGTH_LONG).show();
+            // End the game after x seconds
+            leaveActivity();
+            return;
+        }
+        if (result.equals(RESULT_GAME_NOT_EXIST_OR_END)) {
+            // TODO Alert player that the game is over (Time ran out, and player with isTop called EndGame)
+            Toast.makeText(this, "Game Over", Toast.LENGTH_LONG).show();
+            leaveActivity();
+            return;
+        }
+        switch (result) {
+            case RESULT_ERROR:
+                error = "An unknown server error occurred";
+                break;
+            default:
+                break;
+        }
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
+    }
+
+    /** Called whenever we plan to leave this activity (back button leave and after game ends) */
+    private void leaveActivity() {
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        try {
+            locationManager.removeUpdates(locationListener); // Stop the location service
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+        updateGameHandler.removeCallbacks(updateGameRunnable); // Stop the looping call
+        finish();
+    }
+
     boolean doubleBackToExitPressedOnce = false;
 
     /** Code to control back button usage */
     @Override
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
+            leaveGame();
             return;
         }
 

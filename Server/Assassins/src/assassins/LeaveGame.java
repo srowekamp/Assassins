@@ -17,9 +17,9 @@ public class LeaveGame extends HttpServlet{
 	public static final String RESULT_PARAMETER_MISSING = "parameter_error";
 	public static final String RESULT_LEAVE_GAME_SUCCESS = "success"; // The player was successfully removed from the list of players in game
 	public static final String RESULT_NOT_IN_GAME = "not_in_game"; // The player was not in the game
-	public static final String RESULT_GAME_NOT_FOUND = "game_not_found"; // no game was found with provided name
-	public static final String RESULT_PLAYER_DEAD = "success"; // Player can safely leave game when dead. That way they still get gamesPlayed++ when game ends
-	public static final String RESULT_PLAYER_WON = "success"; // Player was the last one alive, don't let them leave. Wait for their device to call EndGame.
+	public static final String RESULT_GAME_NOT_EXIST_OR_END = "game_not_exist_or_end"; // Result when the game wasn't found in the database. Either it DNE or it was ended
+	public static final String RESULT_PLAYER_DEAD = "dead-success"; // Player can safely leave game when dead. That way they still get gamesPlayed++ when game ends
+	public static final String RESULT_PLAYER_WON = "win"; // Player was the last one alive, don't let them leave. Wait for their device to call EndGame.
 	public static final String RESULT_ERROR = "error"; // Result when there is an error. Shouldn't occur
 	
 	/**
@@ -102,7 +102,7 @@ public class LeaveGame extends HttpServlet{
 				}
 				else result = RESULT_ERROR;
 			}
-			else result = RESULT_GAME_NOT_FOUND;
+			else result = RESULT_GAME_NOT_EXIST_OR_END;
 		}
 		else result = RESULT_PARAMETER_MISSING;
 		jsonResponse.put(KEY_RESULT, result);
