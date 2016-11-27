@@ -41,7 +41,7 @@ public class GameActivity extends AppCompatActivity{
     public static final String RESULT_PLAYER_DEAD = "dead"; // Result when the player was killed since the last update
     public static final String RESULT_NORMAL = "normal"; // Result when the game is proceeding as normal
     public static final String RESULT_GAME_WIN = "win"; // Result when the player has won the game
-    public static final String RESULT_GAME_OVER = "game_over"; // Result when the game has ended because time ran out or host ended game early
+    public static final String RESULT_GAME_NOT_EXIST_OR_END = "game_not_exist_or_end"; // Result when the game wasn't found in the database. Since we made it to game view, this means the game was ended
     public static final String RESULT_ERROR = "error"; // Result when there is an error. Shouldn't occur
     public static final String KEY_TARGET = "target"; // Key in the JSONObject response corresponding to the player's target represented by a JSONObject in String form
     public static final String KEY_IS_TOP = "istop"; // Key in the JSONObject response representing whether or not the player is at the top of the AlivePlayers list
@@ -216,12 +216,11 @@ public class GameActivity extends AppCompatActivity{
             return;
         }
         if (result.equals(RESULT_GAME_WIN)) {
-            // TODO Alert player that they have won the game, call EndGame
+            // TODO Alert player that they have won the game, call EndGame after ~15 seconds so player's target gets alert that they were killed
             return;
         }
-        if (result.equals(RESULT_GAME_OVER)) {
+        if (result.equals(RESULT_GAME_NOT_EXIST_OR_END)) {
             // TODO Alert player that the game is over (Time ran out, and player with isTop called EndGame)
-            // TODO this won't work currently. Server removes game on EndGame, other players will get error when host ends game
             return;
         }
         switch (result) {

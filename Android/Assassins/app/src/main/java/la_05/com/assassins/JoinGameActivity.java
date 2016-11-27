@@ -33,6 +33,7 @@ public class JoinGameActivity extends AppCompatActivity {
     public static final String RESULT_ALREADY_JOINED = "already_joined";
     public static final String RESULT_PASSWORD_INCORRECT = "password_incorrect";
     public static final String RESULT_GAME_NOT_FOUND = "game_not_found";
+    public static final String RESULT_GAME_ALREADY_STARTED = "game_started"; // Result when a player tries to join a game in progress
     public static final String RESULT_ERROR = "error"; // Result when there is an error. Shouldn't occur
 
     private String gameName;
@@ -153,6 +154,9 @@ public class JoinGameActivity extends AppCompatActivity {
                 break;
             case RESULT_GAME_NOT_FOUND:
                 error = "No game found with that name";
+                break;
+            case RESULT_GAME_ALREADY_STARTED:
+                error = "This game has already started";
                 break;
             default:
                 break;
