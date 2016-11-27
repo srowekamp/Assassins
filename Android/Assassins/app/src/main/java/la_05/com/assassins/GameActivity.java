@@ -41,7 +41,7 @@ public class GameActivity extends AppCompatActivity{
     }
 
     public void onAccuracyChanged(Sensor s, int accuracy){
-        
+
     }
 
     public void assassinate(View view){
