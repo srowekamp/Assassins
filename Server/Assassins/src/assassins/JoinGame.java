@@ -19,6 +19,7 @@ public class JoinGame extends HttpServlet{
 	public static final String RESULT_ALREADY_JOINED = "already_joined";
 	public static final String RESULT_PASSWORD_INCORRECT = "password_incorrect";
 	public static final String RESULT_GAME_NOT_FOUND = "game_not_found";
+	public static final String RESULT_GAME_ALREADY_STARTED = "game_started"; // Result when a player tries to join a game in progress
 	public static final String RESULT_ERROR = "error"; // Result when there is an error. Shouldn't occur
 	
 	/**
@@ -49,24 +50,30 @@ public class JoinGame extends HttpServlet{
         	parameterMissing = true;
         }
 		if(!parameterMissing) {
-			if (DB.doesGameExist(gameID)){
+			// Check if the game exists
+			if (DB.doesGameExist(gameID)) {
 				tempGame = DB.attemptJoinGame(gameID, password);
-				if(tempGame != null){
+				// Check if the password was correct (null means password was wrong)
+				if(tempGame != null) {
+					// Check players list for the player and start building the new list
 					int[] players = tempGame.getPlayers();
 					String playerList = "";
-					for (int i = 0; i < players.length; i++){
+					for (int i = 0; i < players.length; i++) {
 						playerList += String.format("%d,", players[i]);
 						if (players[i] == playerID) alreadyJoined = true;
 					}
 					if (!alreadyJoined) {
-						// TODO check if game has been started
-						playerList += String.format("%d,", playerID);
-						tempGame = DB.updatePlayersList(tempGame, playerList);
-						if (tempGame != null) {
-							result = RESULT_JOIN_GAME_SUCCESS;
-							jsonResponse.put(Game.KEY_GAME, tempGame);
+						// Check if game has been started
+						if (tempGame.getEndTime() == null) {
+							playerList += String.format("%d,", playerID);
+							tempGame = DB.updatePlayersList(tempGame, playerList);
+							if (tempGame != null) {
+								result = RESULT_JOIN_GAME_SUCCESS;
+								jsonResponse.put(Game.KEY_GAME, tempGame);
+							}
+							else result = RESULT_ERROR;
 						}
-						else result = RESULT_ERROR;
+						else result = RESULT_GAME_ALREADY_STARTED; // Don't let player join a game in progress
 					}
 					else {
 						result = RESULT_ALREADY_JOINED;
