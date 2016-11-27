@@ -47,7 +47,7 @@ public class CreateGame extends HttpServlet {
 	        		game = DB.createGame(tempGame);
 	        		if (game != null) {
 	        			result = Game.RESULT_GAME_CREATED;
-	        			jsonResponse.put(Game.KEY_GAME, game.toJSONString());
+	        			jsonResponse.put(Game.KEY_GAME, game);
 	        		}
 	        		else result = Game.RESULT_OTHER_ERROR;
 	        	}

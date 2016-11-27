@@ -70,6 +70,11 @@ public class UserAccount {
 		return j.toJSONString();
 	}
 	
+	@Override
+	public String toString() {
+		return toJSONString();
+	}
+	
 	/** Return the id of this user */
 	public int getUserID() {
 		return id;
@@ -78,6 +83,11 @@ public class UserAccount {
 	/** Return the total kills of this player */
 	public int getTotalKills() {
 		return totalKills;
+	}
+	
+	/** Return the games played of this player */
+	public int getGamesPlayed() {
+		return gamesPlayed;
 	}
 	
     /** Checks the provided username for validity */

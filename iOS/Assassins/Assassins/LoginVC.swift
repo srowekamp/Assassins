@@ -31,51 +31,39 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var usernameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     
-    func switchView(userJSON:JSON) {
-        // set up the current user object for use across the app
-        currentUser = Player(
-             id: userJSON["id"].int!,
-             username: userJSON["username"].string!,
-             password: userJSON["password"].string!,
-             real_Name: userJSON["real_name"].string!,
-             image_filename: userJSON["image_filename"].string!,
-             games_played: userJSON["games_played"].int!,
-             total_kills: userJSON["total_kills"].int!,
-             x_location: userJSON["x_location"].int!,
-             y_location: userJSON["y_location"].int!
-        )
+    func switchView() {
         performSegue(withIdentifier: "loginToMain", sender: self)
     }
     
     func login(username:String, password:String) {
+        
+        var user:Player?
+        
         // the url to login in to the server
         let loginURL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/Login"
         let paramaters = ["username":username,"password":password]
-        
         // make a request to the server and proccess the data
         Alamofire.request(loginURL, parameters: paramaters).responseJSON { response in
-            if let data = response.result.value as? [String:String] {
-                if let jsonString = data["account"]?.data(using: .utf8, allowLossyConversion: false) {
-                    let json = JSON(data: jsonString)
-                    print(json)
-                    
-                    // check that username and password are correct
-                    if (json["username"].string! == username && json["password"].string! == password) {
-                        self.switchView(userJSON: json)
-                        return
-                    } else {
-                        self.failedLogin()
+            if response.result.isSuccess {
+                let returned_data = JSON(response.result.value!)
+                print("Response JSON:\n\(returned_data)\n")
+                
+                if returned_data["result"].string! == "success" {
+                    let user_data = returned_data["account"]
+                    if user_data != JSON.null {
+                        user = Player(data: user_data)
+                        if user!.username == username && user!.password == password {
+                            currentUser = user
+                            self.switchView()
+                            return
+                        }
                     }
                 }
+                self.popUpAlert(title: "Login Faled:", message: "The username or password is incorrect, please try again.", handler: nil)
+            } else {
+                self.popUpAlert(title: "Server Call Failed", message: "Please check your network connection and verify you are using the IOWA STATE VPN", handler: nil)
             }
-            self.failedLogin()
         }
-    }
-    
-    func failedLogin(){
-        let alert = UIAlertController(title: "Login Failed", message: "You username or password is incorrect, please try again.", preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
     }
     
     override func viewDidLoad() {
@@ -88,22 +76,34 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         passwordField.text = ""
     }
     
-    // called when he user wants to create a new account
+    // called when user taps create a new account
     @IBAction func showCreateAccount(_ sender: AnyObject) {
         performSegue(withIdentifier: "createAccount", sender: self)
     }
 
-    // called when the user tries to log in
+    // called when user taps log in
     @IBAction func tapLogin(_ sender: AnyObject) {
         
+        // used for debuging purposed to make logging in faster
         if(ignoreLogin){
             login(username: "admin", password: "password")
+            //performSegue(withIdentifier: "loginToMain", sender: self)
             return
         }
         
-        // TODO: check that user name and password are of correct length
-        // username must be between 4 and 32 characters
-        // password must be between 5 and 32 characters
+        // checks if username is correct length
+        if((usernameField.text?.characters.count)! < 4 || (usernameField.text?.characters.count)! > 32){
+            popUpAlert(title: "Bad Username", message: "a username must be between 4 and 32 characters long", handler: nil)
+            return
+        }
+        
+        // checks if password is correct length
+        if((passwordField.text?.characters.count)! < 5 || (passwordField.text?.characters.count)! > 32){
+            popUpAlert(title: "Bad Password", message: "a password must be between 5 and 32 characters long", handler: nil)
+            return
+        }
+        
+        // attempt to log in
         login(username: usernameField.text!, password: passwordField.text! )
     }
     

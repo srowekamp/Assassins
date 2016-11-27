@@ -34,12 +34,12 @@ class PlayerListVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10;
+        return (TempGameData?.players?.count)!;
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "playerCell")!
-        cell.textLabel?.text = "Player \(indexPath.row)"
+        cell.textLabel?.text = TempGameData?.players?[indexPath.row]?.real_name
         return cell
     }
 }

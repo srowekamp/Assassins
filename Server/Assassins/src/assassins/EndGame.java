@@ -17,9 +17,11 @@ public class EndGame extends HttpServlet{
 	private static final long serialVersionUID = 3390648842666208917L;
 	
 	public static final String KEY_RESULT = "result";
-	public static final String KEY_PARAMETER_MISSING = "parameter_error";
-	public static final String RESULT_REMOVE_GAME_SUCCESS = "success";
-	public static final String RESULT_REMOVE_GAME_FAILURE = "fail";
+	public static final String RESULT_GAME_NOT_FOUND = "game_not_found"; // Result when no game was found with given name
+	public static final String RESULT_GAME_NOT_STARTED = "game_not_started"; // Result when trying to end game that hasn't been started
+	public static final String RESULT_ERROR = "error"; // Result when there was an unknown error
+	public static final String RESULT_REMOVE_GAME_SUCCESS = "success"; // Result when the game was successfully ended
+	public static final String RESULT_REMOVE_GAME_FAILURE = "fail"; // Result when there was an error removing game from database
 
 	/**
      * Handles the HTTP <code>GET</code> method.
@@ -35,24 +37,28 @@ public class EndGame extends HttpServlet{
 		String result = null;
 		String gameName = request.getParameter(Game.KEY_GAMEID);
 		Game tempGame = null, game = null;
-		
+
+		// Check if the game exists
 		if(DB.doesGameExist(gameName)){
 			game = DB.getGame(gameName);
-			tempGame = DB.removeGame(game.getID(), gameName);
-			/*
-			 * update stats for all players when stats exist
-			 */
-			if (tempGame == null) {
-				result = RESULT_REMOVE_GAME_SUCCESS;
-				jsonResponse.put(Game.KEY_GAME, game);
+			// Check for error
+			if (game != null) {
+				// Check if game has been started
+				if (game.getEndTime() != null && game.getEndTime().length() == 6) { 
+					tempGame = DB.removeGame(game.getID(), gameName);
+					// Check for error
+					if (tempGame == null) {
+						game.updateGamesPlayed();
+						result = RESULT_REMOVE_GAME_SUCCESS;
+						jsonResponse.put(Game.KEY_GAME, game);
+					}
+					else result = RESULT_REMOVE_GAME_FAILURE;
+				}
+				else result = RESULT_GAME_NOT_STARTED;
 			}
-			else {
-				result = RESULT_REMOVE_GAME_FAILURE;
-			}
+			else result = RESULT_ERROR;
 		}
-		else {
-			result = RESULT_REMOVE_GAME_FAILURE;
-		}
+		else result = RESULT_GAME_NOT_FOUND;
 		jsonResponse.put(KEY_RESULT, result);
 		/* write the json object to the response */
 		response.setContentType("application/json");

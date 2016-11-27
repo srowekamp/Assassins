@@ -18,6 +18,8 @@ class Game {
     let radius:Int
     let hostID:Int
     let duration:Int
+    
+    var players:[Int:Player]?
 
     init(gameID:String, password:String, xcenter:Double, ycenter:Double, radius:Int, hostID:Int, duration:Int, serverID:Int){
         self.serverID = serverID

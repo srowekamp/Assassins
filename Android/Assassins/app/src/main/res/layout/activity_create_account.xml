@@ -18,75 +18,76 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="35dp"
         android:layout_centerHorizontal="true"
-        android:id="@+id/imageView"
+        android:id="@+id/createAccountImageView"
         android:onClick="showFileChooser"/>
+
+    <EditText
+        android:hint="Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/createAccountImageView"
+        android:layout_marginTop="35dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:inputType="textCapWords|textPersonName"
+        android:ems="10"
+        android:id="@+id/createAccountEditTextRealName" />
 
     <EditText
         android:hint="Username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editTextCreateName"
+        android:layout_below="@+id/createAccountEditTextRealName"
         android:layout_marginTop="10dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:inputType="textPersonName"
         android:ems="10"
-        android:id="@+id/editTextCreateUserName" />
+        android:id="@+id/createAccountEditTextUserName" />
 
     <EditText
         android:hint="Password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editTextCreateUserName"
+        android:layout_below="@+id/createAccountEditTextUserName"
         android:layout_marginTop="10dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/editTextCreatePassword" />
+        android:id="@+id/createAccountEditTextPassword" />
 
     <EditText
         android:hint="Confirm Password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editTextCreatePassword"
+        android:layout_below="@+id/createAccountEditTextPassword"
         android:layout_marginTop="10dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:inputType="textPassword"
         android:ems="10"
-        android:id="@+id/editTextConfirmPassword" />
+        android:id="@+id/createAccountEditTextConfirmPassword" />
 
     <Button
         android:text="Create Account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editTextConfirmPassword"
+        android:layout_below="@+id/createAccountEditTextConfirmPassword"
         android:layout_marginTop="10dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:id="@+id/buttonCreateAccount"
+        android:id="@+id/createAccountButtonCreateAccount"
         android:onClick="createAccount" />
 
     <TextView
         android:text="Already Have an Account? Log in."
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/buttonCreateAccount"
+        android:layout_below="@+id/createAccountButtonCreateAccount"
         android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
-        android:id="@+id/textViewLogIn"
+        android:id="@+id/createAccountTextViewLogIn"
         android:onClick="switchToLogIn"/>
-
-    <EditText
-        android:hint="Name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:inputType="textCapWords|textPersonName"
-        android:ems="10"
-        android:id="@+id/editTextCreateName"
-        android:layout_below="@+id/imageView"
-        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

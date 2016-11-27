@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		385CE2501DD42C3100C99289 /* AlertExtenstion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 385CE24F1DD42C3100C99289 /* AlertExtenstion.swift */; };
 		386734FE1D8B879300844D90 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386734FD1D8B879300844D90 /* AppDelegate.swift */; };
 		386735031D8B879300844D90 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 386735011D8B879300844D90 /* Main.storyboard */; };
 		386735061D8B879300844D90 /* Assassins.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 386735041D8B879300844D90 /* Assassins.xcdatamodeld */; };
@@ -21,7 +22,6 @@
 		38E2B3391DD04AFC005BAE45 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E2B3381DD04AFC005BAE45 /* Game.swift */; };
 		38E8DBF01DA3616D005EA2C2 /* JoinGameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBEF1DA3616D005EA2C2 /* JoinGameVC.swift */; };
 		38E8DBF21DA3617E005EA2C2 /* CreateGameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBF11DA3617E005EA2C2 /* CreateGameVC.swift */; };
-		38E8DBF41DA36196005EA2C2 /* GameEditorVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBF31DA36196005EA2C2 /* GameEditorVC.swift */; };
 		38E8DBF61DA3619E005EA2C2 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBF51DA3619E005EA2C2 /* SettingsVC.swift */; };
 		38E8DBF91DA361FA005EA2C2 /* MainMenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBF71DA361FA005EA2C2 /* MainMenuVC.swift */; };
 		38E8DBFA1DA361FA005EA2C2 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBF81DA361FA005EA2C2 /* LoginVC.swift */; };
@@ -32,6 +32,7 @@
 /* Begin PBXFileReference section */
 		140CADA412C9604593F8D59B /* Pods-Assassins.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Assassins.release.xcconfig"; path = "Pods/Target Support Files/Pods-Assassins/Pods-Assassins.release.xcconfig"; sourceTree = "<group>"; };
 		3433DDC01C1751096C292F5A /* Pods-Assassins.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Assassins.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Assassins/Pods-Assassins.debug.xcconfig"; sourceTree = "<group>"; };
+		385CE24F1DD42C3100C99289 /* AlertExtenstion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertExtenstion.swift; sourceTree = "<group>"; };
 		386734FA1D8B879300844D90 /* Assassins.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Assassins.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		386734FD1D8B879300844D90 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		386735021D8B879300844D90 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -48,7 +49,6 @@
 		38E2B3381DD04AFC005BAE45 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
 		38E8DBEF1DA3616D005EA2C2 /* JoinGameVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JoinGameVC.swift; sourceTree = "<group>"; };
 		38E8DBF11DA3617E005EA2C2 /* CreateGameVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateGameVC.swift; sourceTree = "<group>"; };
-		38E8DBF31DA36196005EA2C2 /* GameEditorVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameEditorVC.swift; sourceTree = "<group>"; };
 		38E8DBF51DA3619E005EA2C2 /* SettingsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		38E8DBF71DA361FA005EA2C2 /* MainMenuVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuVC.swift; sourceTree = "<group>"; };
 		38E8DBF81DA361FA005EA2C2 /* LoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
@@ -74,6 +74,7 @@
 				386734FC1D8B879300844D90 /* Assassins */,
 				CE300855160EF9682D22E389 /* Pods */,
 				BE3E6353340E1A7A4DBDB1A0 /* Frameworks */,
+				A50360888E3101DE94993118 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
@@ -92,6 +93,7 @@
 				38B6557F1DA31EEF004C9E02 /* Controllers */,
 				38B655801DA31F07004C9E02 /* Views */,
 				38B655811DA31F1E004C9E02 /* Models */,
+				386734FB1D8B879300844D90 /* Products */,
 				38B655821DA31F4B004C9E02 /* Other */,
 			);
 			path = Assassins;
@@ -100,16 +102,15 @@
 		38B6557F1DA31EEF004C9E02 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				38EB57F81DA4436100932027 /* TrackerVC.swift */,
 				38E8DBF81DA361FA005EA2C2 /* LoginVC.swift */,
-				38E8DBF71DA361FA005EA2C2 /* MainMenuVC.swift */,
 				38B6557D1DA2EEA4004C9E02 /* CreateAccountVC.swift */,
-				38C90E211DCFDE1B008B0013 /* MapSelectVC.swift */,
-				38A6968C1DA3EA470061FE9A /* LobbyVC.swift */,
-				38E8DBEF1DA3616D005EA2C2 /* JoinGameVC.swift */,
+				38E8DBF71DA361FA005EA2C2 /* MainMenuVC.swift */,
 				38E8DBF11DA3617E005EA2C2 /* CreateGameVC.swift */,
-				38E8DBF31DA36196005EA2C2 /* GameEditorVC.swift */,
+				38C90E211DCFDE1B008B0013 /* MapSelectVC.swift */,
 				38E8DBF51DA3619E005EA2C2 /* SettingsVC.swift */,
+				38E8DBEF1DA3616D005EA2C2 /* JoinGameVC.swift */,
+				38A6968C1DA3EA470061FE9A /* LobbyVC.swift */,
+				38EB57F81DA4436100932027 /* TrackerVC.swift */,
 				386BF48F1DA428E300CDC02E /* PlayerListVC.swift */,
 			);
 			name = Controllers;
@@ -127,9 +128,9 @@
 		38B655811DA31F1E004C9E02 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				385CE24F1DD42C3100C99289 /* AlertExtenstion.swift */,
 				38B655831DA31FDB004C9E02 /* Player.swift */,
 				38E2B3381DD04AFC005BAE45 /* Game.swift */,
-				386734FB1D8B879300844D90 /* Products */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -144,6 +145,13 @@
 				386735041D8B879300844D90 /* Assassins.xcdatamodeld */,
 			);
 			name = Other;
+			sourceTree = "<group>";
+		};
+		A50360888E3101DE94993118 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		BE3E6353340E1A7A4DBDB1A0 /* Frameworks */ = {
@@ -212,7 +220,7 @@
 				Base,
 			);
 			mainGroup = 386734F11D8B879300844D90;
-			productRefGroup = 386734FB1D8B879300844D90 /* Products */;
+			productRefGroup = A50360888E3101DE94993118 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -287,7 +295,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				38E8DBF41DA36196005EA2C2 /* GameEditorVC.swift in Sources */,
 				386735061D8B879300844D90 /* Assassins.xcdatamodeld in Sources */,
 				38E8DBF01DA3616D005EA2C2 /* JoinGameVC.swift in Sources */,
 				38A6968D1DA3EA470061FE9A /* LobbyVC.swift in Sources */,
@@ -303,6 +310,7 @@
 				38E8DBF61DA3619E005EA2C2 /* SettingsVC.swift in Sources */,
 				38E8DBF91DA361FA005EA2C2 /* MainMenuVC.swift in Sources */,
 				38E2B3391DD04AFC005BAE45 /* Game.swift in Sources */,
+				385CE2501DD42C3100C99289 /* AlertExtenstion.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
