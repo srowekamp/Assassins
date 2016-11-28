@@ -9,10 +9,14 @@
 import UIKit
 
 class MainMenuVC: UIViewController {
+    
+    @IBOutlet weak var welcomeLabel: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        if currentUser != nil {
+            welcomeLabel.text = "Welcome \(currentUser?.real_name)"
+        }
     }
     
     @IBAction func joinGame(_ sender: AnyObject) {

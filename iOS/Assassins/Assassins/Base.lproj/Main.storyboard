@@ -154,6 +154,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Main Menu" id="bux-Sb-uLS"/>
                     <connections>
+                        <outlet property="welcomeLabel" destination="ZgE-fI-MMX" id="8av-JY-RoR"/>
                         <segue destination="Wcf-Zx-ltU" kind="show" identifier="joinGame" id="cAD-dg-4h0"/>
                         <segue destination="RcS-F5-1lq" kind="show" identifier="createGame" id="bku-r7-TcB"/>
                         <segue destination="pqV-TB-pvp" kind="show" identifier="settings" id="6No-9S-2uV"/>
