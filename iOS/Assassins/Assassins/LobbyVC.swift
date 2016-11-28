@@ -16,6 +16,8 @@ var TempGameData:Game?
 
 class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
+    var game:Game!
+    
     let locationManager = CLLocationManager();
     
     var gameObject:Game? {
@@ -74,7 +76,7 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         print()
         print(gameID)
         
-        parameters["gameid"] = gameID
+        parameters["gameid"] = game.gameID
         parameters["id"] = currentUser?.id
         parameters["x_location"] = String(Double(center!.longitude))
         parameters["y_location"] = String(Double(center!.latitude))

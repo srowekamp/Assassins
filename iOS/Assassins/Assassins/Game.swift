@@ -37,4 +37,16 @@ class Game {
         self.players_list = data["players_list"].arrayObject as? [Int]
         self.players_alive = data["players_alive"].arrayObject as? [Int]
     }
+    
+    func printDebugInfo() {
+        print("\nGame Object Informaton\n")
+        print("Host ID: \(id)")
+        print("Game ID: \(gameID)")
+        print("Password: \(password)")
+        print("X Center: \(xcenter)")
+        print("Y Center: \(ycenter)")
+        print("Radius: \(radius)")
+        print("Game Duration: \(duration)")
+        print("\nEnd of Object\n")
+    }
 }
