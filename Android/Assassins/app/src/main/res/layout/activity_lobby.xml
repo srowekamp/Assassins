@@ -68,6 +68,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:paddingLeft="16dp"
             android:background="@android:color/background_light"
@@ -100,7 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_above="@+id/RelativeLayoutBottom"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="8dp"
             android:id="@+id/textGPSTest"
             android:textColor="?android:attr/textColorPrimary" />
 
@@ -124,6 +126,26 @@
             android:layout_alignStart="@id/lobbyImageViewCenterCircle"
             android:layout_above="@id/lobbyImageViewCenterCircle"
             android:onClick="centerMapToCircle" />
+
+        <Button
+            android:text="Start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/RelativeLayoutBottom"
+            android:layout_marginBottom="24dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="24dp"
+            android:id="@+id/lobbyButtonStart"
+            android:onClick="startGame"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@android:drawable/stat_sys_download"
+            android:layout_below="@+id/relativeLayout"
+            android:layout_alignParentStart="true"
+            android:paddingLeft="8dp"
+            android:id="@+id/lobbyImageViewUpdating" />
 
     </RelativeLayout>
 </android.support.v4.widget.DrawerLayout>

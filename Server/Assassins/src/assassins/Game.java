@@ -49,7 +49,7 @@ public class Game {
 	public static final double LATITUDE_MIN_VALUE = -90.0;
 	public static final double LATITUDE_MAX_VALUE = 90.0;
 	public static final int RADIUS_MIN_VALUE = 100; // Minimum size of the game radius in m = 100m
-	public static final int RADIUS_MAX_VALUE = 5000; // Maximum size of the game radius in m = 5km
+	public static final int RADIUS_MAX_VALUE = 1000; // Maximum size of the game radius in m = 1000m
 	public static final int DURATION_MIN_VALUE = 60 * 10; // Minimum duration of the game in seconds = 10 minutes
 	public static final int DURATION_MAX_VALUE = 60 * 60; // Maximum duration of the game in seconds = 1 hour
 	public static final int GAME_START_LENGTH = 6; // Correct length of start_time string
@@ -213,6 +213,19 @@ public class Game {
 			}
 		}
 		return DB.updateAlivePlayers(this, newPlayersAlive);
+	}
+	
+	/** Returns true if the game has been started, false otherwise */
+	public boolean isStarted() {
+		return (players_alive != null && end_time != null);
+	}
+	
+	/** Increment the games played stat for each player in the game */
+	public void updateGamesPlayed() {
+		int[] players = getPlayers();
+		for (int i = 0; i < players.length; i++) {
+			DB.addGamePlayed(players[i]);
+		}
 	}
 	
 	/** Converts this game object into a JSONObject */

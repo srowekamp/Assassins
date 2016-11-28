@@ -20,6 +20,9 @@ public class UserAccountActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_account);
+
+        setTitle("User Details");
+
         user = (UserAccount) getIntent().getSerializableExtra(UserAccount.KEY_USER_ACCOUNT);
 
         TextView textViewRealName = (TextView) findViewById(R.id.textViewRealName);
