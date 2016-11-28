@@ -6,17 +6,6 @@
 //  Copyright © 2016 LA-05. All rights reserved.
 //
 
-struct userInfo {
-    var username = "baduser"
-    var password = "badpass"
-    var realName = "noName"
-    var adminFlag = false
-    var modFlag = false
-    var image:UIImage?
-}
-
-var user = userInfo()
-
 var currentUser:Player?
 
 import UIKit

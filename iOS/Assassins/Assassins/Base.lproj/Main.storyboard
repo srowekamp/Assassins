@@ -481,13 +481,13 @@
                                 <rect key="frame" x="8" y="629" width="359" height="30"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Radius:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j9J-9p-ptJ">
-                                        <rect key="frame" x="0.0" y="5" width="37" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="5" width="33" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="d2n-WA-5Wn">
-                                        <rect key="frame" x="43" y="0.0" width="318" height="31"/>
+                                        <rect key="frame" x="39" y="0.0" width="322" height="31"/>
                                         <connections>
                                             <action selector="sliderValueChanged:" destination="Ppm-Yh-lZm" eventType="valueChanged" id="EpU-rw-UYD"/>
                                         </connections>
@@ -699,71 +699,21 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="qlV-g2-RcW">
-                                <rect key="frame" x="112.5" y="148.5" width="150" height="370.5"/>
+                                <rect key="frame" x="137.5" y="268.5" width="100" height="130.5"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="viking" translatesAutoresizingMaskIntoConstraints="NO" id="BHR-bS-cG8">
-                                        <rect key="frame" x="25" y="0.0" width="100" height="100"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="100" id="EYb-uJ-15K"/>
                                             <constraint firstAttribute="height" constant="100" id="ZIk-C5-yzJ"/>
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Real Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fcP-aA-7eb">
-                                        <rect key="frame" x="34" y="110" width="82.5" height="20.5"/>
+                                        <rect key="frame" x="9" y="110" width="82.5" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="username" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="eZu-Fx-BV1">
-                                        <rect key="frame" x="0.0" y="140.5" width="150" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="150" id="ocX-aM-xB7"/>
-                                        </constraints>
-                                        <nil key="textColor"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ltn-bB-9Av">
-                                        <rect key="frame" x="11" y="180.5" width="128" height="30"/>
-                                        <state key="normal" title="Change Username"/>
-                                        <connections>
-                                            <action selector="changeUser:" destination="pqV-TB-pvp" eventType="touchUpInside" id="v7O-A3-yJV"/>
-                                        </connections>
-                                    </button>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="current password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xOV-g4-RRc">
-                                        <rect key="frame" x="0.0" y="220.5" width="150" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="150" id="Kgx-Ap-mY5"/>
-                                        </constraints>
-                                        <nil key="textColor"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="new password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MnX-GS-8AD">
-                                        <rect key="frame" x="0.0" y="260.5" width="150" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="150" id="Z17-5f-0yO"/>
-                                        </constraints>
-                                        <nil key="textColor"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="confirm password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XNG-9Y-ah4">
-                                        <rect key="frame" x="0.0" y="300.5" width="150" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="150" id="b04-xo-ZNZ"/>
-                                        </constraints>
-                                        <nil key="textColor"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zjr-2A-2MM">
-                                        <rect key="frame" x="13.5" y="340.5" width="123" height="30"/>
-                                        <state key="normal" title="Change Password"/>
-                                        <connections>
-                                            <action selector="changePassword:" destination="pqV-TB-pvp" eventType="touchUpInside" id="5Yd-Be-vaE"/>
-                                        </connections>
-                                    </button>
                                 </subviews>
                             </stackView>
                         </subviews>
@@ -775,12 +725,8 @@
                     </view>
                     <navigationItem key="navigationItem" title="Settings" id="uac-52-OYj"/>
                     <connections>
-                        <outlet property="confirmPasswordField" destination="XNG-9Y-ah4" id="sOl-G1-HbI"/>
-                        <outlet property="currentPasswordField" destination="xOV-g4-RRc" id="rRR-sd-IKB"/>
                         <outlet property="nameLabel" destination="fcP-aA-7eb" id="5vf-rS-eO9"/>
-                        <outlet property="newPasswordField" destination="MnX-GS-8AD" id="mUx-XU-RBN"/>
                         <outlet property="userImage" destination="BHR-bS-cG8" id="d36-rm-J8O"/>
-                        <outlet property="usernameField" destination="eZu-Fx-BV1" id="BRd-1x-3Wx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bRf-bM-cue" userLabel="First Responder" sceneMemberID="firstResponder"/>

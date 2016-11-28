@@ -49,7 +49,7 @@ class CreateAccountVC: UIViewController, UIImagePickerControllerDelegate, UINavi
         B64_ImageData = B64_ImageData.replacingOccurrences(of: "/", with: "%2f")
         B64_ImageData = B64_ImageData.replacingOccurrences(of: "=", with: "%3d")
         
-        print("\n\n\(B64_ImageData)\n\n")
+        // print("\n\n\(B64_ImageData)\n\n")
         
         // set up data for server call
         
@@ -70,34 +70,39 @@ class CreateAccountVC: UIViewController, UIImagePickerControllerDelegate, UINavi
         generatedURL.append("&real_name=" + parameters["real_name"]!)
         generatedURL.append("&b64_jpg=" + parameters["b64_jpg"]!)
         
-        // username=test6&password=password&real_name=test%20user%206&b64_jpg=
-        
         // make server call
         
-        Alamofire.request(generatedURL, method: .post).responseString { response in
-        //Alamofire.request(Constants.addUserURL, method:.post, parameters: parameters).responseString { response in
-            
-            /* proccess the data from the server
-            if let data = response.result.value as? [String:String] {
-                if let jsonString = data["account"]?.data(using: .utf8, allowLossyConversion: false) {
-                    let json = JSON(data: jsonString)
-                    print(json)
+        Alamofire.request(generatedURL, method: .post).responseJSON { response in
+            print("\n\nResponse String: \(response.result.value!)")
+        
+            if response.result.isSuccess {
+                let server_data = JSON(response.result.value!)
+                print(server_data)
+                
+                if server_data["result"].string == "exists" {
+                    self.popUpAlert(title: "Error", message: "User already exits", handler: nil)
+                    return
                 }
-                for (key,value) in data {
-                    print("\(key): \(value)")
-                }
+    
+                let user_data = server_data["account"]
+                
+                print(user_data)
+                
+                currentUser = Player(data: user_data)
+                self.goToMainMenu()
+                
+            } else {
+                self.popUpAlert(title: "Error", message: "There was an issue creating your account", handler: nil)
             }
-            */
-            
-            print("\ndebug: \(response.request!.url)")
-            print("\n\nResponse String: \(response.result.value)")
         }
-
-        // performSegue(withIdentifier: "createToMenu", sender: nil)
     }
     
     @IBAction func showLoginPage(_ sender: AnyObject) {
         self.navigationController!.popViewController(animated: true)
+    }
+    
+    func goToMainMenu() {
+        performSegue(withIdentifier: "createToMenu", sender: nil)
     }
     
     // MARK: User Icon Methods

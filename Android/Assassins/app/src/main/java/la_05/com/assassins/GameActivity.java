@@ -13,6 +13,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+import android.app.Activity;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -558,6 +567,8 @@ public class GameActivity extends AppCompatActivity{
         updateGameHandler.removeCallbacks(updateGameRunnable); // Stop the looping call
         finish();
     }
+
+
 
     boolean doubleBackToExitPressedOnce = false;
 
