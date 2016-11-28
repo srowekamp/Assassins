@@ -73,40 +73,73 @@ class CreateAccountVC: UIViewController, UIImagePickerControllerDelegate, UINavi
         // make server call
         //Alamofire.request(method: .post, parameters: parameters).responseJSON { response in
         Alamofire.request(generatedURL, method: .post).responseJSON { response in
-            print("\n\nResponse String: \(response.result.value!)")
-        
             if response.result.isSuccess {
-                let server_data = JSON(response.result.value!)
-                print(server_data)
+                // check if the server call was a success
+                let returned_data = JSON(response.result.value!)
                 
-                if server_data["result"].string == "exists" {
-                    self.popUpAlert(title: "Error", message: "User already exits", handler: nil)
+                // proccess the returned data from server
+                switch returned_data["result"].string! {
+                case "success":
+                    
+                    let user_data = returned_data["account"]
+                    if user_data != JSON.null {
+                        currentUser = Player(data: user_data)
+                        currentUser?.printDebugInfo()
+                        
+                        // go to main menu
+                        self.goToMainMenu()
+                    }
+                    return
+                case "exists":
+                    self.popUpAlert(title: "Error", message: "user \"\(parameters["username"])\" already exits.", handler: nil)
+                    return
+                default:
+                    self.popUpAlert(title: "Error", message: "Server Error: \(returned_data["result"].string!)", handler: nil)
                     return
                 }
-    
-                let user_data = server_data["account"]
-                
-                print(user_data)
-                
-                currentUser = Player(data: user_data)
-                self.goToMainMenu()
-                
             } else {
-                self.popUpAlert(title: "Error", message: "There was an issue creating your account", handler: nil)
+                self.popUpAlert(title: "Server Error", message: "There was an error connecting to the server.", handler: nil)
             }
+        
         }
+        
+        /* OLD CODE:
+         
+         print("\n\nResponse String: \(response.result.value!)")
+         
+         if response.result.isSuccess {
+         let server_data = JSON(response.result.value!)
+         print(server_data)
+         
+         if server_data["result"].string == "exists" {
+         self.popUpAlert(title: "Error", message: "User already exits", handler: nil)
+         return
+         }
+         
+         let user_data = server_data["account"]
+         
+         print(user_data)
+         
+         currentUser = Player(data: user_data)
+         self.goToMainMenu()
+         
+         } else {
+         self.popUpAlert(title: "Error", message: "There was an issue creating your account", handler: nil)
+         }
+        */
+        
     }
-    
+ 
     @IBAction func showLoginPage(_ sender: AnyObject) {
         self.navigationController!.popViewController(animated: true)
     }
-    
+ 
     func goToMainMenu() {
         performSegue(withIdentifier: "createToMenu", sender: nil)
     }
-    
+ 
     // MARK: User Icon Methods
-    
+ 
     @IBAction func openCameraButton(_ sender: UIButton) {
         if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera) {
             let imagePicker = UIImagePickerController()
