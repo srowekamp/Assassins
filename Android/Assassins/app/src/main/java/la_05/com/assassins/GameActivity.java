@@ -156,13 +156,14 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         double playerY = user.getYLocation();
         double targetX = user.getXLocation();
         double targetY = user.getYLocation();
+        int add = addDegrees(playerX, playerY, targetX, targetY);
         //tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
-        RotateAnimation ra = new RotateAnimation(currDegree, -degree + addDegrees(playerX, playerY, targetX, targetY), Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        RotateAnimation ra = new RotateAnimation(currDegree, -degree + add, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 
         ra.setDuration(210);
         ra.setFillAfter(true);
         image.startAnimation(ra);
-        currDegree = -degree;
+        currDegree = -degree + add;
     }
 
     @Override
