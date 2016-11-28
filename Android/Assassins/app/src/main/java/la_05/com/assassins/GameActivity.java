@@ -92,10 +92,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_game);
         user = (UserAccount) getIntent().getSerializableExtra(UserAccount.KEY_USER_ACCOUNT);
         game = (Game) getIntent().getSerializableExtra(Game.KEY_GAME);
-        //image = (ImageView) findViewByID(R.id.targetCompass);
+        image = (ImageView) findViewById(R.id.targetCompass);
         //tvHeading = (TextView) findViewByID(R.id.tvHeading);
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-
         buttonAssassinate = (Button) findViewById(R.id.AssassinateButton);
         buttonAssassinate.setEnabled(false); // initialize button as disabled
 
@@ -153,7 +152,11 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent se){
         float degree = Math.round(se.values[0]);
-        //degree += addDegrees(1, 1, 1, 1); // not for sure yet
+        double playerX = user.getXLocation();
+        double playerY = user.getYLocation();
+        double targetX = user.getXLocation();
+        double targetY = user.getYLocation();
+        degree += addDegrees(playerX, playerY, targetX, targetY); // not for sure yet
         //tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
         RotateAnimation ra = new RotateAnimation(currDegree, -degree, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 
@@ -168,9 +171,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         // Not in use
     }
 
-    public int addDegrees(int playerX, int playerY, int targetX, int targetY){
-        int diffX = targetX - playerX;
-        int diffY = targetY - playerY;
+    public int addDegrees(double playerX, double playerY, double targetX, double targetY){
+        double diffX = targetX - playerX;
+        double diffY = targetY - playerY;
         int degree;
 
         /* quandrant I */
