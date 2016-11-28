@@ -60,18 +60,9 @@ class CreateGameVC: UIViewController, UITextFieldDelegate {
         
         // make server requests
         Alamofire.request(baseURL, parameters: paramaters).responseJSON { response in
-            if let data = response.result.value as? [String:String] {
-                print("Debug Data \(data)")
-                if let jsonString = data["game"]?.data(using: .utf8, allowLossyConversion: false) {
-                    let json = JSON(data: jsonString)
-                    print("Server Request Success, Return JSON: \(json)")
-                    
-                    self.gameObject = Game(data: json)
-                    self.loadGameView()
-                    return
-                }
-                print("There was an error with the server request")
-            }
+           
+            
+            
         }
     }
     
@@ -84,6 +75,8 @@ class CreateGameVC: UIViewController, UITextFieldDelegate {
         performSegue(withIdentifier: "mapSelect", sender: self)
     }
     
+    // TODO:  THIS WILL BREAK
+    
     // prepares to load map interface
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier!{
@@ -95,7 +88,6 @@ class CreateGameVC: UIViewController, UITextFieldDelegate {
             return
         case "createGameToGameView":
             let gameViewVC = segue.destination.childViewControllers.first?.childViewControllers.first as? LobbyVC
-            gameViewVC?.gameObject = self.gameObject
         default:
             return
         }

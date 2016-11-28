@@ -71,7 +71,7 @@ class CreateAccountVC: UIViewController, UIImagePickerControllerDelegate, UINavi
         generatedURL.append("&b64_jpg=" + parameters["b64_jpg"]!)
         
         // make server call
-        
+        //Alamofire.request(method: .post, parameters: parameters).responseJSON { response in
         Alamofire.request(generatedURL, method: .post).responseJSON { response in
             print("\n\nResponse String: \(response.result.value!)")
         
