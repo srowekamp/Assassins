@@ -23,18 +23,6 @@ class Player {
     var x_location:Double?
     var y_location:Double?
     
-    init(id:Int, username:String, password:String, real_Name:String, image_filename:String, games_played:Int, total_kills:Int, x_location:Double, y_location:Double){
-        self.id = id
-        self.username = username
-        self.password = password
-        self.real_name = real_Name
-        self.image_filename = image_filename
-        self.games_played = games_played
-        self.total_kills = total_kills
-        self.x_location = x_location
-        self.y_location = y_location
-    }
-    
     init(data:JSON) {
         self.id = data["id"].int!
         self.username = data["username"].string!
@@ -47,5 +35,17 @@ class Player {
         self.y_location = data["y_location"].double
     }
 
+    func printDebugInfo() {
+        print("\nGame Object Informaton\n")
+        print("ID: \(id)")
+        print("Username: \(username)")
+        print("Password: \(password)")
+        print("Real Name: \(real_name)")
+        print("Games Played: \(games_played)")
+        print("Total Kills: \(total_kills)")
+        print("X Location: \(x_location)")
+        print("Y Location: \(y_location)")
+        print("\nEnd of Object\n")
+    }
     
 }
