@@ -167,6 +167,34 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         // Not in use
     }
 
+    public int addDegrees(int playerX, int playerY, int targetX, int targetY){
+        int diffX = targetX - playerX;
+        int diffY = targetY - playerY;
+        int degree;
+
+        /* quandrant I */
+        if(diffX > 0 && diffY > 0){
+            degree = (int) Math.sin(Math.abs(diffX) / Math.sqrt(( (diffX)*(diffX)) + ((diffY)*(diffY)) ));
+            return degree;
+        }
+        /* quadrant II */
+        else if(diffX > 0 && diffY < 0){
+            degree = (int) Math.sin(Math.abs(diffY) / Math.sqrt(( (diffX)*(diffX)) + ((diffY)*(diffY)) ));
+            return degree + 90;
+        }
+        /* quadrant III */
+        else if(diffX < 0 && diffY < 0){
+            degree = (int) Math.sin(Math.abs(diffX) / Math.sqrt(( (diffX)*(diffX)) + ((diffY)*(diffY)) ));
+            return degree + 180;
+        }
+        /* quadrant IV */
+        else if(diffX < 0 && diffY > 0){
+            degree = (int) Math.sin(Math.abs(diffY) / Math.sqrt(( (diffX)*(diffX)) + ((diffY)*(diffY)) ));
+            return degree + 270;
+        }
+        return 0;
+    }
+
     /** Called when the user presses the assassinate button */
     public void assassinate(View view) {
         buttonAssassinate.setEnabled(false); // Disable the button so they can't spam
