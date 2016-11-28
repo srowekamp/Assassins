@@ -84,7 +84,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private ImageView image;
     private float currDegree = 0f;
     private SensorManager mSensorManager;
-    TextView tvHeading;
+    //TextView tvHeading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +92,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_game);
         user = (UserAccount) getIntent().getSerializableExtra(UserAccount.KEY_USER_ACCOUNT);
         game = (Game) getIntent().getSerializableExtra(Game.KEY_GAME);
-        //image = (ImageView) findViewByID(R.id.TargetCompass);
+        //image = (ImageView) findViewByID(R.id.targetCompass);
         //tvHeading = (TextView) findViewByID(R.id.tvHeading);
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
@@ -153,7 +153,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent se){
         float degree = Math.round(se.values[0]);
-        tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
+        //degree += addDegrees(1, 1, 1, 1); // not for sure yet
+        //tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
         RotateAnimation ra = new RotateAnimation(currDegree, -degree, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 
         ra.setDuration(210);
