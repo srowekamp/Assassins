@@ -13,9 +13,6 @@ import Alamofire
 import SwiftyJSON
 
 class LoginVC: UIViewController, UITextFieldDelegate {
-    
-    // ignores login for testing purposes
-    let ignoreLogin = true
 
     @IBOutlet weak var usernameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
@@ -72,28 +69,38 @@ class LoginVC: UIViewController, UITextFieldDelegate {
 
     // called when user taps log in
     @IBAction func tapLogin(_ sender: AnyObject) {
-        
-        // used for debuging purposed to make logging in faster
-        if(ignoreLogin){
-            login(username: "admin", password: "password")
-            //performSegue(withIdentifier: "loginToMain", sender: self)
-            return
+        // protect against nil optionals
+        if let username = usernameField.text {
+            if let password = passwordField.text {
+                
+                // defaults to admin account if left blank
+                if username == "" && password == "" {
+                    print("Logging in as Admin")
+                    login(username: "admin", password: "password")
+                    return
+                }
+                
+                // checks if username is correct length
+                if ((username.characters.count) < 4 || (username.characters.count) > 32) {
+                    popUpAlert(title: "Bad Username", message: "a username must be between 4 and 32 characters long", handler: nil)
+                    return
+                }
+                
+                // checks if password is correct length
+                if ((password.characters.count) < 5 || (password.characters.count) > 32) {
+                    popUpAlert(title: "Bad Password", message: "a password must be between 5 and 32 characters long", handler: nil)
+                    return
+                }
+                
+                // attempt to log in
+                login(username: username, password: password )
+                
+            } else {
+                print("password is nil")
+            }
+        } else {
+            print("username is nil")
         }
-        
-        // checks if username is correct length
-        if((usernameField.text?.characters.count)! < 4 || (usernameField.text?.characters.count)! > 32){
-            popUpAlert(title: "Bad Username", message: "a username must be between 4 and 32 characters long", handler: nil)
-            return
-        }
-        
-        // checks if password is correct length
-        if((passwordField.text?.characters.count)! < 5 || (passwordField.text?.characters.count)! > 32){
-            popUpAlert(title: "Bad Password", message: "a password must be between 5 and 32 characters long", handler: nil)
-            return
-        }
-        
-        // attempt to log in
-        login(username: usernameField.text!, password: passwordField.text! )
     }
     
     // MARK: Text Field Methods
