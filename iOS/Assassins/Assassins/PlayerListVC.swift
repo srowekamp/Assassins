@@ -16,10 +16,9 @@ class PlayerListVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         self.dismiss(animated: true, completion: nil)
     }
     
+    // TODO: Add Admin View
     @IBAction func loadAdminView(_ sender: AnyObject) {
-        if (user.adminFlag || user.modFlag) {
-            performSegue(withIdentifier: "playerListToAdminMod", sender: nil)
-        }
+        
     }    
     override func viewDidLoad() {
         super.viewDidLoad()
