@@ -79,7 +79,7 @@ public class GameActivity extends AppCompatActivity{
     private UserAccount user;
     private Game game;
     private UserAccount target;
-    private boolean isTop;
+    private boolean isTop = false;
 
     private Runnable updateGameRunnable;
     private Handler updateGameHandler;
@@ -260,7 +260,7 @@ public class GameActivity extends AppCompatActivity{
         if (endTimeSeconds - game.getDuration() < 0) { // was the game started before midnight
             return ((currentTimeSeconds > endTimeSeconds) && (currentTimeSeconds - game.getDuration() < 0));
         }
-        return (currentTimeSeconds > endTimeSeconds); // TODO does this work
+        return (currentTimeSeconds > endTimeSeconds);
     }
 
     /** Called every 10 seconds by every player in the game.
@@ -268,7 +268,7 @@ public class GameActivity extends AppCompatActivity{
     private void updateGame() {
         String requestURL = JSON_URL + UPDATEGAME;
         // Make the loading indicator visible
-        //imageViewUpdating.setVisibility(View.VISIBLE);// TODO add this to the game view xml
+        //imageViewUpdating.setVisibility(View.VISIBLE);// TODO add this to the game view xml (an indicator that it is downloading new info)
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, requestURL,
                 new Response.Listener<String>() {
@@ -279,10 +279,9 @@ public class GameActivity extends AppCompatActivity{
                         try {
                             JSONObject responseJSON = new JSONObject(response);
                             // Check if the time is up
-                            if (isTimeUp()) {
+                            if (isTimeUp() && isTop) {
                                 Toast.makeText(GameActivity.this, "Game Over", Toast.LENGTH_LONG).show();
                                 endGame();
-                                leaveActivity();
                             } else {
                                 // Call UpdateGame again in 10,000 ms (10s)
                                 updateGameHandler.postDelayed(updateGameRunnable, LobbyActivity.SERVER_UPDATE_INTERVAL);
@@ -344,6 +343,7 @@ public class GameActivity extends AppCompatActivity{
                 isTop = response.getBoolean(KEY_IS_TOP);
                 waitingForUpdate = false;
                 buttonAssassinate.setEnabled(true); // Reenable the assassinate button
+                Toast.makeText(this, "Target: " + target.getUserName(), Toast.LENGTH_LONG).show();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -352,16 +352,19 @@ public class GameActivity extends AppCompatActivity{
         if (result.equals(RESULT_PLAYER_DEAD)) {
             // TODO Alert player that they are dead and give game over screen or something
             Toast.makeText(this, "You have been assassinated", Toast.LENGTH_LONG).show();
+            leaveActivity();
             return;
         }
         if (result.equals(RESULT_GAME_WIN)) {
             // TODO Alert player that they have won the game, call EndGame after ~15 seconds so player's target gets alert that they were killed
             Toast.makeText(this, "You win!", Toast.LENGTH_LONG).show();
+            endGame();
             return;
         }
         if (result.equals(RESULT_GAME_NOT_EXIST_OR_END)) {
             // TODO Alert player that the game is over (Time ran out, and player with isTop called EndGame)
             Toast.makeText(this, "Game Over", Toast.LENGTH_LONG).show();
+            leaveActivity();
             return;
         }
         switch (result) {
@@ -387,10 +390,6 @@ public class GameActivity extends AppCompatActivity{
                         loading.dismiss();
                         try {
                             JSONObject responseJSON = new JSONObject(response);
-                            /*if (responseJSON.getString(KEY_RESULT) != null) {
-                                // Left game in database, so close activity
-                                leaveActivity();
-                            }*/
                             authenticateLeaveGame(responseJSON);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -452,7 +451,6 @@ public class GameActivity extends AppCompatActivity{
             Toast.makeText(this, "You win!", Toast.LENGTH_LONG).show();
             // End the game after x seconds
             endGame();
-            leaveActivity();
             return;
         }
         if (result.equals(RESULT_GAME_NOT_EXIST_OR_END)) {
@@ -567,8 +565,6 @@ public class GameActivity extends AppCompatActivity{
         updateGameHandler.removeCallbacks(updateGameRunnable); // Stop the looping call
         finish();
     }
-
-
 
     boolean doubleBackToExitPressedOnce = false;
 
