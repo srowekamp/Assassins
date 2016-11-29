@@ -14,15 +14,16 @@ import SwiftyJSON
 
 class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
+    let PLAYER_LIST_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/GetPlayers"
+    let UPDATE_GAME_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/UpdateGame"
+    
     var game:Game!
+    var updateTimer:Timer!
+    var sendRequests = true
     
-    let locationManager = CLLocationManager();
+    let locationManager = CLLocationManager()
     
-    var center:CLLocationCoordinate2D? {
-        didSet{
-            downloadGameData()
-        }
-    }
+    var center:CLLocationCoordinate2D?
     
     private var _playArea: MKCircle = MKCircle()
     var playArea:MKCircle {
@@ -41,6 +42,12 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     @IBAction func goBack(_ sender: AnyObject) {
         self.dismiss(animated: true, completion: nil)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        // Set Update Timer
+        updateTimer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(updateGame), userInfo: nil, repeats: true)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -57,29 +64,63 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         mapView.mapType = MKMapType.hybrid
     }
     
-    func downloadGameData()  {
-        
-        let baseURL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/GetPlayers"
-        var parameters = [String:String]()
-        
-        parameters["gameid"] = game.gameID
-        parameters["id"] = "\(currentUser?.id)"
-        parameters["x_location"] = String(Double(center!.longitude))
-        parameters["y_location"] = String(Double(center!.latitude))
-        
-        Alamofire.request(baseURL, parameters: parameters).responseJSON { response in
-            
-            //print(parameters)
-            if response.result.isSuccess {
-                let json = JSON(response.result.value!)
-                let gameData = json["game"]
-                print("JSON: \(json)")
+    func updateGame() {
+        // make sure we arent still waiting for data
+        if(sendRequests){
+            sendRequests = false
+            // game is not running so we only wnat to update the player list
+            if !(game.isRunning) {
+                print("Updating Player List")
+                updatePlayerList()
+            } else {
+                print("Updating Game")
+                updateFullGame()
             }
         }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        locationManager.startUpdatingLocation()
+    func updatePlayerList() {
+        var paramaters = [String:String]()
+        paramaters["gameid"] = "\(game.gameID)"
+        paramaters["id"] = "\(currentUser!.id)"
+        paramaters["x_location"] = "\(Double((center!.latitude)))"
+        paramaters["y_location"] = "\(Double((center!.longitude)))"
+        
+        Alamofire.request(PLAYER_LIST_URL, parameters: paramaters).responseJSON { (response) in
+            if response.result.isSuccess {
+                let server_data = JSON(response.result.value!)
+                
+                switch server_data["result"].string! {
+                case "normal":
+                    self.game.player_object_list.removeAll()
+                    let num_players = server_data["num_players"].int!
+                    // load all players
+                    for num in 0...(num_players - 1) {
+                        let tempPlayer = Player(data: server_data["Player \(num)"])
+                        tempPlayer.printDebugInfo()
+                        self.game.player_object_list.append(tempPlayer)
+                    }
+                    let game_data = server_data["game"]
+                    self.game.updateInfo(data: game_data)
+                    
+                    self.game.printPlayerList()
+                    self.sendRequests = true
+                    break
+                default:
+                    print("ERROR: server returned result: \(server_data["result"].string!)")
+                }
+            } else {
+                print("ERROR: could not connect to server")
+            }
+        }
+    }
+    
+    func updateFullGame() {
+        // ha ha lol
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        updateTimer.invalidate()
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -89,7 +130,6 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         self.center = center
         mapView.setRegion(region, animated: false)
         playArea = MKCircle(center: center, radius: 100 as CLLocationDistance)
-        locationManager.stopUpdatingLocation()
     }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {

@@ -37,6 +37,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
                     let user_data = returned_data["account"]
                     if user_data != JSON.null {
                         user = Player(data: user_data)
+                        
                         user?.printDebugInfo()
                         if user!.username == username && user!.password == password {
                             currentUser = user

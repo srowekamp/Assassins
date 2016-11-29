@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Alamofire
 import SwiftyJSON
 
 class Game {
@@ -22,7 +23,10 @@ class Game {
     
     var end_time:Int?
     var players_list:[Int]?
+    var player_object_list:[Player] = [Player]()
     var players_alive:[Int]?
+    
+    var isRunning = false
     
     init(data:JSON){
         self.id = data["id"].int!
@@ -38,6 +42,19 @@ class Game {
         self.players_alive = data["players_alive"].arrayObject as? [Int]
     }
     
+    func updateInfo(data: JSON) {
+        self.end_time = data["end_time"].int
+        self.players_list = data["players_list"].arrayObject as? [Int]
+        self.players_alive = data["players_alive"].arrayObject as? [Int]
+        
+        if end_time == nil {
+            isRunning = false
+        } else {
+            isRunning = true
+        }
+        
+    }
+    
     func printDebugInfo() {
         print("\nGame Information\n")
         print("Host ID: \(id)")
@@ -48,5 +65,13 @@ class Game {
         print("Radius: \(radius)")
         print("Game Duration: \(duration)")
         print("\nEnd of Game Infromation\n")
+    }
+    
+    func printPlayerList() {
+        print("\nPlayer List for \(id)\n")
+        for item in player_object_list {
+            print("ID: \(item.id) --- NAME: \(item.real_name)")
+        }
+        print("\nEnd of PlayerList\n")
     }
 }

@@ -60,9 +60,6 @@ class CreateGameVC: UIViewController, UITextFieldDelegate {
         
         // make server requests
         Alamofire.request(baseURL, parameters: paramaters).responseJSON { response in
-           
-            
-            
         }
     }
     
@@ -87,7 +84,8 @@ class CreateGameVC: UIViewController, UITextFieldDelegate {
             mapSelectVC?.mainSettingsVC = self
             return
         case "createGameToGameView":
-            let gameViewVC = segue.destination.childViewControllers.first?.childViewControllers.first as? LobbyVC
+            // let gameViewVC = segue.destination.childViewControllers.first?.childViewControllers.first as? LobbyVC
+            break
         default:
             return
         }
