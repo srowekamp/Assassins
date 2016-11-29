@@ -345,10 +345,16 @@
                                 <action selector="goBack:" destination="WKd-u3-Rnp" id="HIY-WN-2NQ"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Start Game" id="TAx-6h-sYz">
+                            <connections>
+                                <action selector="pressedStartStopButton:" destination="WKd-u3-Rnp" id="NzP-vA-snn"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="mapView" destination="a0V-uh-Kxd" id="xL3-pb-ABY"/>
+                        <outlet property="startStopButton" destination="TAx-6h-sYz" id="eUr-A8-ww1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JX0-dR-Abh" userLabel="First Responder" sceneMemberID="firstResponder"/>

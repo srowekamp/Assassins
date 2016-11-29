@@ -60,6 +60,19 @@ class CreateGameVC: UIViewController, UITextFieldDelegate {
         
         // make server requests
         Alamofire.request(baseURL, parameters: paramaters).responseJSON { response in
+            if response.result.isSuccess {
+                let server_data = JSON(response.result.value!)
+                switch server_data["result"].string! {
+                case "success":
+                    self.gameObject = Game(data: server_data["game"])
+                    self.loadGameView()
+                    break
+                default:
+                    print("Error Creating Game: \(server_data["result"])")
+                }
+            }
+            
+            
         }
     }
     
@@ -84,7 +97,8 @@ class CreateGameVC: UIViewController, UITextFieldDelegate {
             mapSelectVC?.mainSettingsVC = self
             return
         case "createGameToGameView":
-            // let gameViewVC = segue.destination.childViewControllers.first?.childViewControllers.first as? LobbyVC
+            let gameViewVC = segue.destination.childViewControllers.first?.childViewControllers.first as? LobbyVC
+            gameViewVC?.game = gameObject
             break
         default:
             return

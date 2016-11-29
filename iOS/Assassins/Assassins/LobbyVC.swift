@@ -12,11 +12,16 @@ import CoreLocation
 import Alamofire
 import SwiftyJSON
 
+var currentTarget:Player?
+
 class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     let PLAYER_LIST_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/GetPlayers"
     let UPDATE_GAME_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/UpdateGame"
+    let START_GAME_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/GameStart"
+    let STOP_GAME_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/EndGame"
     
+    var pressedStart = false
     var game:Game!
     var updateTimer:Timer!
     var sendRequests = true
@@ -43,6 +48,88 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         self.dismiss(animated: true, completion: nil)
     }
     
+    @IBOutlet weak var startStopButton: UIBarButtonItem!
+    
+    @IBAction func pressedStartStopButton(_ sender: Any) {
+        if pressedStart == false {
+            // call game start
+            
+            var paramaters = [String:String]()
+            paramaters["gameid"] = "\(game.gameID)"
+            
+            // setup current time
+            let date = Date()
+            let calendar = Calendar.current
+            
+            var hour = String(calendar.component(.hour, from: date))
+            var minutes = String(calendar.component(.minute, from: date))
+            var seconds = String(calendar.component(.second, from: date))
+            
+            if hour.characters.count < 2 {
+                hour = "0\(calendar.component(.hour, from: date))"
+            }
+            
+            if minutes.characters.count < 2 {
+                minutes = "0\(calendar.component(.minute, from: date))"
+            }
+            
+            if seconds.characters.count < 2 {
+                seconds = "0\(calendar.component(.second, from: date))"
+            }
+            
+            print("\(hour)\(minutes)\(seconds)")
+            
+            paramaters["start_time"] = "\(hour)\(minutes)\(seconds)"
+            
+            // make request to start the game
+            Alamofire.request(START_GAME_URL, parameters: paramaters).responseJSON { (response) in
+                if response.result.isSuccess {
+                    let server_data = JSON(response.result.value!)
+                    
+                    switch server_data["result"].string! {
+                    case "success":
+                        print("game starting")
+                        let game_data = server_data["game"]
+                        let target_data = server_data["target"]
+                        
+                        self.game.updateInfo(data: game_data)
+                        currentTarget = Player(data: target_data)
+                        
+                        break
+                    default:
+                        print("ERROR: server returned result: \(server_data["result"].string!)")
+                    }
+                } else {
+                    print("ERROR: could not connect to server")
+                }
+            }
+            // change button to be stop button
+            pressedStart = true
+            startStopButton.title = "End Game"
+        } else {
+            // button is the stop button, stop the game
+            var paramaters = [String:String]()
+            paramaters["gameid"] = "\(game.gameID)"
+            
+            // make request to stop the game
+            Alamofire.request(START_GAME_URL, parameters: paramaters).responseJSON { (response) in
+                if response.result.isSuccess {
+                    let server_data = JSON(response.result.value!)
+                    
+                    switch server_data["result"].string! {
+                    case "success":
+                        print("Game Killed")
+                        break
+                    default:
+                        print("ERROR: server returned result: \(server_data["result"].string!)")
+                    }
+                } else {
+                    print("ERROR: could not connect to server")
+                }
+            }
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         // Set Update Timer
         updateTimer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(updateGame), userInfo: nil, repeats: true)
@@ -50,6 +137,10 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if currentUser!.id != game.hostID {
+            startStopButton.isEnabled = false
+        }
         
         // Setup Location Manager
         self.locationManager.delegate = self
@@ -115,8 +206,42 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         }
     }
     
+    // updates the game once the game is running
     func updateFullGame() {
-        // ha ha lol
+        var paramaters = [String:String]()
+        paramaters["gameid"] = "\(game.gameID)"
+        paramaters["id"] = "\(currentUser!.id)"
+        paramaters["x_location"] = "\(Double((center!.latitude)))"
+        paramaters["y_location"] = "\(Double((center!.longitude)))"
+        
+        Alamofire.request(UPDATE_GAME_URL, parameters: paramaters).responseJSON { (response) in
+            if response.result.isSuccess {
+                let server_data = JSON(response.result.value!)
+                
+                switch server_data["result"].string! {
+                case "normal":
+                    self.game.player_object_list.removeAll()
+                    let num_players = server_data["num_players"].int!
+                    // load all players
+                    for num in 0...(num_players - 1) {
+                        let tempPlayer = Player(data: server_data["Player \(num)"])
+                        tempPlayer.printDebugInfo()
+                        self.game.player_object_list.append(tempPlayer)
+                    }
+                    let game_data = server_data["game"]
+                    self.game.updateInfo(data: game_data)
+                    
+                    self.game.printPlayerList()
+                    self.sendRequests = true
+                    break
+                default:
+                    print("ERROR: server returned result: \(server_data["result"].string!)")
+                }
+            } else {
+                print("ERROR: could not connect to server")
+            }
+        }
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {

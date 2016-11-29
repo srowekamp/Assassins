@@ -47,5 +47,4 @@ class Player {
         print("Y Location: \(y_location)")
         print("\nEnd of Player Information\n")
     }
-    
 }

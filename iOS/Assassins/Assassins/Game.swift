@@ -74,4 +74,12 @@ class Game {
         }
         print("\nEnd of PlayerList\n")
     }
+    
+    func updatePlayerList(xcord:Double, ycord:Double ) {
+        
+    }
+    
+    
+    
+    
 }
