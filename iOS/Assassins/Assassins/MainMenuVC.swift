@@ -15,7 +15,7 @@ class MainMenuVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if currentUser != nil {
-            welcomeLabel.text = "Welcome \(currentUser?.real_name)"
+            welcomeLabel.text = "Welcome \(currentUser!.real_name)"
         }
     }
     
