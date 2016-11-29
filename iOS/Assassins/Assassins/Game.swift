@@ -39,7 +39,7 @@ class Game {
     }
     
     func printDebugInfo() {
-        print("\nGame Object Informaton\n")
+        print("\nGame Information\n")
         print("Host ID: \(id)")
         print("Game ID: \(gameID)")
         print("Password: \(password)")
@@ -47,6 +47,6 @@ class Game {
         print("Y Center: \(ycenter)")
         print("Radius: \(radius)")
         print("Game Duration: \(duration)")
-        print("\nEnd of Object\n")
+        print("\nEnd of Game Infromation\n")
     }
 }

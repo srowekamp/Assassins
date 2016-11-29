@@ -32,12 +32,12 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         Alamofire.request(loginURL, parameters: paramaters).responseJSON { response in
             if response.result.isSuccess {
                 let returned_data = JSON(response.result.value!)
-                print("Response JSON:\n\(returned_data)\n")
                 
                 if returned_data["result"].string! == "success" {
                     let user_data = returned_data["account"]
                     if user_data != JSON.null {
                         user = Player(data: user_data)
+                        user?.printDebugInfo()
                         if user!.username == username && user!.password == password {
                             currentUser = user
                             self.switchView()

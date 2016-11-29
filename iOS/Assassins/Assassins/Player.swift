@@ -36,7 +36,7 @@ class Player {
     }
 
     func printDebugInfo() {
-        print("\nGame Object Informaton\n")
+        print("\nPlayer Information\n")
         print("ID: \(id)")
         print("Username: \(username)")
         print("Password: \(password)")
@@ -45,7 +45,7 @@ class Player {
         print("Total Kills: \(total_kills)")
         print("X Location: \(x_location)")
         print("Y Location: \(y_location)")
-        print("\nEnd of Object\n")
+        print("\nEnd of Player Information\n")
     }
     
 }
