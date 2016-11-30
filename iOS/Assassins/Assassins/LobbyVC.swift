@@ -13,6 +13,7 @@ import Alamofire
 import SwiftyJSON
 
 var currentTarget:Player?
+var globalGame:Game?
 
 class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
@@ -22,7 +23,11 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     let STOP_GAME_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/EndGame"
     
     var pressedStart = false
-    var game:Game!
+    var game:Game! {
+        willSet {
+            globalGame = newValue
+        }
+    }
     var updateTimer:Timer!
     var sendRequests = true
     
@@ -187,9 +192,11 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
                     let num_players = server_data["num_players"].int!
                     // load all players
                     for num in 0...(num_players - 1) {
-                        let tempPlayer = Player(data: server_data["Player \(num)"])
-                        tempPlayer.printDebugInfo()
-                        self.game.player_object_list.append(tempPlayer)
+                        if server_data["Player \(num)"] != JSON.null {
+                            let tempPlayer = Player(data: server_data["Player \(num)"])
+                            tempPlayer.printDebugInfo()
+                            self.game.player_object_list.append(tempPlayer)
+                        }
                     }
                     let game_data = server_data["game"]
                     self.game.updateInfo(data: game_data)
@@ -241,7 +248,6 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
                 print("ERROR: could not connect to server")
             }
         }
-        
     }
     
     override func viewWillDisappear(_ animated: Bool) {

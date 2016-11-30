@@ -26,6 +26,10 @@ class PlayerListVC: UIViewController, UITableViewDelegate, UITableViewDataSource
         playerTableList.dataSource = self
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        playerTableList.reloadData()
+    }
+    
     // MARK: Table View Methods
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -33,12 +37,12 @@ class PlayerListVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10;
+        return globalGame!.player_object_list.count;
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "playerCell")!
-        cell.textLabel?.text = "Stupid"
+        cell.textLabel?.text = globalGame?.player_object_list[indexPath.row].real_name
         return cell
     }
 }
