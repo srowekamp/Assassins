@@ -172,5 +172,14 @@
         android:layout_alignBottom="@+id/Score"
         android:layout_toStartOf="@+id/timeRemainingNumbers" />
 
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/AssassinateButton"
+        android:layout_alignEnd="@+id/timeRemainingNumbers"
+        android:layout_marginTop="6dp"
+        android:id="@+id/textViewUp" />
+
 
 </RelativeLayout>
