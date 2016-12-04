@@ -102,7 +102,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         TextView scoreNumbers = (TextView) findViewById(R.id.scoreNumbers);
         TextView playersLeftNumber = (TextView) findViewById(R.id.playersLeftNumber);
         TextView targetGamerTag = (TextView) findViewById(R.id.targetGamerTag);
-        TextView playerGamertag = (TextView) findViewById(R.id.gamertag);
+
 
         timeRemainingNumbers.setText("no");
         scoreNumbers.setText(user.getTotalKills().toString());
@@ -169,12 +169,12 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         double targetY = user.getYLocation();
         int add = addDegrees(playerX, playerY, targetX, targetY);
         //tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
-        RotateAnimation ra = new RotateAnimation(currDegree, -degree + add, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        RotateAnimation ra = new RotateAnimation(currDegree, -degree, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 
         ra.setDuration(210);
         ra.setFillAfter(true);
         image.startAnimation(ra);
-        currDegree = -degree + add;
+        currDegree = -degree;
     }
 
     @Override

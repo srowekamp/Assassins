@@ -11,23 +11,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="la_05.com.assassins.GameActivity">
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@android:drawable/ic_menu_gallery"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="5dp"
-        android:id="@+id/GamerPicture"/>
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:id="@+id/gamertag"/>
-
     <TextView
         android:text="Players Left"
         android:layout_width="wrap_content"
@@ -138,41 +121,6 @@
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/timeRemainingNumbers"
-        android:layout_below="@+id/TimeRemaining"
-        android:layout_alignEnd="@+id/TimeRemaining"
-        android:layout_marginTop="6dp" />
-
-    <TextView
-        android:text="Score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/Score"
-        android:layout_alignBottom="@+id/TargetImage"
-        android:layout_alignStart="@+id/TimeRemaining" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/targetCompass"
-        android:layout_alignEnd="@+id/timeRemainingNumbers"
-        android:id="@+id/scoreNumbers" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/playersLeftNumber"
-        android:layout_above="@+id/gamertag"
-        android:layout_alignStart="@+id/PlayersLeft"
-        android:layout_marginStart="6dp"
-        android:layout_marginBottom="9dp" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/targetGamerTag"
         android:layout_below="@+id/TargetImage"
         android:layout_toEndOf="@+id/weapons" />
@@ -186,6 +134,43 @@
         android:layout_alignBaseline="@+id/weapons"
         android:layout_alignBottom="@+id/weapons"
         android:layout_alignStart="@+id/Score" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/playersLeftNumber"
+        android:layout_below="@+id/AssassinateButton"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="6dp"
+        android:layout_marginTop="22dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/timeRemainingNumbers"
+        android:layout_alignBaseline="@+id/TimeRemaining"
+        android:layout_alignBottom="@+id/TimeRemaining"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="Score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/Score"
+        android:layout_above="@+id/targetGamerTag"
+        android:layout_alignStart="@+id/TimeRemaining"
+        android:layout_marginBottom="14dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scoreNumbers"
+        android:layout_alignBaseline="@+id/Score"
+        android:layout_alignBottom="@+id/Score"
+        android:layout_toStartOf="@+id/timeRemainingNumbers" />
 
 
 </RelativeLayout>
