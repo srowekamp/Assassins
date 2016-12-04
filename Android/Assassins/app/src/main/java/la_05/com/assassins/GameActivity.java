@@ -90,13 +90,24 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
         user = (UserAccount) getIntent().getSerializableExtra(UserAccount.KEY_USER_ACCOUNT);
         game = (Game) getIntent().getSerializableExtra(Game.KEY_GAME);
         image = (ImageView) findViewById(R.id.targetCompass);
-        //tvHeading = (TextView) findViewByID(R.id.tvHeading);
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         buttonAssassinate = (Button) findViewById(R.id.AssassinateButton);
         buttonAssassinate.setEnabled(false); // initialize button as disabled
+
+        TextView timeRemainingNumbers = (TextView) findViewById(R.id.timeRemainingNumbers);
+        TextView scoreNumbers = (TextView) findViewById(R.id.scoreNumbers);
+        TextView playersLeftNumber = (TextView) findViewById(R.id.playersLeftNumber);
+        TextView targetGamerTag = (TextView) findViewById(R.id.targetGamerTag);
+        TextView playerGamertag = (TextView) findViewById(R.id.gamertag);
+
+        timeRemainingNumbers.setText("no");
+        scoreNumbers.setText(user.getTotalKills().toString());
+        playersLeftNumber.setText(game.getNumPlayersAlive());
+        targetGamerTag.setText(target.getUserName());
 
         // Setup GPS Service
         // First Check if App has permission to access device location
@@ -547,4 +558,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             }
         }, 2000);
     }
+
+
+
 }

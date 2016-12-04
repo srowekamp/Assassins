@@ -135,4 +135,15 @@ public class Game implements Serializable{
     public String getPlayers_alive(){
         return players_alive;
     }
+
+    public int getNumPlayersAlive(){
+        int i;
+        int total = 0;
+        for(i = 0; i < players_alive.length(); i++){
+            if(players_alive.charAt(i) == ','){
+                total++;
+            }
+        }
+        return total;
+    }
 }
