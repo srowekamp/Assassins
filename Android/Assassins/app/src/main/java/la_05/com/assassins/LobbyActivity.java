@@ -65,7 +65,7 @@ public class LobbyActivity extends AppCompatActivity {
     public static final String RESULT_ERROR = "error"; // Result when there is an error. Shouldn't occur
 
     // Constants
-    public static final int LOCATION_UPDATE_INTERVAL = 10000; // Minimum time between location updates in milliseconds
+    public static final int LOCATION_UPDATE_INTERVAL = 5000; // Minimum time between location updates in milliseconds
     public static final float LOCATION_UPDATE_DISTANCE = 5; // Minimum distance between location updates in meters
     public static final int MAP_ZOOM_SCALE_FACTOR = 350; // Constant used to determine map zoom
     public static final int SERVER_UPDATE_INTERVAL = 10000; // Time between server updates in milliseconds

@@ -46,7 +46,7 @@
         android:onClick="gotoCreateGame" />
 
     <Button
-        android:text="Options"
+        android:text="Admin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/CreateGameButton"
@@ -54,14 +54,14 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:id="@+id/OptionsButton"
+        android:id="@+id/adminButton"
         android:onClick="gotoOptions"/>
 
     <Button
         android:text="Account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/OptionsButton"
+        android:layout_below="@+id/adminButton"
         android:layout_marginTop="40dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentStart="true"
