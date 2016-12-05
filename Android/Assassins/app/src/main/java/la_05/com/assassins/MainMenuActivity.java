@@ -37,9 +37,13 @@ public class MainMenuActivity extends AppCompatActivity{
     }
 
     public void gotoOptions(View view){
-        Intent intent = new Intent(this, AdminActivity.class);
-        intent.putExtra(UserAccount.KEY_USER_ACCOUNT, user);
-        startActivity(intent);
+        if(user.getUserName().equals("admin")) {
+            Intent intent = new Intent(this, AdminActivity.class);
+            intent.putExtra(UserAccount.KEY_USER_ACCOUNT, user);
+            startActivity(intent);
+        }
+        Toast.makeText(this, "You must construct additional Pylons.", Toast.LENGTH_SHORT).show();
+        return;
     }
 
     public void gotoAccount(View view){
