@@ -38,7 +38,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
                     if user_data != JSON.null {
                         user = Player(data: user_data)
                         
-                        user?.printDebugInfo()
+                        //user?.printDebugInfo()
                         if user!.username == username && user!.password == password {
                             currentUser = user
                             self.switchView()

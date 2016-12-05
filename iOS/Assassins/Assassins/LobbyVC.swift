@@ -13,7 +13,7 @@ import Alamofire
 import SwiftyJSON
 
 var currentTarget:Player?
-var globalGame:Game?
+var gameUpdater:UIViewController?
 
 class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
@@ -23,11 +23,6 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     let STOP_GAME_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/EndGame"
     
     var pressedStart = false
-    var game:Game! {
-        willSet {
-            globalGame = newValue
-        }
-    }
     var updateTimer:Timer!
     var sendRequests = true
     
@@ -60,7 +55,7 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             // call game start
             
             var paramaters = [String:String]()
-            paramaters["gameid"] = "\(game.gameID)"
+            paramaters["gameid"] = "\(game!.gameID)"
             
             // setup current time
             let date = Date()
@@ -87,7 +82,7 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             paramaters["start_time"] = "\(hour)\(minutes)\(seconds)"
             
             // make request to start the game
-            Alamofire.request(START_GAME_URL, parameters: paramaters).responseJSON { (response) in
+            Alamofire.request(START_GAME_URL, method: .post, parameters: paramaters).responseJSON { (response) in
                 if response.result.isSuccess {
                     let server_data = JSON(response.result.value!)
                     
@@ -97,7 +92,7 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
                         let game_data = server_data["game"]
                         let target_data = server_data["target"]
                         
-                        self.game.updateInfo(data: game_data)
+                        game?.updateInfo(data: game_data)
                         currentTarget = Player(data: target_data)
                         
                         break
@@ -114,7 +109,7 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         } else {
             // button is the stop button, stop the game
             var paramaters = [String:String]()
-            paramaters["gameid"] = "\(game.gameID)"
+            paramaters["gameid"] = "\(game?.gameID)"
             
             // make request to stop the game
             Alamofire.request(START_GAME_URL, parameters: paramaters).responseJSON { (response) in
@@ -135,15 +130,13 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        // Set Update Timer
-        updateTimer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(updateGame), userInfo: nil, repeats: true)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if currentUser!.id != game.hostID {
+        updateTimer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(updateGame), userInfo: nil, repeats: true)
+        gameUpdater = self
+        
+        if currentUser!.id != game?.hostID {
             startStopButton.isEnabled = false
         }
         
@@ -161,11 +154,13 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     }
     
     func updateGame() {
+        //print("Timer Called")
         // make sure we arent still waiting for data
         if(sendRequests){
             sendRequests = false
             // game is not running so we only wnat to update the player list
-            if !(game.isRunning) {
+            print((game?.isRunning)!)
+            if !((game?.isRunning)!) {
                 print("Updating Player List")
                 updatePlayerList()
             } else {
@@ -177,31 +172,29 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     func updatePlayerList() {
         var paramaters = [String:String]()
-        paramaters["gameid"] = "\(game.gameID)"
+        paramaters["gameid"] = "\(game!.gameID)"
         paramaters["id"] = "\(currentUser!.id)"
-        paramaters["x_location"] = "\(Double((center!.latitude)))"
-        paramaters["y_location"] = "\(Double((center!.longitude)))"
+        paramaters["x_location"] = "\(Double((center!.longitude)))"
+        paramaters["y_location"] = "\(Double((center!.latitude)))"
         
-        Alamofire.request(PLAYER_LIST_URL, parameters: paramaters).responseJSON { (response) in
+        Alamofire.request(PLAYER_LIST_URL, method: .post, parameters: paramaters).responseJSON { (response) in
             if response.result.isSuccess {
                 let server_data = JSON(response.result.value!)
-                
                 switch server_data["result"].string! {
                 case "normal":
-                    self.game.player_object_list.removeAll()
+                    game?.player_object_list.removeAll()
                     let num_players = server_data["num_players"].int!
                     // load all players
                     for num in 0...(num_players - 1) {
                         if server_data["Player \(num)"] != JSON.null {
                             let tempPlayer = Player(data: server_data["Player \(num)"])
-                            tempPlayer.printDebugInfo()
-                            self.game.player_object_list.append(tempPlayer)
+                            //tempPlayer.printDebugInfo()
+                            game?.player_object_list.append(tempPlayer)
                         }
                     }
                     let game_data = server_data["game"]
-                    self.game.updateInfo(data: game_data)
-                    
-                    self.game.printPlayerList()
+                    game?.updateInfo(data: game_data)
+                    //game?.printPlayerList()
                     self.sendRequests = true
                     break
                 default:
@@ -216,10 +209,10 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     // updates the game once the game is running
     func updateFullGame() {
         var paramaters = [String:String]()
-        paramaters["gameid"] = "\(game.gameID)"
+        paramaters["gameid"] = "\(game?.gameID)"
         paramaters["id"] = "\(currentUser!.id)"
-        paramaters["x_location"] = "\(Double((center!.latitude)))"
-        paramaters["y_location"] = "\(Double((center!.longitude)))"
+        paramaters["x_location"] = "\(Double((center!.longitude)))"
+        paramaters["y_location"] = "\(Double((center!.latitude)))"
         
         Alamofire.request(UPDATE_GAME_URL, parameters: paramaters).responseJSON { (response) in
             if response.result.isSuccess {
@@ -227,18 +220,18 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
                 
                 switch server_data["result"].string! {
                 case "normal":
-                    self.game.player_object_list.removeAll()
+                    game?.player_object_list.removeAll()
                     let num_players = server_data["num_players"].int!
                     // load all players
                     for num in 0...(num_players - 1) {
                         let tempPlayer = Player(data: server_data["Player \(num)"])
-                        tempPlayer.printDebugInfo()
-                        self.game.player_object_list.append(tempPlayer)
+                        //tempPlayer.printDebugInfo()
+                        game?.player_object_list.append(tempPlayer)
                     }
                     let game_data = server_data["game"]
-                    self.game.updateInfo(data: game_data)
+                    game?.updateInfo(data: game_data)
                     
-                    self.game.printPlayerList()
+                    //game?.printPlayerList()
                     self.sendRequests = true
                     break
                 default:
@@ -248,10 +241,6 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
                 print("ERROR: could not connect to server")
             }
         }
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        updateTimer.invalidate()
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
