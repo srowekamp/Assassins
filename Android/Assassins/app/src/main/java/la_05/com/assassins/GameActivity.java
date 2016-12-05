@@ -3,11 +3,14 @@ package la_05.com.assassins;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +31,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.model.LatLng;
@@ -88,6 +92,11 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private boolean updateReceived = false;
     //TextView tvHeading;
 
+    public TextView timeRemainingNumbers;
+    public TextView scoreNumbers;
+    public TextView targetGamerTag;
+    public TextView playersLeftNumber;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +108,11 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         buttonAssassinate = (Button) findViewById(R.id.AssassinateButton);
         buttonAssassinate.setEnabled(false); // initialize button as disabled
+
+        timeRemainingNumbers = (TextView) findViewById(R.id.timeRemainingNumbers);
+        scoreNumbers = (TextView) findViewById(R.id.scoreNumbers);
+        targetGamerTag = (TextView) findViewById(R.id.targetGamerTag);
+        playersLeftNumber = (TextView) findViewById(R.id.playersLeftNumber);
 
         textViewUp = (TextView) findViewById(R.id.textViewUp);
         textViewUp.setText("");
@@ -174,6 +188,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         // Not in use
     }
 
+    /** determines and returns the direction in degrees to the target from the player */
     public double getbearing(){
         Location targetL = new Location("");
         targetL.setLatitude(target.getYLocation());
@@ -181,11 +196,22 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         return (double) lastLocation.bearingTo(targetL);
     }
 
+    /** determines whether or not the player is out of bounds */
+    public boolean isOutOfBounds(){
+        Location center = new Location("");
+        center.setLatitude(game.getYCenter());
+        center.setLongitude(game.getXCenter());
+        if(lastLocation.distanceTo(center) > game.getRadius()){
+            return true;
+        }
+        return false;
+    }
+
     /** Called when the user presses the assassinate button */
     public void assassinate(View view) {
         buttonAssassinate.setEnabled(false); // Disable the button so they can't spam
         // TODO Determine if the target is able to be killed
-        boolean killable = true; // Set this with methods
+        boolean killable = inRange(); // Set this with methods
         if (killable && !waitingForUpdate) {
             kill();
             waitingForUpdate = true;
@@ -193,6 +219,17 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         else {
             buttonAssassinate.setEnabled(true);
         }
+    }
+
+    /** determines whether or not the target is within killing range */
+    public boolean inRange(){
+        Location targetLocation = new Location("");
+        targetLocation.setLatitude(target.getYLocation());
+        targetLocation.setLongitude(target.getXLocation());
+        if(lastLocation.distanceTo(targetLocation) <= 15.0){
+            return true;
+        }
+        return false;
     }
 
     /** Setup a LocationListener whose methods will be called on Location updates*/
@@ -204,6 +241,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
             // called when the listener is notified with a location update from the GPS
             lastLocation = locFromGps;
             lastLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+            if(isOutOfBounds()){
+                suicide();
+            }
         }
 
         @Override
@@ -313,6 +353,12 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                             // Call UpdateGame again in 10,000 ms (10s)
                             updateGameHandler.postDelayed(updateGameRunnable, LobbyActivity.SERVER_UPDATE_INTERVAL);
                             authenticateUpdateGame(responseJSON); // Got a response from the server, check if valid
+
+                            timeRemainingNumbers.setText("no");
+                            scoreNumbers.setText(String.format("%d", user.getTotalKills()));
+                            targetGamerTag.setText(target.getUserName());
+                            playersLeftNumber.setText(String.format("%d", game.getNumPlayersAlive()));
+
                             updateReceived = true;
                             textViewUp.setText(String.format("%f", getbearing()));
                         } catch (JSONException e) {
@@ -405,6 +451,55 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public void leaveGame() {
         String requestURL = JSON_URL + LEAVEGAME;
         final ProgressDialog loading = ProgressDialog.show(this, "Leaving Game...", "Please wait...", false, false);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, requestURL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response){
+                        // Dismiss the progress dialog
+                        loading.dismiss();
+                        try {
+                            JSONObject responseJSON = new JSONObject(response);
+                            /*if (responseJSON.getString(KEY_RESULT) != null) {
+                                // Left game in database, so close activity
+                                leaveActivity();
+                            }*/
+                            authenticateLeaveGame(responseJSON);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            //show a toast and log the error
+                            Toast.makeText(GameActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            Log.d("ERROR", "error => " + e.getMessage()); // Print the error to the device log
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Dismiss the progress dialog
+                        loading.dismiss();
+                        //show a toast and log the error
+                        Toast.makeText(GameActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("ERROR", "error => " + error.toString()); // Print the error to the device log
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parameters = new Hashtable<String, String>();
+                parameters.put(Game.KEY_GAMEID, game.getGameID());
+                parameters.put(UserAccount.KEY_ID, String.format("%d", user.getID()));
+                return parameters;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
+    /** Leave the game with the server. Called when user goes out of bounds. */
+    public void suicide() {
+        String requestURL = JSON_URL + LEAVEGAME;
+        final ProgressDialog loading = ProgressDialog.show(this, "You left the game area...", "Please wait...", false, false);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, requestURL,
                 new Response.Listener<String>() {

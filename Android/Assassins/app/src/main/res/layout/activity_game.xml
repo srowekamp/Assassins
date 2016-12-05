@@ -167,7 +167,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@mipmap/ic_launcher"
-        android:id="@+id/TargetImage"
+        android:id="@+id/targetImage"
         android:layout_below="@+id/Target"
         android:layout_alignStart="@+id/playersLeftNumber" />
 
@@ -176,8 +176,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/targetGamerTag"
-        android:layout_below="@+id/TargetImage"
-        android:layout_alignEnd="@+id/TargetImage" />
+        android:layout_below="@+id/targetImage"
+        android:layout_alignEnd="@+id/targetImage" />
 
     <TextView
         android:text="TARGET"
