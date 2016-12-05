@@ -188,5 +188,13 @@
         android:layout_alignBottom="@+id/timeRemainingNumbers"
         android:layout_alignStart="@+id/PlayersLeft" />
 
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/playersLeftNumber"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/aTextView" />
+
 
 </RelativeLayout>

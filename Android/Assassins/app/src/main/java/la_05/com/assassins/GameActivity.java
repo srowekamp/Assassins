@@ -96,6 +96,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public TextView scoreNumbers;
     public TextView targetGamerTag;
     public TextView playersLeftNumber;
+    public TextView aTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +115,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         targetGamerTag = (TextView) findViewById(R.id.targetGamerTag);
         playersLeftNumber = (TextView) findViewById(R.id.playersLeftNumber);
 
+        aTextView = (TextView) findViewById(R.id.aTextView);
+        aTextView.setText("");
         textViewUp = (TextView) findViewById(R.id.textViewUp);
         textViewUp.setText("");
 
@@ -226,10 +229,11 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         Location targetLocation = new Location("");
         targetLocation.setLatitude(target.getYLocation());
         targetLocation.setLongitude(target.getXLocation());
-        if(lastLocation.distanceTo(targetLocation) <= 15.0){
+
+        if(lastLocation.distanceTo(targetLocation) <= 20.0){
             return true;
         }
-        return false;
+        return true;
     }
 
     /** Setup a LocationListener whose methods will be called on Location updates*/
@@ -361,6 +365,10 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
 
                             updateReceived = true;
                             textViewUp.setText(String.format("%f", getbearing()));
+                            /*Location targetLocation = new Location("");
+                            targetLocation.setLatitude(game.getYCenter());
+                            targetLocation.setLongitude(game.getXCenter());
+                            aTextView.setText(String.format("%f, %f", targetLocation.getLatitude(), targetLocation.getLongitude()));*/
                         } catch (JSONException e) {
                             e.printStackTrace();
                             //show a toast and log the error

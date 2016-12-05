@@ -16,12 +16,6 @@ public class AdminActivity extends AppCompatActivity {
 
         setTitle("List of Games");
 
-        int i;
-        String returnGames = "";
-
-        for(i = 0; i < games.size(); i++){
-            returnGames += games.get(i).getGameID() + "\n";
-        }
 
     }
 }

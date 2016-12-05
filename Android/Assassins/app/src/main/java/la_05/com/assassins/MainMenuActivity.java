@@ -37,7 +37,9 @@ public class MainMenuActivity extends AppCompatActivity{
     }
 
     public void gotoOptions(View view){
-        // TODO
+        Intent intent = new Intent(this, AdminActivity.class);
+        intent.putExtra(UserAccount.KEY_USER_ACCOUNT, user);
+        startActivity(intent);
     }
 
     public void gotoAccount(View view){
