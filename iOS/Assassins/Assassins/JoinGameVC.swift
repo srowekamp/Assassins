@@ -25,7 +25,13 @@ class JoinGameVC: UIViewController, UITextFieldDelegate {
 
         paramaters["id"] = "\(currentUser!.id)"
         paramaters["gameid"] = "\(gameID.text!)"
-        paramaters["password"] = "\(gamePassword.text!)"
+
+        var password = gamePassword.text!
+        if password == "" {
+            password = "password"
+        }
+        
+        paramaters["password"] = password
 
         // Attempt to Join Game
         Alamofire.request(JOIN_GAME_URL, parameters: paramaters).responseJSON { response in

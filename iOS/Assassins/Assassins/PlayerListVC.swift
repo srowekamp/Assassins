@@ -8,22 +8,19 @@
 
 import UIKit
 
-class PlayerListVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class PlayerListVC: UIViewController, UITableViewDelegate, UITableViewDataSource, updateable {
 
     @IBOutlet weak var playerTableList: UITableView!
     
-    @IBAction func leaveGame(_ sender: AnyObject) {
-        self.dismiss(animated: true, completion: nil)
-    }
-    
-    // TODO: Add Admin View
-    @IBAction func loadAdminView(_ sender: AnyObject) {
-        
-    }    
     override func viewDidLoad() {
         super.viewDidLoad()
+        game?.viewsToUpdate.append(self)
         playerTableList.delegate = self
         playerTableList.dataSource = self
+    }
+    
+    func updateUI() {
+        playerTableList.reloadData()
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -22,6 +22,8 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     let START_GAME_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/GameStart"
     let STOP_GAME_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/EndGame"
     
+    let UPDATE_FREQUENCY = 3.0
+    
     var pressedStart = false
     var updateTimer:Timer!
     var sendRequests = true
@@ -133,7 +135,7 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        updateTimer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(updateGame), userInfo: nil, repeats: true)
+        updateTimer = Timer.scheduledTimer(timeInterval: UPDATE_FREQUENCY, target: self, selector: #selector(updateGame), userInfo: nil, repeats: true)
         gameUpdater = self
         
         if currentUser!.id != game?.hostID {
@@ -156,6 +158,7 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     func updateGame() {
         //print("Timer Called")
         // make sure we arent still waiting for data
+        game?.printDebugInfo()
         if(sendRequests){
             sendRequests = false
             // game is not running so we only wnat to update the player list
@@ -165,6 +168,7 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
                 updatePlayerList()
             } else {
                 print("Updating Game")
+                updatePlayerList()
                 updateFullGame()
             }
         }
@@ -209,7 +213,7 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     // updates the game once the game is running
     func updateFullGame() {
         var paramaters = [String:String]()
-        paramaters["gameid"] = "\(game?.gameID)"
+        paramaters["gameid"] = "\(game!.gameID)"
         paramaters["id"] = "\(currentUser!.id)"
         paramaters["x_location"] = "\(Double((center!.longitude)))"
         paramaters["y_location"] = "\(Double((center!.latitude)))"
@@ -218,16 +222,10 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
             if response.result.isSuccess {
                 let server_data = JSON(response.result.value!)
                 
+                // print(response.request?.urlRequest)
+                
                 switch server_data["result"].string! {
                 case "normal":
-                    game?.player_object_list.removeAll()
-                    let num_players = server_data["num_players"].int!
-                    // load all players
-                    for num in 0...(num_players - 1) {
-                        let tempPlayer = Player(data: server_data["Player \(num)"])
-                        //tempPlayer.printDebugInfo()
-                        game?.player_object_list.append(tempPlayer)
-                    }
                     let game_data = server_data["game"]
                     game?.updateInfo(data: game_data)
                     

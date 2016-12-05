@@ -9,20 +9,28 @@
 import UIKit
 import CoreLocation
 
-class TrackerVC: UIViewController {
+class TrackerVC: UIViewController, updateable {
 
-    @IBOutlet weak var compassImage: UIImageView!
-    
-    var updateTimer2:Timer?
-    var currentRadians:CGFloat = 0.0
-    
-    @IBAction func goBack(_ sender: AnyObject) {
-        self.dismiss(animated: true, completion: nil)
+    func updateUI() {
+        if game!.isRunning {
+            let userLoc = CLLocation(latitude: currentUser!.x_location!,longitude: currentUser!.y_location!)
+            let targetLoc = CLLocation(latitude: (currentTarget!.x_location)!, longitude: (currentTarget!.y_location)!)
+            let bearing = CGFloat(getBearingBetweenTwoPoints(point1: userLoc, point2: targetLoc))
+            
+            //print(userLoc)
+            //print(targetLoc)
+            //print(bearing)
+            
+            compassImage.transform = .identity
+            compassImage.transform = CGAffineTransform(rotationAngle: bearing)
+        }
     }
     
+    @IBOutlet weak var compassImage: UIImageView!
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        updateTimer2 = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(rotateImage), userInfo: nil, repeats: true)
+        game?.viewsToUpdate.append(self)
     }
     
     func XXRadiansToDegrees(radians: Double) -> Double {
@@ -34,15 +42,6 @@ class TrackerVC: UIViewController {
         let x = point1.coordinate.longitude - point2.coordinate.longitude
         let y = point1.coordinate.latitude - point2.coordinate.latitude
         
-        return fmod(XXRadiansToDegrees(radians: atan2(y, x)), 360.0) + 90.0
-    }
-    
-    func rotateImage() {
-        if (currentRadians + CGFloat.pi / 4.0) >= 2 * CGFloat.pi {
-            currentRadians = 0
-        } else {
-            currentRadians += CGFloat.pi / 4.0
-        }
-        compassImage.transform = CGAffineTransform(rotationAngle: currentRadians)
+        return fmod((radians: atan2(y, x)), 360.0) + 90.0
     }
 }

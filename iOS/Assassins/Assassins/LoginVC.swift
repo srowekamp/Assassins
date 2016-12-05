@@ -74,10 +74,9 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         if let username = usernameField.text {
             if let password = passwordField.text {
                 
-                // defaults to admin account if left blank
-                if username == "" && password == "" {
-                    print("Logging in as Admin")
-                    login(username: "admin", password: "password")
+                // defaults password to password
+                if username != "" && password == "" {
+                    login(username: username, password: "password")
                     return
                 }
                 
