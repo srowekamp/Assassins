@@ -3,11 +3,14 @@ package la_05.com.assassins;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +31,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.model.LatLng;
@@ -38,7 +42,7 @@ import org.json.JSONObject;
 import java.util.Hashtable;
 import java.util.Map;
 
-public class GameActivity extends AppCompatActivity{
+public class GameActivity extends AppCompatActivity implements SensorEventListener{
 
     public static final String JSON_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/";
     public static final String UPDATEGAME = "UpdateGame";
@@ -87,15 +91,40 @@ public class GameActivity extends AppCompatActivity{
     private boolean waitingForUpdate = true;
     private Button buttonAssassinate;
 
+    private ImageView image;
+    private float currDegree = 0f;
+    private SensorManager mSensorManager;
+    TextView textViewUp;
+    private boolean updateReceived = false;
+    //TextView tvHeading;
+
+    public TextView timeRemainingNumbers;
+    public TextView scoreNumbers;
+    public TextView targetGamerTag;
+    public TextView playersLeftNumber;
+    public TextView aTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
         user = (UserAccount) getIntent().getSerializableExtra(UserAccount.KEY_USER_ACCOUNT);
         game = (Game) getIntent().getSerializableExtra(Game.KEY_GAME);
-
+        image = (ImageView) findViewById(R.id.targetCompass);
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         buttonAssassinate = (Button) findViewById(R.id.AssassinateButton);
         buttonAssassinate.setEnabled(false); // initialize button as disabled
+
+        timeRemainingNumbers = (TextView) findViewById(R.id.timeRemainingNumbers);
+        scoreNumbers = (TextView) findViewById(R.id.scoreNumbers);
+        targetGamerTag = (TextView) findViewById(R.id.targetGamerTag);
+        playersLeftNumber = (TextView) findViewById(R.id.playersLeftNumber);
+
+        aTextView = (TextView) findViewById(R.id.aTextView);
+        aTextView.setText("");
+        textViewUp = (TextView) findViewById(R.id.textViewUp);
+        textViewUp.setText("");
 
         // Setup GPS Service
         // First Check if App has permission to access device location
@@ -134,11 +163,64 @@ public class GameActivity extends AppCompatActivity{
         updateGame();
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_GAME);
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+
+        mSensorManager.unregisterListener(this);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent se){
+        float degree = Math.round(se.values[0]);
+        //tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
+        if(updateReceived){
+            degree -= getbearing();
+        }
+        RotateAnimation ra = new RotateAnimation(currDegree, -degree, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+
+        ra.setDuration(210);
+        ra.setFillAfter(true);
+        image.startAnimation(ra);
+        currDegree = -degree;
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor s, int accuracy){
+        // Not in use
+    }
+
+    /** determines and returns the direction in degrees to the target from the player */
+    public double getbearing(){
+        Location targetL = new Location("");
+        targetL.setLatitude(target.getYLocation());
+        targetL.setLongitude(target.getXLocation());
+        return (double) lastLocation.bearingTo(targetL);
+    }
+
+    /** determines whether or not the player is out of bounds */
+    public boolean isOutOfBounds(){
+        Location center = new Location("");
+        center.setLatitude(game.getYCenter());
+        center.setLongitude(game.getXCenter());
+        if(lastLocation.distanceTo(center) > game.getRadius()){
+            return true;
+        }
+        return false;
+    }
+
     /** Called when the user presses the assassinate button */
     public void assassinate(View view) {
         buttonAssassinate.setEnabled(false); // Disable the button so they can't spam
         // TODO Determine if the target is able to be killed
-        boolean killable = true; // Set this with methods
+        boolean killable = inRange(); // Set this with methods
         if (killable && !waitingForUpdate) {
             kill();
             waitingForUpdate = true;
@@ -148,7 +230,20 @@ public class GameActivity extends AppCompatActivity{
         }
     }
 
+    /** determines whether or not the target is within killing range */
+    public boolean inRange(){
+        Location targetLocation = new Location("");
+        targetLocation.setLatitude(target.getYLocation());
+        targetLocation.setLongitude(target.getXLocation());
+
+        if(lastLocation.distanceTo(targetLocation) <= 20.0){
+            return true;
+        }
+        return false;
+    }
+
     /** Setup a LocationListener whose methods will be called on Location updates*/
+    /* kill if they're outside range */
     private final class MyLocationListener implements LocationListener {
 
         @Override
@@ -156,6 +251,9 @@ public class GameActivity extends AppCompatActivity{
             // called when the listener is notified with a location update from the GPS
             lastLocation = locFromGps;
             lastLatLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+            if(isOutOfBounds()){
+                suicide();
+            }
         }
 
         @Override
@@ -286,6 +384,18 @@ public class GameActivity extends AppCompatActivity{
                                 // Call UpdateGame again in 10,000 ms (10s)
                                 updateGameHandler.postDelayed(updateGameRunnable, LobbyActivity.SERVER_UPDATE_INTERVAL);
                                 authenticateUpdateGame(responseJSON); // Got a response from the server, check if valid
+
+                                timeRemainingNumbers.setText("no");
+                                scoreNumbers.setText(String.format("%d", user.getTotalKills()));
+                                targetGamerTag.setText(target.getUserName());
+                                playersLeftNumber.setText(String.format("%d", game.getNumPlayersAlive()));
+
+                                updateReceived = true;
+                                textViewUp.setText(String.format("%f", getbearing()));
+                            /*Location targetLocation = new Location("");
+                            targetLocation.setLatitude(game.getYCenter());
+                            targetLocation.setLongitude(game.getXCenter());
+                            aTextView.setText(String.format("%f, %f", targetLocation.getLatitude(), targetLocation.getLongitude()));*/
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -390,6 +500,55 @@ public class GameActivity extends AppCompatActivity{
                         loading.dismiss();
                         try {
                             JSONObject responseJSON = new JSONObject(response);
+                            authenticateLeaveGame(responseJSON);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            //show a toast and log the error
+                            Toast.makeText(GameActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            Log.d("ERROR", "error => " + e.getMessage()); // Print the error to the device log
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //Dismiss the progress dialog
+                        loading.dismiss();
+                        //show a toast and log the error
+                        Toast.makeText(GameActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("ERROR", "error => " + error.toString()); // Print the error to the device log
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parameters = new Hashtable<String, String>();
+                parameters.put(Game.KEY_GAMEID, game.getGameID());
+                parameters.put(UserAccount.KEY_ID, String.format("%d", user.getID()));
+                return parameters;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
+    /** Leave the game with the server. Called when user goes out of bounds. */
+    public void suicide() {
+        String requestURL = JSON_URL + LEAVEGAME;
+        final ProgressDialog loading = ProgressDialog.show(this, "You left the game area...", "Please wait...", false, false);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, requestURL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response){
+                        // Dismiss the progress dialog
+                        loading.dismiss();
+                        try {
+                            JSONObject responseJSON = new JSONObject(response);
+                            /*if (responseJSON.getString(KEY_RESULT) != null) {
+                                // Left game in database, so close activity
+                                leaveActivity();
+                            }*/
                             authenticateLeaveGame(responseJSON);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -587,4 +746,7 @@ public class GameActivity extends AppCompatActivity{
             }
         }, 2000);
     }
+
+
+
 }

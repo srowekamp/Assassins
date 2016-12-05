@@ -82,4 +82,8 @@ public class UserAccount implements Serializable{
     public String getImageURL() {
         return USER_IMAGE_URL + userImagePath;
     }
+
+    public double getXLocation() { return this.xlocation; }
+
+    public double getYLocation() { return this.ylocation; }
 }
