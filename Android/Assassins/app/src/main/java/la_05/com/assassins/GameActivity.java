@@ -84,7 +84,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     private ImageView image;
     private float currDegree = 0f;
     private SensorManager mSensorManager;
-    //TextView textViewUp;
+    TextView textViewUp;
+    private boolean updateReceived = false;
     //TextView tvHeading;
 
     @Override
@@ -99,18 +100,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         buttonAssassinate = (Button) findViewById(R.id.AssassinateButton);
         buttonAssassinate.setEnabled(false); // initialize button as disabled
 
-        TextView timeRemainingNumbers = (TextView) findViewById(R.id.timeRemainingNumbers);
-        TextView scoreNumbers = (TextView) findViewById(R.id.scoreNumbers);
-        TextView playersLeftNumber = (TextView) findViewById(R.id.playersLeftNumber);
-        TextView targetGamerTag = (TextView) findViewById(R.id.targetGamerTag);
-
-        //textViewUp = (TextView) findViewById(R.id.textViewUp);
-        //textViewUp.setText("");
-
-        timeRemainingNumbers.setText("no");
-        scoreNumbers.setText(user.getTotalKills().toString());
-        playersLeftNumber.setText(game.getNumPlayersAlive());
-        targetGamerTag.setText(target.getUserName());
+        textViewUp = (TextView) findViewById(R.id.textViewUp);
+        textViewUp.setText("");
 
         // Setup GPS Service
         // First Check if App has permission to access device location
@@ -166,15 +157,11 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent se){
         float degree = Math.round(se.values[0]);
-        double playerX = user.getXLocation();
-        double playerY = user.getYLocation();
-        double targetX = user.getXLocation();
-        double targetY = user.getYLocation();
-        int add = addDegrees(playerX, playerY, targetX, targetY);
         //tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
-        RotateAnimation ra = new RotateAnimation(currDegree, -degree, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-
-        //textViewUp.setText(add);
+        if(updateReceived){
+            degree += getbearing();
+        }
+        RotateAnimation ra = new RotateAnimation(currDegree, degree, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 
         ra.setDuration(210);
         ra.setFillAfter(true);
@@ -187,32 +174,11 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         // Not in use
     }
 
-    public int addDegrees(double playerX, double playerY, double targetX, double targetY){
-        double diffX = targetX - playerX;
-        double diffY = targetY - playerY;
-        int degree;
-
-        /* quandrant I */
-        if(diffX > 0 && diffY > 0){
-            degree = (int) Math.sin(Math.abs(diffX) / Math.sqrt(( (diffX)*(diffX)) + ((diffY)*(diffY)) ));
-            return degree;
-        }
-        /* quadrant II */
-        else if(diffX > 0 && diffY < 0){
-            degree = (int) Math.sin(Math.abs(diffY) / Math.sqrt(( (diffX)*(diffX)) + ((diffY)*(diffY)) ));
-            return degree + 90;
-        }
-        /* quadrant III */
-        else if(diffX < 0 && diffY < 0){
-            degree = (int) Math.sin(Math.abs(diffX) / Math.sqrt(( (diffX)*(diffX)) + ((diffY)*(diffY)) ));
-            return degree + 180;
-        }
-        /* quadrant IV */
-        else if(diffX < 0 && diffY > 0){
-            degree = (int) Math.sin(Math.abs(diffY) / Math.sqrt(( (diffX)*(diffX)) + ((diffY)*(diffY)) ));
-            return degree + 270;
-        }
-        return 0;
+    public double getbearing(){
+        Location targetL = new Location("");
+        targetL.setLatitude(target.getYLocation());
+        targetL.setLongitude(target.getXLocation());
+        return (double) lastLocation.bearingTo(targetL);
     }
 
     /** Called when the user presses the assassinate button */
@@ -346,6 +312,8 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                             // Call UpdateGame again in 10,000 ms (10s)
                             updateGameHandler.postDelayed(updateGameRunnable, LobbyActivity.SERVER_UPDATE_INTERVAL);
                             authenticateUpdateGame(responseJSON); // Got a response from the server, check if valid
+                            updateReceived = true;
+                            textViewUp.setText(String.format("%f", getbearing()));
                         } catch (JSONException e) {
                             e.printStackTrace();
                             //show a toast and log the error
