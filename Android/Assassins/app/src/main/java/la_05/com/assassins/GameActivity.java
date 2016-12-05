@@ -393,9 +393,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                                 updateReceived = true;
                                 textViewUp.setText(String.format("%f", getbearing()));
                             /*Location targetLocation = new Location("");
-                            targetLocation.setLatitude(game.getYCenter());
-                            targetLocation.setLongitude(game.getXCenter());
-                            aTextView.setText(String.format("%f, %f", targetLocation.getLatitude(), targetLocation.getLongitude()));*/
+                            targetLocation.setLatitude(target.getYLocation());
+                            targetLocation.setLongitude(target.getXLocation());
+                            aTextView.setText(String.format("%f", lastLocation.distanceTo(targetLocation)));*/
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
