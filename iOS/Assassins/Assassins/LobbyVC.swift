@@ -54,8 +54,6 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
     
     @IBAction func pressedStartStopButton(_ sender: Any) {
         if pressedStart == false {
-            // call game start
-            
             var paramaters = [String:String]()
             paramaters["gameid"] = "\(game!.gameID)"
             
@@ -97,6 +95,9 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
                         game?.updateInfo(data: game_data)
                         currentTarget = Player(data: target_data)
                         
+                        self.pressedStart = true
+                        self.startStopButton.title = "End Game"
+                        
                         break
                     default:
                         print("ERROR: server returned result: \(server_data["result"].string!)")
@@ -105,22 +106,20 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
                     print("ERROR: could not connect to server")
                 }
             }
-            // change button to be stop button
-            pressedStart = true
-            startStopButton.title = "End Game"
         } else {
             // button is the stop button, stop the game
             var paramaters = [String:String]()
-            paramaters["gameid"] = "\(game?.gameID)"
+            paramaters["gameid"] = "\(game!.gameID)"
             
             // make request to stop the game
-            Alamofire.request(START_GAME_URL, parameters: paramaters).responseJSON { (response) in
+            Alamofire.request(STOP_GAME_URL, parameters: paramaters).responseJSON { (response) in
                 if response.result.isSuccess {
                     let server_data = JSON(response.result.value!)
                     
                     switch server_data["result"].string! {
                     case "success":
                         print("Game Killed")
+                        self.endGame()
                         break
                     default:
                         print("ERROR: server returned result: \(server_data["result"].string!)")
@@ -130,6 +129,11 @@ class LobbyVC: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
                 }
             }
         }
+    }
+    
+    func endGame() {
+        updateTimer.invalidate()
+        self.dismiss(animated: false, completion: nil)
     }
     
     override func viewDidLoad() {

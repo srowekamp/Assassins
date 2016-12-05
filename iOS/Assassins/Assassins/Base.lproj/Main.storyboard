@@ -185,7 +185,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Qai-1o-vE2">
-                                <rect key="frame" x="37.5" y="72" width="300.5" height="328.5"/>
+                                <rect key="frame" x="38" y="72" width="300.5" height="396.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Fub-4a-w5j">
                                         <rect key="frame" x="67.5" y="0.0" width="165.5" height="20.5"/>
@@ -216,6 +216,14 @@
                                             <constraint firstAttribute="width" constant="300" id="fKx-jf-yAa"/>
                                         </constraints>
                                     </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ljp-qS-9bb">
+                                        <rect key="frame" x="64.5" y="336.5" width="172" height="60"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                        <state key="normal" title="Kill Target"/>
+                                        <connections>
+                                            <action selector="killTarget:" destination="9zk-3k-vfg" eventType="touchUpInside" id="LRk-2V-n4L"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                             </stackView>
                         </subviews>
@@ -229,6 +237,8 @@
                     <navigationItem key="navigationItem" title="Tracker Mode" id="PgN-8w-qSf"/>
                     <connections>
                         <outlet property="compassImage" destination="1KL-sg-lhU" id="RAh-ng-NOK"/>
+                        <outlet property="currentTargetLabel" destination="Fts-Gw-Ukd" id="oOR-qK-bV4"/>
+                        <outlet property="killButton" destination="Ljp-qS-9bb" id="xhV-6I-MGb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UgJ-aD-oBK" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -428,7 +438,7 @@
                         <outlet property="gameID" destination="9D8-tQ-asT" id="2Wm-39-DO2"/>
                         <outlet property="gamePassword" destination="Tgi-6p-3Lk" id="tf3-iM-9Az"/>
                         <segue destination="Ppm-Yh-lZm" kind="show" identifier="mapSelect" id="EaR-Qf-Qch"/>
-                        <segue destination="XP6-r0-jAk" kind="show" identifier="createGameToGameView" id="iNO-gi-WW2"/>
+                        <segue destination="XP6-r0-jAk" kind="presentation" identifier="createGameToGameView" id="iNO-gi-WW2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="eal-u2-9QZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -498,13 +508,13 @@
                                 <rect key="frame" x="8" y="629" width="359" height="30"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Radius:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j9J-9p-ptJ">
-                                        <rect key="frame" x="0.0" y="5" width="9.5" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="5" width="5.5" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="d2n-WA-5Wn">
-                                        <rect key="frame" x="15.5" y="0.0" width="345.5" height="31"/>
+                                        <rect key="frame" x="11.5" y="0.0" width="349.5" height="31"/>
                                         <connections>
                                             <action selector="sliderValueChanged:" destination="Ppm-Yh-lZm" eventType="valueChanged" id="EpU-rw-UYD"/>
                                         </connections>
@@ -834,7 +844,7 @@
         <image name="viking" width="100" height="100"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="mkb-pQ-9dg"/>
         <segue reference="iNO-gi-WW2"/>
+        <segue reference="mkb-pQ-9dg"/>
     </inferredMetricsTieBreakers>
 </document>

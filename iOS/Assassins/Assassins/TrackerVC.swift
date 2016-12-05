@@ -8,22 +8,58 @@
 
 import UIKit
 import CoreLocation
+import Alamofire
+import SwiftyJSON
 
 class TrackerVC: UIViewController, updateable {
-
+    
+    let KILL_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/Kill"
+    
     func updateUI() {
         if game!.isRunning {
             let userLoc = CLLocation(latitude: currentUser!.x_location!,longitude: currentUser!.y_location!)
             let targetLoc = CLLocation(latitude: (currentTarget!.x_location)!, longitude: (currentTarget!.y_location)!)
             let bearing = CGFloat(getBearingBetweenTwoPoints(point1: userLoc, point2: targetLoc))
             
-            //print(userLoc)
-            //print(targetLoc)
-            //print(bearing)
-            
             compassImage.transform = .identity
             compassImage.transform = CGAffineTransform(rotationAngle: bearing)
+            currentTargetLabel.text?.removeAll()
+            currentTargetLabel.text = "Current Target: \(currentTarget!.real_name)"
+            let distance = userLoc.distance(from: targetLoc)
+            print(distance)
+            print(distance < 100.0)
+            if (distance < 100.0) {
+                killButton.isEnabled = true
+            } else {
+                killButton.isEnabled = false
+            }
         }
+    }
+    
+    @IBOutlet weak var killButton: UIButton!
+    
+    @IBOutlet weak var currentTargetLabel: UILabel!
+    
+    @IBAction func killTarget(_ sender: Any) {
+        var paramaters = [String:String]()
+        paramaters["gameid"] = "\(game!.gameID)"
+        paramaters["id"] = "\(currentUser!.id)"
+        
+        Alamofire.request(KILL_URL, parameters: paramaters).responseJSON { response in
+            if response.result.isSuccess {
+                let returned_data = JSON(response.result.value!)
+                
+                if returned_data["result"].string! == "success" {
+                    print("user killed")
+                }
+                self.popUpAlert(title: "Login Faled:", message: "The username or password is incorrect, please try again.", handler: nil)
+            } else {
+                self.popUpAlert(title: "Server Call Failed", message: "Please check your network connection and verify you are using the IOWA STATE VPN", handler: nil)
+            }
+        }
+        
+        
+        // kill target
     }
     
     @IBOutlet weak var compassImage: UIImageView!
