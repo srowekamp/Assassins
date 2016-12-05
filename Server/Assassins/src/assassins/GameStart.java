@@ -17,6 +17,7 @@ public class GameStart extends HttpServlet {
 
 	public static final String KEY_RESULT = "result";
 	public static final String RESULT_PARAMETER_MISSING = "parameter_error";
+	public static final String RESULT_GAME_NOT_FOUND = "game_not_found"; // Result when no game was found with given name
 	public static final String RESULT_GAME_STARTED = "success";
 	public static final String RESULT_NOT_ENOUGH_PLAYERS = "not_enough_players";
 	
@@ -39,6 +40,7 @@ public class GameStart extends HttpServlet {
         String startTime = request.getParameter(Game.KEY_START_TIME);
         if (!Game.isValidGameID(gameID)) result = Game.RESULT_GAMEID_INVALID;
         else if (!Game.isValidStartTime(startTime)) result = Game.RESULT_START_TIME_INVALID;
+        else if (!DB.doesGameExist(gameID)) result = RESULT_GAME_NOT_FOUND;
         else {
         	Game game = DB.getGame(gameID);
         	if (game.getPlayers().length > 1) {
