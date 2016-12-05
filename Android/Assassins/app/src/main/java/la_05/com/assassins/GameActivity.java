@@ -44,7 +44,7 @@ public class GameActivity extends AppCompatActivity{
     public static final String UPDATEGAME = "UpdateGame";
     public static final String KILL = "Kill";
     public static final String LEAVEGAME = "LeaveGame";
-    //public static final String ENDGAME = "EndGame";
+    public static final String ENDGAME = "EndGame";
 
     public static final String KEY_RESULT = "result";
 
@@ -66,6 +66,12 @@ public class GameActivity extends AppCompatActivity{
     public static final String RESULT_LEAVE_PLAYER_DEAD = "dead-success"; // Player can safely leave game when dead. That way they still get gamesPlayed++ when game ends
     public static final String RESULT_PLAYER_WON = "win"; // Player was the last one alive, don't let them leave. Wait for their device to call EndGame.
 
+    // Values for EndGame
+    public static final String RESULT_GAME_NOT_FOUND = "game_not_found"; // Result when no game was found with given name
+    public static final String RESULT_GAME_NOT_STARTED = "game_not_started"; // Result when trying to end game that hasn't been started
+    public static final String RESULT_REMOVE_GAME_SUCCESS = "success"; // Result when the game was successfully ended
+    public static final String RESULT_REMOVE_GAME_FAILURE = "fail"; // Result when there was an error removing game from database
+
     private LocationListener locationListener;
     private Location lastLocation;
     private LatLng lastLatLng;
@@ -73,7 +79,7 @@ public class GameActivity extends AppCompatActivity{
     private UserAccount user;
     private Game game;
     private UserAccount target;
-    private boolean isTop;
+    private boolean isTop = false;
 
     private Runnable updateGameRunnable;
     private Handler updateGameHandler;
@@ -241,12 +247,28 @@ public class GameActivity extends AppCompatActivity{
         Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
     }
 
+    /** Called before updateGame is called again. Checks if time is up */
+    private boolean isTimeUp() {
+        int h, m, s;
+        int secondsPerDay = 60 * 60 * 24;
+        int currentTimeSeconds = (int) (System.currentTimeMillis() / 1000) % secondsPerDay;
+        String endTime = game.getEnd_time();
+        h = Integer.parseInt(endTime.substring(0,2));
+        m = Integer.parseInt(endTime.substring(2,4));
+        s = Integer.parseInt(endTime.substring(4,6));
+        int endTimeSeconds = h * 3600 + m * 60 + s;
+        if (endTimeSeconds - game.getDuration() < 0) { // was the game started before midnight
+            return ((currentTimeSeconds > endTimeSeconds) && (currentTimeSeconds - game.getDuration() < 0));
+        }
+        return (currentTimeSeconds > endTimeSeconds);
+    }
+
     /** Called every 10 seconds by every player in the game.
      * Sends this player's location data and gets the latest game status/data from server */
     private void updateGame() {
         String requestURL = JSON_URL + UPDATEGAME;
         // Make the loading indicator visible
-        //imageViewUpdating.setVisibility(View.VISIBLE);// TODO add this to the game view xml
+        //imageViewUpdating.setVisibility(View.VISIBLE);// TODO add this to the game view xml (an indicator that it is downloading new info)
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, requestURL,
                 new Response.Listener<String>() {
@@ -256,9 +278,15 @@ public class GameActivity extends AppCompatActivity{
                         //imageViewUpdating.setVisibility(View.INVISIBLE); // TODO ^
                         try {
                             JSONObject responseJSON = new JSONObject(response);
-                            // Call UpdateGame again in 10,000 ms (10s)
-                            updateGameHandler.postDelayed(updateGameRunnable, LobbyActivity.SERVER_UPDATE_INTERVAL);
-                            authenticateUpdateGame(responseJSON); // Got a response from the server, check if valid
+                            // Check if the time is up
+                            if (isTimeUp() && isTop) {
+                                Toast.makeText(GameActivity.this, "Game Over", Toast.LENGTH_LONG).show();
+                                endGame();
+                            } else {
+                                // Call UpdateGame again in 10,000 ms (10s)
+                                updateGameHandler.postDelayed(updateGameRunnable, LobbyActivity.SERVER_UPDATE_INTERVAL);
+                                authenticateUpdateGame(responseJSON); // Got a response from the server, check if valid
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                             //show a toast and log the error
@@ -315,6 +343,7 @@ public class GameActivity extends AppCompatActivity{
                 isTop = response.getBoolean(KEY_IS_TOP);
                 waitingForUpdate = false;
                 buttonAssassinate.setEnabled(true); // Reenable the assassinate button
+                Toast.makeText(this, "Target: " + target.getUserName(), Toast.LENGTH_LONG).show();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -323,16 +352,19 @@ public class GameActivity extends AppCompatActivity{
         if (result.equals(RESULT_PLAYER_DEAD)) {
             // TODO Alert player that they are dead and give game over screen or something
             Toast.makeText(this, "You have been assassinated", Toast.LENGTH_LONG).show();
+            leaveActivity();
             return;
         }
         if (result.equals(RESULT_GAME_WIN)) {
             // TODO Alert player that they have won the game, call EndGame after ~15 seconds so player's target gets alert that they were killed
             Toast.makeText(this, "You win!", Toast.LENGTH_LONG).show();
+            endGame();
             return;
         }
         if (result.equals(RESULT_GAME_NOT_EXIST_OR_END)) {
             // TODO Alert player that the game is over (Time ran out, and player with isTop called EndGame)
             Toast.makeText(this, "Game Over", Toast.LENGTH_LONG).show();
+            leaveActivity();
             return;
         }
         switch (result) {
@@ -358,10 +390,6 @@ public class GameActivity extends AppCompatActivity{
                         loading.dismiss();
                         try {
                             JSONObject responseJSON = new JSONObject(response);
-                            /*if (responseJSON.getString(KEY_RESULT) != null) {
-                                // Left game in database, so close activity
-                                leaveActivity();
-                            }*/
                             authenticateLeaveGame(responseJSON);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -422,7 +450,7 @@ public class GameActivity extends AppCompatActivity{
             // TODO Alert player that they have won the game, call EndGame after ~15 seconds so player's target gets alert that they were killed
             Toast.makeText(this, "You win!", Toast.LENGTH_LONG).show();
             // End the game after x seconds
-            leaveActivity();
+            endGame();
             return;
         }
         if (result.equals(RESULT_GAME_NOT_EXIST_OR_END)) {
@@ -441,6 +469,91 @@ public class GameActivity extends AppCompatActivity{
         Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
     }
 
+    /** The game time has expired or the player has won, so end the game */
+    private void endGame() {
+        String requestURL = JSON_URL + ENDGAME;
+        final ProgressDialog loading = ProgressDialog.show(this, "Ending Game...", "Please wait...", false, false);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, requestURL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response){
+                        // Dismiss the progress dialog
+                        loading.dismiss();
+                        try {
+                            JSONObject responseJSON = new JSONObject(response);
+                            authenticateEndGame(responseJSON); // Got a response from the server, check if valid
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            //show a toast and log the error
+                            Toast.makeText(GameActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                            Log.d("ERROR", "error => " + e.getMessage()); // Print the error to the device log
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Dismiss the progress dialog
+                        loading.dismiss();
+
+                        //show a toast and log the error
+                        Toast.makeText(GameActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+                        Log.d("ERROR", "error => " + error.toString()); // Print the error to the device log
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parameters = new Hashtable<String, String>();
+                parameters.put(Game.KEY_GAMEID, game.getGameID());
+                parameters.put(UserAccount.KEY_ID, String.format("%d", user.getID()));
+
+                return parameters;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+
+    /** Process JSON response from server */
+    private void authenticateEndGame(JSONObject response) {
+        String result = null;
+        String error = "Unknown Error Occurred (1)";
+        try {
+            result = (String) response.get(KEY_RESULT);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (result == null) {
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
+            return;
+        }
+        if (result.equals(RESULT_REMOVE_GAME_SUCCESS)) {
+            // Game was successfully removed from the database
+            // TODO show a recap screen or something
+            Toast.makeText(this, "EndGame Success", Toast.LENGTH_LONG).show();
+            leaveActivity();
+            return;
+        }
+        switch (result) {
+            case RESULT_ERROR:
+                error = "An unknown server error occurred";
+                break;
+            case RESULT_REMOVE_GAME_FAILURE:
+                error = "An unknown server error occurred (2)";
+                break;
+            case RESULT_GAME_NOT_STARTED:
+                error = "RESULT_GAME_NOT_STARTED"; // shouldn't happen, here for debugging
+                break;
+            case RESULT_GAME_NOT_FOUND:
+                error = "RESULT_GAME_NOT_FOUND"; // ^
+            default:
+                break;
+        }
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
+    }
+
     /** Called whenever we plan to leave this activity (back button leave and after game ends) */
     private void leaveActivity() {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -452,8 +565,6 @@ public class GameActivity extends AppCompatActivity{
         updateGameHandler.removeCallbacks(updateGameRunnable); // Stop the looping call
         finish();
     }
-
-
 
     boolean doubleBackToExitPressedOnce = false;
 
