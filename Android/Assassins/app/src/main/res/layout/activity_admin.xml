@@ -10,4 +10,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="la_05.com.assassins.AdminActivity">
 
+    <ListView
+        android:id="@+id/gamesListListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </RelativeLayout>

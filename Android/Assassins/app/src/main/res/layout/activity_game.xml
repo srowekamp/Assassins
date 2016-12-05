@@ -28,23 +28,6 @@
         android:layout_marginStart="5dp"
         android:id="@+id/TimeRemaining" />
 
-    <TextView
-        android:text="TARGET"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/Target" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@mipmap/ic_launcher"
-        android:layout_below="@+id/Target"
-        android:layout_alignEnd="@+id/Target"
-        android:layout_alignStart="@+id/Target"
-        android:id="@+id/TargetImage" />
-
     <Button
         android:text="Assassinate!"
         android:textSize="18dp"
@@ -118,14 +101,6 @@
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/targetGamerTag"
-        android:layout_below="@+id/TargetImage"
-        android:layout_toEndOf="@+id/weapons" />
-
-    <TextView
         android:text="Perks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -179,6 +154,39 @@
         android:id="@+id/textViewUp"
         android:layout_above="@+id/PlayersLeft"
         android:layout_toEndOf="@+id/scoreNumbers" />
+
+    <TextView
+        android:text="Heading:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textViewUp"
+        android:layout_toEndOf="@+id/perk1"
+        android:id="@+id/Heading:" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@mipmap/ic_launcher"
+        android:id="@+id/TargetImage"
+        android:layout_below="@+id/Target"
+        android:layout_alignStart="@+id/playersLeftNumber" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/targetGamerTag"
+        android:layout_below="@+id/TargetImage"
+        android:layout_alignEnd="@+id/TargetImage" />
+
+    <TextView
+        android:text="TARGET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/Target"
+        android:layout_alignBaseline="@+id/timeRemainingNumbers"
+        android:layout_alignBottom="@+id/timeRemainingNumbers"
+        android:layout_alignStart="@+id/PlayersLeft" />
 
 
 </RelativeLayout>

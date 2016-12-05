@@ -196,6 +196,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     }
 
     /** Setup a LocationListener whose methods will be called on Location updates*/
+    /* kill if they're outside range */
     private final class MyLocationListener implements LocationListener {
 
         @Override
