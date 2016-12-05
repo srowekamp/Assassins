@@ -159,9 +159,9 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         float degree = Math.round(se.values[0]);
         //tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
         if(updateReceived){
-            degree += getbearing();
+            degree -= getbearing();
         }
-        RotateAnimation ra = new RotateAnimation(currDegree, degree, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        RotateAnimation ra = new RotateAnimation(currDegree, -degree, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
 
         ra.setDuration(210);
         ra.setFillAfter(true);
