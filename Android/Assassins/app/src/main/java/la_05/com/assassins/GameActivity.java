@@ -103,6 +103,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
     public TextView targetGamerTag;
     public TextView playersLeftNumber;
     public TextView aTextView;
+    private ImageView targetImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +121,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         scoreNumbers = (TextView) findViewById(R.id.scoreNumbers);
         targetGamerTag = (TextView) findViewById(R.id.targetGamerTag);
         playersLeftNumber = (TextView) findViewById(R.id.playersLeftNumber);
+        targetImage = (ImageView) findViewById(R.id.targetImage);
 
         aTextView = (TextView) findViewById(R.id.aTextView);
         aTextView.setText("");
@@ -454,6 +456,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 waitingForUpdate = false;
                 buttonAssassinate.setEnabled(true); // Reenable the assassinate button
                 Toast.makeText(this, "Target: " + target.getUserName(), Toast.LENGTH_LONG).show();
+                updateTargetImage();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -485,6 +488,23 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
                 break;
         }
         Toast.makeText(this, error, Toast.LENGTH_LONG).show(); // indicate failure
+    }
+
+    /** Update the image of your target */
+    private void updateTargetImage() {
+        // Get Profile image
+        ImageRequest ir = new ImageRequest(target.getImageURL(), new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                targetImage.setImageBitmap(response);
+                // Make Profile ImageView Rounded
+                RoundedBitmapDrawable roundDrawable = RoundedBitmapDrawableFactory.create(getResources(), response);
+                roundDrawable.setCircular(true);
+                targetImage.setImageDrawable(roundDrawable);
+            }
+        }, 0, 0, null, null);
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(ir);
     }
 
     /** Leave the game with the server. Called when user double presses back button. */
