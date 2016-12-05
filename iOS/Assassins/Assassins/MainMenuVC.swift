@@ -11,11 +11,15 @@ import UIKit
 class MainMenuVC: UIViewController {
     
     @IBOutlet weak var welcomeLabel: UILabel!
+    @IBOutlet weak var gameListButton: UIButton!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         if currentUser != nil {
             welcomeLabel.text = "Welcome \(currentUser!.real_name)"
+            if currentUser?.username == "admin" {
+                gameListButton.isHidden = false
+            }
         }
     }
     

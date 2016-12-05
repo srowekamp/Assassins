@@ -10,28 +10,14 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 
+var game:Game?
+
 class JoinGameVC: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var gameID: UITextField!
     @IBOutlet weak var gamePassword: UITextField!
     
     let JOIN_GAME_URL = "http://proj-309-la-05.cs.iastate.edu:8080/Assassins/JoinGame"
-    
-    var game:Game?
-    
-    /* 
- 
-     4) Join Game: http://proj-309-la-05.cs.iastate.edu:8080/Assassins/JoinGame?gameid=test1&id=1&password=password
-     parameters:
-     id: ID of the player trying to join the game. (int)
-     gameid: ID of the game that you are trying to join. (String)
-     password: password of the game you are trying to join. (String)
-     
-     Returns a JSON object with key "result" with one value indicating what happened
-     Result values can be found in JoinGame.java in the Assassins servlet src
-     Also within the response is a JSON object with key "game" holding all database info in this game (look at Game.java)
-
-    */
  
     @IBAction func joinGame(_ sender: AnyObject) {
         
@@ -48,12 +34,19 @@ class JoinGameVC: UIViewController, UITextFieldDelegate {
                 // print("Response JSON:\n\(returned_data)\n")
             
                 switch returned_data["result"].string! {
-                case "success":
-                    
+                case "already_joined":
                     let game_data = returned_data["game"]
                     if game_data != JSON.null {
-                        self.game = Game(data: game_data)
-                        self.game?.printDebugInfo()
+                        game = Game(data: game_data)
+                        game?.printDebugInfo()
+                        self.loadLobby()
+                    }
+                    return
+                case "success":
+                    let game_data = returned_data["game"]
+                    if game_data != JSON.null {
+                        game = Game(data: game_data)
+                        game?.printDebugInfo()
                         self.loadLobby()
                     }
                     return
@@ -85,8 +78,6 @@ class JoinGameVC: UIViewController, UITextFieldDelegate {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         switch segue.identifier! {
         case "joinToGame":
-            let lobbyVC = segue.destination.childViewControllers.first?.childViewControllers.first as? LobbyVC
-            lobbyVC?.game = self.game
             break
         default:
             break

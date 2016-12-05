@@ -28,6 +28,8 @@ class Game {
     
     var isRunning = false
     
+    
+    
     init(data:JSON){
         self.id = data["id"].int!
         self.gameID = data["gameid"].string!
@@ -46,6 +48,10 @@ class Game {
         self.end_time = data["end_time"].int
         self.players_list = data["players_list"].arrayObject as? [Int]
         self.players_alive = data["players_alive"].arrayObject as? [Int]
+        
+        // RRROROOROROROROROROORORORORORO with end_time
+        
+        print(end_time ?? "no end time")
         
         if end_time == nil {
             isRunning = false

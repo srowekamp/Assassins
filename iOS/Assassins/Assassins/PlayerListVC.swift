@@ -37,12 +37,12 @@ class PlayerListVC: UIViewController, UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return globalGame!.player_object_list.count;
+        return game!.player_object_list.count;
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "playerCell")!
-        cell.textLabel?.text = globalGame?.player_object_list[indexPath.row].real_name
+        cell.textLabel?.text = game?.player_object_list[indexPath.row].real_name
         return cell
     }
 }
