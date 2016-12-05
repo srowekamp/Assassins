@@ -233,7 +233,7 @@ public class GameActivity extends AppCompatActivity implements SensorEventListen
         if(lastLocation.distanceTo(targetLocation) <= 20.0){
             return true;
         }
-        return true;
+        return false;
     }
 
     /** Setup a LocationListener whose methods will be called on Location updates*/

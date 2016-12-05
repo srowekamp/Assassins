@@ -17,5 +17,6 @@ public class AdminActivity extends AppCompatActivity {
         setTitle("List of Games");
 
 
+
     }
 }
