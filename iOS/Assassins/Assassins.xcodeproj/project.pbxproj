@@ -26,6 +26,7 @@
 		38E8DBF91DA361FA005EA2C2 /* MainMenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBF71DA361FA005EA2C2 /* MainMenuVC.swift */; };
 		38E8DBFA1DA361FA005EA2C2 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E8DBF81DA361FA005EA2C2 /* LoginVC.swift */; };
 		38EB57F91DA4436100932027 /* TrackerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EB57F81DA4436100932027 /* TrackerVC.swift */; };
+		38FD919F1DF4EFC8009F31FF /* GameListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38FD919E1DF4EFC8009F31FF /* GameListVC.swift */; };
 		A558B9EDC0F3329A26A4D5BB /* Pods_Assassins.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81C53D132E467333271A012C /* Pods_Assassins.framework */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +54,7 @@
 		38E8DBF71DA361FA005EA2C2 /* MainMenuVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuVC.swift; sourceTree = "<group>"; };
 		38E8DBF81DA361FA005EA2C2 /* LoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		38EB57F81DA4436100932027 /* TrackerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackerVC.swift; sourceTree = "<group>"; };
+		38FD919E1DF4EFC8009F31FF /* GameListVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameListVC.swift; sourceTree = "<group>"; };
 		81C53D132E467333271A012C /* Pods_Assassins.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Assassins.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -112,6 +114,7 @@
 				38A6968C1DA3EA470061FE9A /* LobbyVC.swift */,
 				38EB57F81DA4436100932027 /* TrackerVC.swift */,
 				386BF48F1DA428E300CDC02E /* PlayerListVC.swift */,
+				38FD919E1DF4EFC8009F31FF /* GameListVC.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -295,6 +298,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38FD919F1DF4EFC8009F31FF /* GameListVC.swift in Sources */,
 				386735061D8B879300844D90 /* Assassins.xcdatamodeld in Sources */,
 				38E8DBF01DA3616D005EA2C2 /* JoinGameVC.swift in Sources */,
 				38A6968D1DA3EA470061FE9A /* LobbyVC.swift in Sources */,
